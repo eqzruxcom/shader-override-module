@@ -1,8 +1,8 @@
 [CmdletBinding()]
 param(
-    [string]$PackRoot = (Join-Path (Split-Path -Parent $PSScriptRoot) 'artifacts\agent2-r3d-ssgi-temporal-history-pack'),
+    [string]$PackRoot = (Join-Path (Split-Path -Parent $PSScriptRoot) 'artifacts\agent2-r3d-ssgi-temporal-history-pack-static-reprojection-v2'),
     [string]$WrapperPath = (Join-Path (Split-Path -Parent $PSScriptRoot) 'src\Backends\3DmigotoFork\builds\x64\Release\d3d11.dll'),
-    [string]$OutputRoot = (Join-Path (Split-Path -Parent $PSScriptRoot) 'artifacts\agent2-r3d-ssgi-temporal-live-candidate'),
+    [string]$OutputRoot = (Join-Path (Split-Path -Parent $PSScriptRoot) 'artifacts\agent2-r3d-ssgi-temporal-live-candidate-static-reprojection-v2'),
     [ValidatePattern('^[0-9A-Fa-f]{64}$')]
     [string]$ExpectedPredecessorWrapperSha256 = 'D3F0FC5562AF68DA2E6C99F24D742A562B2FF9604398EE6B80188C7CF46B8FDB'
 )
@@ -33,7 +33,7 @@ Assert-InRoot $wrapper 'WrapperPath'
 Assert-InRoot $output 'OutputRoot'
 if (-not (Test-Path -LiteralPath $wrapper -PathType Leaf)) { throw "Rebuilt wrapper is missing: $wrapper" }
 
-& (Join-Path $PSScriptRoot 'Test-IntergradeR3DSSGITemporalHistoryPack.ps1') | Out-Null
+& (Join-Path $PSScriptRoot 'Test-IntergradeR3DSSGITemporalHistoryPack.ps1') -PackRoot $pack | Out-Null
 $sourceManifestPath = Join-Path $pack 'manifest.json'
 $sourceManifest = Get-Content -Raw -LiteralPath $sourceManifestPath | ConvertFrom-Json
 if ($sourceManifest.schemaVersion -ne 1 -or $sourceManifest.result -ne 'pass' -or
@@ -42,6 +42,8 @@ if ($sourceManifest.schemaVersion -ne 1 -or $sourceManifest.result -ne 'pass' -o
     -not [bool]$sourceManifest.validation.deterministicInitialization -or
     -not [bool]$sourceManifest.validation.resolutionRecreationClear -or
     -not [bool]$sourceManifest.validation.finishedSceneFeedbackAbsent -or
+    -not [bool]$sourceManifest.validation.motionConventionMatchedNativeAssembly -or
+    -not [bool]$sourceManifest.validation.staticSurfaceFallbackMatchedNativeAssembly -or
     $sourceManifest.controls.F10 -ne 'native reload, unchanged') {
     throw 'Temporal source pack failed its closed offline contract.'
 }
@@ -109,7 +111,8 @@ $manifest = [ordered]@{
         resolutionRecreationClear = $true
         finishedSceneFeedbackAbsent = $true
         wrapperBuiltReleaseX64 = $true
-        motionSignLiveValidationPending = $true
+        motionConventionMatchedNativeAssembly = $true
+        staticSurfaceFallbackMatchedNativeAssembly = $true
     }
     files = @($payload | ForEach-Object { Get-FileRecord $output $_.FullName })
     rollback = [ordered]@{

@@ -1,6 +1,6 @@
 # FF7 Remake private temporal indirect-lighting candidate
 
-Status: offline verified; not installed; controlled live validation pending.
+Status: offline verified and installed for controlled live validation; native moving/static reprojection now matched from retained c473 assembly.
 
 ## Why this revision exists
 
@@ -47,4 +47,4 @@ Run the gates from the repository root:
 
 ## Still pending
 
-The inferred motion-vector sign must be confirmed in motion, along with disocclusion behavior, resolution changes, F2 off/on resets, and regression checks for Cloud, emissive lights, contact shadows, UI, and native F10 reload behavior. The candidate must remain isolated on F2 until those checks pass.
+The retained c473 assembly proves both paths: nonzero t4.zx uses the decoded motion vector, while the zero sentinel uses depth plus CB1[114..117] to reproject static surfaces. Controlled live validation must now confirm the corrected wall persistence, disocclusion behavior, resolution changes, F2 off/on resets, and regressions for Cloud, emissive lights, contact shadows, UI, and native F10 reload behavior. The candidate remains isolated on F2 until those checks pass.

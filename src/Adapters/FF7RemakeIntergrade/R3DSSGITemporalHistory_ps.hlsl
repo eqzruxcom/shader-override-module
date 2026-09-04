@@ -6,9 +6,11 @@
  * so creates recursive previous-frame feedback and causes lighting to become
  * stuck until a shader reload.
  *
- * The motion decode matches c473ab75b7519f7e's observed t4 constants. The
- * sign/UV conversion remains a live-validation item and is deliberately kept
- * in this adapter rather than the reusable R3D effect source.
+ * The motion decode and static-surface fallback match c473ab75b7519f7e's
+ * native history reprojection. Moving pixels use encoded t4.zx motion. A zero
+ * motion sentinel uses depth plus CB1[114..117] to reconstruct previous clip
+ * position; returning the current UV here would lose wall history on camera
+ * movement.
  */
 
 Texture2D<float4> RemakeCurrentIndirect : register(t110);
@@ -65,16 +67,30 @@ float RemakeTemporalDepthKey(float rawDepth)
     return log2(1.0 + abs(deviceW)) + 1.0;
 }
 
-float2 RemakeTemporalDecodePreviousUV(float2 uv, float4 encodedMotion)
+float2 RemakeTemporalPreviousUV(float2 uv, float rawDepth, float4 encodedMotion)
 {
     // c473 reads t4.zx, checks the encoded pair for a zero sentinel, then
     // subtracts 0.499992371 and multiplies by 4.008016.
     float2 encoded = encodedMotion.zx;
-    if (dot(encoded, encoded) <= 0.0)
-        return uv;
+    if (dot(encoded, encoded) > 0.0)
+    {
+        float2 velocity = (encoded - REMAKE_MOTION_CENTER) * REMAKE_MOTION_SCALE;
+        return uv + float2(-0.5 * velocity.x, 0.5 * velocity.y);
+    }
 
-    float2 velocity = (encoded - REMAKE_MOTION_CENTER) * REMAKE_MOTION_SCALE;
-    return uv + float2(-0.5 * velocity.x, 0.5 * velocity.y);
+    // Native c473 fallback (assembly lines 85..90 and 164): reproject static
+    // geometry with the previous-view transform carried in CB1[114..117].
+    float2 currentNDC = uv * 2.0 - 1.0;
+    float currentClipY = -currentNDC.y;
+    float3 previousClipXYW = currentNDC.x * RemakeViewData[114].xyw
+        + currentClipY * RemakeViewData[115].xyw
+        + rawDepth * RemakeViewData[116].xyw
+        + RemakeViewData[117].xyw;
+    if (!all(isfinite(previousClipXYW)) || abs(previousClipXYW.z) <= 1.0e-8)
+        return float2(-1.0, -1.0);
+
+    float2 previousNDC = previousClipXYW.xy / previousClipXYW.z;
+    return float2(previousNDC.x * 0.5 + 0.5, 0.5 - previousNDC.y * 0.5);
 }
 
 float RemakeTemporalPeak(float3 value)
@@ -106,7 +122,7 @@ float4 main(FullscreenInput input) : SV_Target0
 
     float4 encodedMotion = RemakeEncodedMotion.Load(int3(
         RemakeTemporalCoord(uv, motionWidth, motionHeight), 0));
-    float2 previousUV = RemakeTemporalDecodePreviousUV(uv, encodedMotion);
+    float2 previousUV = RemakeTemporalPreviousUV(uv, rawDepth, encodedMotion);
     bool insideHistory = all(previousUV > 0.0) && all(previousUV < 1.0);
 
     float4 previous = 0.0;

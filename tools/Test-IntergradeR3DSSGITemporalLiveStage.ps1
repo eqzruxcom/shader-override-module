@@ -7,9 +7,10 @@ $ErrorActionPreference = 'Stop'
 $root = [IO.Path]::GetFullPath((Split-Path -Parent $PSScriptRoot)).TrimEnd('\')
 $generator = Join-Path $PSScriptRoot 'New-IntergradeR3DSSGITemporalLiveCandidate.ps1'
 $stager = Join-Path $PSScriptRoot 'Stage-IntergradeR3DSSGITemporalHistory.ps1'
-$candidate = Join-Path $root 'artifacts\agent2-r3d-ssgi-temporal-live-candidate'
+$pack = Join-Path $root 'artifacts\agent2-r3d-ssgi-temporal-history-pack-static-reprojection-v2'
 $predecessor = Join-Path $root 'artifacts\agent2-r3d-ssgi-pre-temporal-pack'
 $testRoot = Join-Path $root ('artifacts\temporal-live-stage-tests\' + [Guid]::NewGuid().ToString('N'))
+$candidate = Join-Path $testRoot 'Candidate'
 $target = Join-Path $testRoot 'End\Binaries\Win64'
 $mods = Join-Path $target 'Mods'
 $fixes = Join-Path $target 'ShaderFixes'
@@ -27,7 +28,7 @@ function Assert-Tree([Collections.IDictionary]$Expected,[Collections.IDictionary
 }
 
 try {
-    & $generator | Out-Null
+    & $generator -PackRoot $pack -OutputRoot $candidate | Out-Null
     [void][IO.Directory]::CreateDirectory($mods)
     [void][IO.Directory]::CreateDirectory($fixes)
     $predecessorManifest = Get-Content -Raw -LiteralPath (Join-Path $predecessor 'manifest.json') | ConvertFrom-Json

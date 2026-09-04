@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param(
     [string]$SourcePackRoot = (Join-Path (Split-Path -Parent $PSScriptRoot) 'artifacts\agent2-r3d-ssgi-pre-temporal-pack'),
-    [string]$OutputRoot = (Join-Path (Split-Path -Parent $PSScriptRoot) 'artifacts\agent2-r3d-ssgi-temporal-history-pack'),
+    [string]$OutputRoot = (Join-Path (Split-Path -Parent $PSScriptRoot) 'artifacts\agent2-r3d-ssgi-temporal-history-pack-static-reprojection-v2'),
     [string]$FxcPath = 'C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x64\fxc.exe'
 )
 
@@ -37,6 +37,33 @@ if ($sourceManifest.result -ne 'pass' -or
     [bool]$sourceManifest.installed) {
     throw 'The pre-temporal source pack does not satisfy its recorded offline contract.'
 }
+$nativeTemporalAssemblyPath = [string]$sourceManifest.validation.temporalAssemblyPath
+$nativeTemporalAssemblyHash = [string]$sourceManifest.validation.temporalAssemblySha256
+if (-not (Test-Path -LiteralPath $nativeTemporalAssemblyPath -PathType Leaf) -or
+    (Get-FileHash -Algorithm SHA256 -LiteralPath $nativeTemporalAssemblyPath).Hash -ne $nativeTemporalAssemblyHash) {
+    throw 'Pinned native c473 assembly is missing or drifted.'
+}
+$nativeTemporalAssembly = [IO.File]::ReadAllText($nativeTemporalAssemblyPath)
+$nativeReprojectionSequence = @(
+    'mul r6.xyz, r1.wwww, cb1[115].xywx',
+    'mad r6.xyz, r1.zzzz, cb1[114].xywx, r6.xyzx',
+    'mad r6.xyz, r5.xxxx, cb1[116].xywx, r6.xyzx',
+    'add r6.xyz, r6.xyzx, cb1[117].xywx',
+    'div r5.xw, r6.xxxy, r6.zzzz',
+    'mad r5.xw, r1.xxxy, l(1.000000, 0.000000, 0.000000, -1.000000), -r5.xxxw',
+    'ld_indexable(texture2d)(float,float,float,float) r5.yz, r6.xyzw, t4.zxyw',
+    'add r5.yz, r5.yyzy, l(0.000000, -0.499992, -0.499992, 0.000000)',
+    'mul r5.yz, r5.yyzy, l(0.000000, 4.008016, 4.008016, 0.000000)',
+    'movc r5.xy, r0.wwww, r5.yzyy, r5.xwxx',
+    'mad r0.yw, r1.xxxy, l(0.000000, 1.000000, 0.000000, -1.000000), -r5.xxxy'
+)
+$cursor = -1
+foreach ($instruction in $nativeReprojectionSequence) {
+    $next = $nativeTemporalAssembly.IndexOf($instruction, $cursor + 1, [StringComparison]::Ordinal)
+    if ($next -lt 0) { throw "Native c473 reprojection instruction is missing or out of order: $instruction" }
+    $cursor = $next
+}
+
 foreach ($entry in @($sourceManifest.files)) {
     $path = Join-Path $sourceMods ([string]$entry.name)
     if (-not (Test-Path -LiteralPath $path -PathType Leaf) -or
@@ -243,6 +270,8 @@ $manifest = [ordered]@{
         preTemporalManifestSha256 = (Get-FileHash -Algorithm SHA256 -LiteralPath $sourceManifestPath).Hash
         temporalShader = $temporalSourcePath
         temporalShaderSha256 = (Get-FileHash -Algorithm SHA256 -LiteralPath $temporalSourcePath).Hash
+        nativeTemporalAssembly = $nativeTemporalAssemblyPath
+        nativeTemporalAssemblySha256 = $nativeTemporalAssemblyHash
     }
     hooks = [ordered]@{
         geometryCapture = 'e2aa1c8cb39e0a55-ps'
@@ -270,7 +299,7 @@ $manifest = [ordered]@{
         decay = 0.985
         fastRefresh = 0.35
         slowRefresh = 0.015
-        motionDecode = 'c473 t4.zx, center 0.499992371, scale 4.008016; inferred previous-UV sign pending live validation'
+        motionDecode = 'c473 t4.zx, center 0.499992371, scale 4.008016; zero sentinel uses native depth plus CB1[114..117] previous-view reprojection'
     }
     engine = [ordered]@{
         clearOnCreateHeaderSha256 = (Get-FileHash -Algorithm SHA256 -LiteralPath $commandListHeaderPath).Hash
@@ -284,7 +313,8 @@ $manifest = [ordered]@{
         deterministicInitialization = $true
         resolutionRecreationClear = $true
         finishedSceneFeedbackAbsent = $true
-        motionSignLiveValidationPending = $true
+        motionConventionMatchedNativeAssembly = $true
+        staticSurfaceFallbackMatchedNativeAssembly = $true
     }
     compile = @($compiled)
     files = $files

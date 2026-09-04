@@ -2,7 +2,7 @@
 param(
     [Parameter(Mandatory)][ValidateSet('Stage','Status','Restore')][string]$Action,
     [Parameter(Mandatory)][string]$TargetWin64Directory,
-    [string]$CandidateRoot = (Join-Path (Split-Path -Parent $PSScriptRoot) 'artifacts\agent2-r3d-ssgi-temporal-live-candidate'),
+    [string]$CandidateRoot = (Join-Path (Split-Path -Parent $PSScriptRoot) 'artifacts\agent2-r3d-ssgi-temporal-live-candidate-static-reprojection-v2'),
     [string]$PredecessorPackRoot = (Join-Path (Split-Path -Parent $PSScriptRoot) 'artifacts\agent2-r3d-ssgi-pre-temporal-pack'),
     [string]$BackupRoot = (Join-Path (Split-Path -Parent $PSScriptRoot) 'artifacts\agent2-r3d-ssgi-temporal-live-stage-backups'),
     [ValidatePattern('^$|^[0-9A-Fa-f]{64}$')][string]$ExpectedPredecessorWrapperSha256 = '',

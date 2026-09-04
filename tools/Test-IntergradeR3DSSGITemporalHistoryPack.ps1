@@ -1,6 +1,6 @@
 [CmdletBinding()]
 param(
-    [string]$PackRoot = (Join-Path (Split-Path -Parent $PSScriptRoot) 'artifacts\agent2-r3d-ssgi-temporal-history-pack')
+    [string]$PackRoot = (Join-Path (Split-Path -Parent $PSScriptRoot) 'artifacts\agent2-r3d-ssgi-temporal-history-pack-static-reprojection-v2')
 )
 
 Set-StrictMode -Version Latest
@@ -36,7 +36,8 @@ if ([int]$manifest.validation.compiledShaderCount -ne 8 -or
     -not [bool]$manifest.validation.deterministicInitialization -or
     -not [bool]$manifest.validation.resolutionRecreationClear -or
     -not [bool]$manifest.validation.finishedSceneFeedbackAbsent -or
-    -not [bool]$manifest.validation.motionSignLiveValidationPending) {
+    -not [bool]$manifest.validation.motionConventionMatchedNativeAssembly -or
+    -not [bool]$manifest.validation.staticSurfaceFallbackMatchedNativeAssembly) {
     throw 'Temporal-history validation contract is invalid.'
 }
 if (Test-Path -LiteralPath (Join-Path $pack 'ShaderFixes')) {
@@ -54,6 +55,33 @@ if (-not (Test-Path -LiteralPath $trackedTemporalPath -PathType Leaf) -or
     (Get-FileHash -Algorithm SHA256 -LiteralPath $trackedTemporalPath).Hash -ne
         [string]$manifest.source.temporalShaderSha256) {
     throw 'Tracked temporal shader source is missing or drifted.'
+}
+
+$nativeTemporalAssemblyPath = [string]$manifest.source.nativeTemporalAssembly
+if (-not (Test-Path -LiteralPath $nativeTemporalAssemblyPath -PathType Leaf) -or
+    (Get-FileHash -Algorithm SHA256 -LiteralPath $nativeTemporalAssemblyPath).Hash -ne
+        [string]$manifest.source.nativeTemporalAssemblySha256) {
+    throw 'Pinned native c473 assembly is missing or drifted.'
+}
+$nativeTemporalAssembly = [IO.File]::ReadAllText($nativeTemporalAssemblyPath)
+$nativeReprojectionSequence = @(
+    'mul r6.xyz, r1.wwww, cb1[115].xywx',
+    'mad r6.xyz, r1.zzzz, cb1[114].xywx, r6.xyzx',
+    'mad r6.xyz, r5.xxxx, cb1[116].xywx, r6.xyzx',
+    'add r6.xyz, r6.xyzx, cb1[117].xywx',
+    'div r5.xw, r6.xxxy, r6.zzzz',
+    'mad r5.xw, r1.xxxy, l(1.000000, 0.000000, 0.000000, -1.000000), -r5.xxxw',
+    'ld_indexable(texture2d)(float,float,float,float) r5.yz, r6.xyzw, t4.zxyw',
+    'add r5.yz, r5.yyzy, l(0.000000, -0.499992, -0.499992, 0.000000)',
+    'mul r5.yz, r5.yyzy, l(0.000000, 4.008016, 4.008016, 0.000000)',
+    'movc r5.xy, r0.wwww, r5.yzyy, r5.xwxx',
+    'mad r0.yw, r1.xxxy, l(0.000000, 1.000000, 0.000000, -1.000000), -r5.xxxy'
+)
+$cursor = -1
+foreach ($instruction in $nativeReprojectionSequence) {
+    $next = $nativeTemporalAssembly.IndexOf($instruction, $cursor + 1, [StringComparison]::Ordinal)
+    if ($next -lt 0) { throw "Native c473 reprojection instruction is missing or out of order: $instruction" }
+    $cursor = $next
 }
 
 $header = [IO.File]::ReadAllText($commandListHeaderPath)
@@ -128,11 +156,20 @@ foreach ($required in @(
     'float4 RemakeViewData[140];',
     'float2 encoded = encodedMotion.zx;',
     'encoded - REMAKE_MOTION_CENTER',
+    'float2 RemakeTemporalPreviousUV(float2 uv, float rawDepth, float4 encodedMotion)',
+    'RemakeViewData[114].xyw',
+    'RemakeViewData[115].xyw',
+    'RemakeViewData[116].xyw',
+    'RemakeViewData[117].xyw',
+    'RemakeTemporalPreviousUV(uv, rawDepth, encodedMotion)',
     'abs(previous.a - currentDepthKey) <= REMAKE_HISTORY_DEPTH_THRESHOLD',
     'float3 decayedHistory = saturate(previous.rgb) * REMAKE_HISTORY_DECAY;',
     'return float4(saturate(resolvedIndirect), currentDepthKey);'
 )) {
     if (-not $temporal.Contains($required)) { throw "Temporal shader contract is missing: $required" }
+}
+if ($temporal -match '(?s)if\s*\(dot\(encoded, encoded\)\s*<=\s*0\.0\)\s*return\s+uv\s*;') {
+    throw 'Zero-motion static surfaces must use native matrix reprojection, not current UV.'
 }
 foreach ($forbidden in @(
     'Texture2D<float4> RemakeFinishedScene',
@@ -157,6 +194,21 @@ foreach ($entry in $compiled) {
         (Get-FileHash -Algorithm SHA256 -LiteralPath $binary).Hash -ne [string]$entry.dxbcSha256 -or
         (Get-FileHash -Algorithm SHA256 -LiteralPath $assembly).Hash -ne [string]$entry.assemblySha256) {
         throw "Compile artifact drifted: $($entry.name)"
+    }
+}
+
+$temporalAssemblyPath = Join-Path (Join-Path $pack 'compile-verification') 'Agent2R3DSSGITemporalHistory_ps.asm'
+$compiledTemporalAssembly = [IO.File]::ReadAllText($temporalAssemblyPath)
+foreach ($required in @(
+    'cb1[115].xxyw',
+    'cb1[114].xywx',
+    'cb1[116].xywx',
+    'cb1[117].xywx',
+    'l(0.000000, -0.499992, -0.499992, 0.000000)',
+    'l(0.000000, -2.004008, 2.004008, 0.000000)'
+)) {
+    if (-not $compiledTemporalAssembly.Contains($required)) {
+        throw "Compiled temporal DXBC lost native moving/static reprojection evidence: $required"
     }
 }
 
@@ -222,4 +274,4 @@ if ($rising[0] -le 0.3 -or $rising[0] -ge 0.8) {
     throw 'Behavior model failed the fast-rise response contract.'
 }
 
-Write-Host 'PASS: private temporal SSGI history compiles eight SM5 shaders, uses a half-resolution RGBA16F GI-only history, clears deterministically on allocation/resize and F2 OFF, preserves F10/Page keys and the native OFF path, rejects depth/viewport discontinuities, retains a bounded temporarily absent source, and contains no finished-scene feedback path.'
+Write-Host 'PASS: private temporal SSGI history compiles eight SM5 shaders, matches native c473 moving and static-surface reprojection in retained and compiled assembly, uses half-resolution RGBA16F GI-only history, clears deterministically on allocation/resize and F2 OFF, preserves F10/Page keys and the native OFF path, rejects depth/viewport discontinuities, retains a bounded temporarily absent source, and contains no finished-scene feedback path.'

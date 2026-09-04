@@ -1,0 +1,127 @@
+{
+  "schemaVersion": 1,
+  "id": "r3d-ssgi-owned-fullscreen-composite",
+  "displayName": "R3D SSGI injector-owned fullscreen composite",
+  "description": "Use a verified scene-lighting family only as the scheduling trigger; execute the SSGI composite with injector-owned fullscreen geometry and explicit state.",
+  "trigger": {
+    "kind": "shader-family",
+    "stage": "ps",
+    "family": "reflection-environment-ssr-composite",
+    "timing": "after",
+    "adapterFastPaths": [
+      {
+        "adapter": "FF7RemakeIntergrade",
+        "identity": "e2aa1c8cb39e0a55-ps",
+        "evidence": "Live topology event 1096; passes 00-04 were visually neutral and zero-output caller composite 05 changed Cloud skin."
+      }
+    ]
+  },
+  "execution": {
+    "ownership": "injector-owned",
+    "kind": "render",
+    "shaders": {
+      "vs": {
+        "path": "artifacts/agent2-r3d-ssgi-owned-fullscreen-real-pack/Mods/Agent2R3DSSGIFullscreen_vs.hlsl",
+        "profile": "vs_5_0",
+        "sha256": "10B9B823B723F2B1CFE21A4427C0D477F15F16EBFBF448B5101042D438206090"
+      },
+      "ps": {
+        "path": "artifacts/agent2-r3d-ssgi-owned-fullscreen-real-pack/Mods/Agent2R3DSSGICompositeE2AA_ps.hlsl",
+        "profile": "ps_5_0",
+        "sha256": "9EE9133B3F448174A82C132A77A386BFCA09579C0E2BE8A916F8A958547A0645"
+      },
+      "hs": null,
+      "ds": null,
+      "gs": null
+    },
+    "geometry": {
+      "source": "fullscreen-triangle",
+      "topology": "triangle-list",
+      "vertexCount": 3,
+      "startVertex": 0
+    },
+    "fixedState": {
+      "blend": "add-one-one",
+      "depthTest": false,
+      "depthWrite": false,
+      "stencil": false,
+      "cull": "none"
+    },
+    "resources": {
+      "inputs": [
+        { "slot": "t110", "role": "filtered-ssgi" },
+        { "slot": "t111", "role": "gbuffer-normal" },
+        { "slot": "t112", "role": "scene-depth" },
+        { "slot": "t113", "role": "gbuffer-material" },
+        { "slot": "t114", "role": "gbuffer-albedo" },
+        { "slot": "b0", "role": "remake-view" }
+      ],
+      "output": { "slot": "current-o0", "role": "additive-scene-radiance" }
+    },
+    "stateRestore": [
+      "shaders",
+      "shader-resources",
+      "constant-buffers",
+      "render-targets",
+      "depth-target",
+      "unordered-access-views",
+      "viewports",
+      "blend-state",
+      "depth-stencil-state",
+      "rasterizer-state",
+      "primitive-topology"
+    ]
+  },
+  "controls": {
+    "bound": [
+      { "key": "F2", "role": "diagnostic-toggle" }
+    ],
+    "reserved": [
+      { "key": "F10", "role": "native-runtime-reload" },
+      { "key": "PageUp", "role": "primary-lighting-test" },
+      { "key": "PageDown", "role": "accepted-effects-master" }
+    ]
+  },
+  "backendMappings": {
+    "3dmigoto-d3d11": {
+      "kind": "custom-shader",
+      "section": "CustomShaderAgent2R3DSSGIComposite",
+      "shaderFiles": {
+        "vs": "Agent2R3DSSGIFullscreen_vs.hlsl",
+        "ps": "Agent2R3DSSGICompositeE2AA_ps.hlsl"
+      },
+      "sampler": "linear_filter",
+      "preCommands": [
+        "run = BuiltInCommandListUnbindAllRenderTargets"
+      ],
+      "outputBindings": [
+        "o0 = set_viewport ResourceAgent2SSGITarget"
+      ],
+      "resourceBindings": [
+        { "target": "ps-t110", "source": "ResourceAgent2SSGIPing", "post": "null" },
+        { "target": "ps-t111", "source": "ResourceAgent2SSGINormal", "post": "null" },
+        { "target": "ps-t112", "source": "ResourceAgent2SSGIDepth", "post": "null" },
+        { "target": "ps-t113", "source": "ResourceAgent2SSGIMaterial", "post": "null" },
+        { "target": "ps-t114", "source": "ResourceAgent2SSGIAlbedo", "post": "null" }
+      ]
+    },
+    "dxvk-d3d11": {
+      "kind": "owned-vulkan-graphics-pass",
+      "status": "planned"
+    }
+  },
+  "evidence": [
+    "docs/agent2-r3d-ssgi-white-skin-isolation.md",
+    "artifacts/agent2-r3d-ssgi-owned-fullscreen-zero-pack/manifest.json",
+    "artifacts/agent2-r3d-ssgi-owned-fullscreen-real-pack/manifest.json"
+  ],
+  "safety": {
+    "runtimeEligible": false,
+    "installed": false,
+    "prerequisites": [
+      "Complete the live 06 zero-composite-no-depth test.",
+      "If needed, complete the live 07 zero-composite-no-draw test.",
+      "Verify the owned fullscreen zero-output composite is visually identical to F2 off before enabling real SSGI math."
+    ]
+  }
+}

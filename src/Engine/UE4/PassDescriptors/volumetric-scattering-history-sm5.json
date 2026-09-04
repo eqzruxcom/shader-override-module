@@ -1,0 +1,112 @@
+{
+  "schemaVersion": 1,
+  "id": "ue4-volumetric-scattering-history-sm5",
+  "family": "volumetrics-and-fog",
+  "displayName": "UE4 volumetric scattering and temporal-history integration",
+  "description": "Compute pass that combines multiple 3D volumetric inputs with reprojected history and stores an integrated scattering/extinction volume.",
+  "stages": ["cs"],
+  "shaderModels": ["cs_5_0"],
+  "hashFastPaths": [
+    {
+      "adapter": "FF7RemakeIntergrade",
+      "hash": "ef7fe8d9c4e9ad15",
+      "evidence": "Verified live at event 811 over a 120x68x96 volume."
+    }
+  ],
+  "semanticSignature": {
+    "checks": [
+      {
+        "id": "thread-group-4x4x4",
+        "pattern": "^dcl_thread_group\\s+4,\\s*4,\\s*4\\s*$",
+        "minCount": 1,
+        "maxCount": 1,
+        "meaning": "Froxel-volume compute dispatch shape used by the verified pass."
+      },
+      {
+        "id": "three-volume-inputs",
+        "pattern": "^dcl_resource_texture3d\\s+\\(float,float,float,float\\)\\s+t\\d+\\s*$",
+        "minCount": 3,
+        "maxCount": null,
+        "meaning": "Current broad injection, temporal history, and local-light injection are 3D textures."
+      },
+      {
+        "id": "typed-volume-output",
+        "pattern": "^dcl_uav_typed_texture3d\\s+\\(float,float,float,float\\)\\s+u\\d+\\s*$",
+        "minCount": 1,
+        "maxCount": 1,
+        "meaning": "The pass writes an integrated float4 scattering/extinction volume."
+      },
+      {
+        "id": "direct-volume-loads",
+        "pattern": "^\\s*ld_indexable\\(texture3d\\)\\(float,float,float,float\\)\\s+[^\\r\\n]+$",
+        "minCount": 2,
+        "maxCount": null,
+        "meaning": "At least two current-frame volumetric sources are loaded by froxel coordinate."
+      },
+      {
+        "id": "sampled-history-volume",
+        "pattern": "^\\s*sample_l_indexable\\(texture3d\\)\\(float,float,float,float\\)\\s+[^\\r\\n]+$",
+        "minCount": 1,
+        "maxCount": null,
+        "meaning": "Reprojected temporal history is sampled at a transformed coordinate."
+      },
+      {
+        "id": "history-difference",
+        "pattern": "^\\s*add\\s+[^\\r\\n]+-r\\d+\\.xyzw,\\s*r\\d+\\.xyzw\\s*$",
+        "minCount": 1,
+        "maxCount": null,
+        "meaning": "The temporal section forms a history-minus-current or current-minus-history difference."
+      },
+      {
+        "id": "bounded-temporal-history-blend",
+        "pattern": "(?ms)^\\s*sample_l_indexable\\(texture3d\\)\\(float,float,float,float\\)\\s+[^\\r\\n]+$\\r?\\n(?:[^\\r\\n]*\\r?\\n){0,4}^\\s*add\\s+[^\\r\\n]+$\\r?\\n(?:[^\\r\\n]*\\r?\\n){0,4}^\\s*mad\\s+[^\\r\\n]+$",
+        "minCount": 1,
+        "maxCount": null,
+        "meaning": "Reprojected 3D history is differenced and blended through a bounded instruction sequence; the numeric weight is adapter-specific."
+      },
+      {
+        "id": "typed-volume-store",
+        "pattern": "^\\s*store_uav_typed\\s+u\\d+\\.xyzw,\\s*[^\\r\\n]+$",
+        "minCount": 1,
+        "maxCount": null,
+        "meaning": "The integrated float4 result is stored to the 3D UAV."
+      }
+    ]
+  },
+  "runtimeContract": {
+    "output": "RWTexture3D<float4> scattering RGB plus extinction A",
+    "temporalCurrentWeight": 0.15,
+    "temporalHistoryWeight": 0.85,
+    "temporalWeightScope": "FF7RemakeIntergrade verified adapter values; other semantic matches must recover and validate their own blend weights.",
+    "temporalWeightValidation": {
+      "analyzer": "tools/Get-UE4TemporalBlendContract.ps1",
+      "verifiedContract": "artifacts/temporal-blend-contracts/ef7fe8d9c4e9ad15.json",
+      "eligibilityRule": "Steady-state compensation requires a fixed temporal blend contract whose recovered current/history weights match the adapter binding.",
+      "failClosedRule": "A dynamic or unresolved temporal coefficient is semantically compatible with this pass family but is ineligible for FF7-style steady-state compensation."
+    },
+    "postControlSynthesis": {
+      "controlledChannels": "RGB scattering only; preserve extinction alpha",
+      "steadyStateTargetFormula": "perFrameScale = target / (temporalCurrentWeight + temporalHistoryWeight * target)",
+      "verifiedTargets": [
+        { "target": 0.25, "perFrameScale": 0.6896551724 },
+        { "target": 0.5, "perFrameScale": 0.8695652174 },
+        { "target": 0.75, "perFrameScale": 0.9523809524 }
+      ],
+      "adapterRequirement": "Confirm the pass output feeds the next frame's temporal-history input before applying compensation."
+    },
+    "verifiedThreadGroup": [4, 4, 4],
+    "adapterMustConfirm": [
+      "3D input roles and slots",
+      "3D output UAV slot and format",
+      "dispatch dimensions",
+      "downstream depth-integration consumer"
+    ]
+  },
+  "sourceEvidence": [
+    "artifacts/captured-shaders/ef7fe8d9c4e9ad15-cs/ef7fe8d9c4e9ad15-cs_dumpbin.asm",
+    "artifacts/temporal-blend-contracts/ef7fe8d9c4e9ad15.json",
+    "artifacts/temporal-blend-contracts/b643d8fed67b4630.json",
+    "src/Adapters/FF7RemakeIntergrade/shader-map.json",
+    "artifacts/ue4-semantic-universal-fix-corpus.json"
+  ]
+}

@@ -1,0 +1,427 @@
+{
+  "schemaVersion": 1,
+  "adapterId": "FF7RemakeIntergrade",
+  "game": "Final Fantasy VII Remake Intergrade",
+  "engineFamily": "UE4-custom",
+  "renderer": "D3D11",
+  "captureId": "ff7r-contact-area-baseline-20260831",
+  "inventory": "artifacts/analysis/rebirth-v2.2.1-remake-area-inventory.json",
+  "families": [
+    {
+      "familyId": "tiled-surface-light-evaluation",
+      "stage": "cs",
+      "role": "five material/tile-specialized per-light surface evaluators",
+      "status": "verified-adjacent-dispatch-family-working-contact-port",
+      "insertionEligibility": "eligible-only-as-complete-five-variant-remake-adapter",
+      "hashes": [
+        {
+          "hash": "c30cdc8365df9840",
+          "indirectArgumentOffset": 0,
+          "nativeVisibilityRegister": "r29.z",
+          "visualObservation": "face involvement observed; not face-only"
+        },
+        {
+          "hash": "62b33a2d1e505241",
+          "indirectArgumentOffset": 12,
+          "nativeVisibilityRegister": "r17.y",
+          "visualObservation": "broad/everything-like coverage observed; accepted left-edge Frustum Fix"
+        },
+        {
+          "hash": "5a9fbefe0ab6f815",
+          "indirectArgumentOffset": 24,
+          "nativeVisibilityRegister": "r21.z",
+          "visualObservation": "face and body involvement observed; not character-only"
+        },
+        {
+          "hash": "0e97888f9a8767da",
+          "indirectArgumentOffset": 36,
+          "nativeVisibilityRegister": "r21.y",
+          "visualObservation": "hair involvement observed; not hair-only"
+        },
+        {
+          "hash": "08bb8764f1840179",
+          "indirectArgumentOffset": 48,
+          "nativeVisibilityRegister": "r15.w",
+          "visualObservation": "hair and face involvement observed; not hair/face-only"
+        }
+      ],
+      "evidence": [
+        "docs/surface-lighting-occlusion-study.md",
+        "docs/contact-output-isolation-results.md",
+        "artifacts/contact-candidate-validation-20260831-v5/manifest.json",
+        "artifacts/checkpoints/rebirth-contact-first-working-20260831-v1/receipts/contact-live-status.json"
+      ],
+      "constraints": [
+        "All five specializations are required; one hash is not one exclusive object type.",
+        "Preserve native material occlusion, screen AO, capsule/other occlusion, shadow maps, BRDF branches, and output packing.",
+        "The working donor contact ray is a Remake adapter port, not a stock UE4 family descriptor.",
+        "Page Down master and Page Up experiment branches are not yet generated into these replacements."
+      ]
+    },
+    {
+      "familyId": "tile-material-light-list-classifier",
+      "stage": "cs",
+      "role": "16x16 material-class mask and specialized indirect-list selector",
+      "status": "verified-structural-infrastructure",
+      "insertionEligibility": "excluded-upstream-classifier",
+      "hashes": [
+        {
+          "hash": "f97a821dddaa328a",
+          "visualObservation": "not independently isolated; structure and dispatch flow verified"
+        }
+      ],
+      "evidence": [
+        "docs/surface-lighting-occlusion-study.md"
+      ],
+      "constraints": [
+        "Use this pass to understand specialization coverage, not to inject contact-ray shading."
+      ]
+    },
+    {
+      "familyId": "tiled-capsule-occlusion-producer",
+      "stage": "cs",
+      "role": "8x8 depth reduction, capsule candidate culling/list construction, analytical capsule-distance occlusion, and low-resolution occlusion/list output",
+      "status": "verified-structural-upstream-occlusion",
+      "insertionEligibility": "excluded-upstream-producer",
+      "hashes": [
+        {
+          "hash": "b9e2305a994308f2",
+          "visualObservation": "precise capsule ownership and isolated screen coverage remain unverified"
+        }
+      ],
+      "evidence": [
+        "docs/surface-lighting-occlusion-study.md",
+        "docs/capsule-occlusion-ownership-test.md",
+        "artifacts/validation-captures/ff7r-contact-area-baseline-20260831/assembly/b9e2305a994308f2-cs.asm",
+        "artifacts/capsule-occlusion-ownership-diagnostic-20260831-v1/diagnostic-manifest.json"
+      ],
+      "constraints": [
+        "This may participate in dynamic/character capsule shadows, but ownership is not yet proven.",
+        "Its output is depth-aware upsampled before the five surface-lighting evaluators consume the other-occlusion term.",
+        "It is not the Rebirth-style per-light screen-depth contact-ray insertion point.",
+        "The output-isolated Page Up ownership diagnostic is assembled and defaults off, but is not installed or runtime-approved."
+      ]
+    },
+    {
+      "familyId": "directional-cascade-shadow-projection-filter",
+      "stage": "ps",
+      "role": "receiver reconstruction plus four offset gathers from a Texture2DArray shadow map, producing packed shadow factors",
+      "status": "verified-shadow-projection-filter",
+      "insertionEligibility": "excluded-not-directional-light-evaluator",
+      "hashes": [
+        {
+          "hash": "aadc1c2374853914",
+          "visualObservation": "true shadow pass; donor DirectionalLight evaluator equivalence rejected"
+        }
+      ],
+      "evidence": [
+        "docs/shader-coverage-audit-2026-08-31.md",
+        "artifacts/validation-captures/ff7r-contact-area-baseline-20260831/assembly/aadc1c2374853914-ps.asm"
+      ],
+      "constraints": [
+        "Do not substitute this projection/filter pass for the missing directional-light evaluator."
+      ]
+    },
+    {
+      "familyId": "shadow-depth-caster-skinned-vertex",
+      "stage": "vs",
+      "role": "skinned shadow-map caster position transforms using buffered bone matrices and four-weight blending",
+      "status": "verified-shadow-depth-caster-family",
+      "insertionEligibility": "excluded-shadow-map-caster-not-light-evaluation",
+      "hashes": [
+        {
+          "hash": "40b611d369bc7b68",
+          "visualObservation": "structural skinned-caster variant; object ownership not isolated"
+        },
+        {
+          "hash": "40e368977f88f118",
+          "visualObservation": "structural skinned-caster variant; object ownership not isolated"
+        },
+        {
+          "hash": "54bb7b01b6bd5196",
+          "visualObservation": "structural skinned-caster variant; object ownership not isolated"
+        },
+        {
+          "hash": "741aee753c201ee6",
+          "visualObservation": "structural skinned-caster variant; object ownership not isolated"
+        },
+        {
+          "hash": "7d8b4ec350c811b6",
+          "visualObservation": "structural skinned-caster variant; object ownership not isolated"
+        },
+        {
+          "hash": "804f4caa626c8a94",
+          "visualObservation": "structural skinned-caster variant; object ownership not isolated"
+        },
+        {
+          "hash": "8942481559f2a938",
+          "visualObservation": "structural skinned-caster variant; object ownership not isolated"
+        },
+        {
+          "hash": "8c6447577e2664d5",
+          "visualObservation": "structural skinned-caster variant; object ownership not isolated"
+        },
+        {
+          "hash": "fe4c1e062a2a682f",
+          "visualObservation": "structural skinned-caster variant; object ownership not isolated"
+        }
+      ],
+      "evidence": [
+        "docs/shader-coverage-audit-2026-08-31.md",
+        "docs/helix-ue3-shader-transformer-evidence.md",
+        "artifacts/validation-captures/ff7r-contact-area-baseline-20260831/assembly/40b611d369bc7b68-vs.asm"
+      ],
+      "constraints": [
+        "The buffered bone loads and v4.xyzw blend weights prove a skinned caster permutation, not a character-only ownership label.",
+        "These shaders generate shadow-map depth and are not the downstream receiver or per-light contact-shadow evaluator.",
+        "Keep this family distinct from cheaper static caster vertex variants."
+      ]
+    },
+    {
+      "familyId": "shadow-depth-caster-static-vertex",
+      "stage": "vs",
+      "role": "non-skinned static shadow-map caster position transforms",
+      "status": "verified-shadow-depth-caster-family",
+      "insertionEligibility": "excluded-shadow-map-caster-not-light-evaluation",
+      "hashes": [
+        {
+          "hash": "49b1908cb47c0d29",
+          "visualObservation": "structural static-caster variant; object ownership not isolated"
+        },
+        {
+          "hash": "73012b97e989a07e",
+          "visualObservation": "structural static-caster variant; object ownership not isolated"
+        }
+      ],
+      "evidence": [
+        "docs/shader-coverage-audit-2026-08-31.md",
+        "docs/helix-ue3-shader-transformer-evidence.md",
+        "artifacts/validation-captures/ff7r-contact-area-baseline-20260831/assembly/49b1908cb47c0d29-vs.asm"
+      ],
+      "constraints": [
+        "These variants emit ShadowDepth without the buffered bone loads and four-weight blend input used by the skinned family.",
+        "Static versus skinned is a verified structural split; exact mesh ownership remains a runtime observation task.",
+        "Do not apply receiver-side contact-ray code to a shadow-map caster."
+      ]
+    },
+    {
+      "familyId": "shadow-depth-writer-sampled-material-pixel",
+      "stage": "ps",
+      "role": "shadow-depth pixel writers with sampled Texture2D material coverage plus optional volume dithering",
+      "status": "verified-shadow-depth-writer-family",
+      "insertionEligibility": "excluded-shadow-map-caster-not-light-evaluation",
+      "hashes": [
+        {
+          "hash": "07a10abbef52a0f2",
+          "visualObservation": "sampled material-coverage shadow-depth variant; material ownership not isolated"
+        },
+        {
+          "hash": "7faf10d13b4e23ec",
+          "visualObservation": "sampled material-coverage shadow-depth variant; material ownership not isolated"
+        },
+        {
+          "hash": "d20b75105323b71d",
+          "visualObservation": "sampled material-coverage shadow-depth variant; material ownership not isolated"
+        }
+      ],
+      "evidence": [
+        "docs/shader-coverage-audit-2026-08-31.md",
+        "artifacts/validation-captures/ff7r-contact-area-baseline-20260831/assembly/07a10abbef52a0f2-ps.asm"
+      ],
+      "constraints": [
+        "Texture2D sampling proves a material-coverage permutation, not one exclusive masked material type.",
+        "These shaders write SV_DEPTH/oDepth into the shadow map and do not evaluate lighting."
+      ]
+    },
+    {
+      "familyId": "shadow-depth-writer-direct-pixel",
+      "stage": "ps",
+      "role": "direct shadow-depth pixel writers without Texture2D material-coverage sampling",
+      "status": "verified-shadow-depth-writer-family",
+      "insertionEligibility": "excluded-shadow-map-caster-not-light-evaluation",
+      "hashes": [
+        {
+          "hash": "50218fe92282b9b2",
+          "visualObservation": "direct shadow-depth variant; material ownership not isolated"
+        },
+        {
+          "hash": "859e9302e9dc9520",
+          "visualObservation": "direct shadow-depth variant; material ownership not isolated"
+        },
+        {
+          "hash": "ac87aba3f1feac47",
+          "visualObservation": "direct-depth variant with volume lookup/dithering but no Texture2D material sample"
+        },
+        {
+          "hash": "bae7ee67de90d1d4",
+          "visualObservation": "direct shadow-depth variant; material ownership not isolated"
+        }
+      ],
+      "evidence": [
+        "docs/shader-coverage-audit-2026-08-31.md",
+        "artifacts/validation-captures/ff7r-contact-area-baseline-20260831/assembly/50218fe92282b9b2-ps.asm",
+        "artifacts/validation-captures/ff7r-contact-area-baseline-20260831/assembly/ac87aba3f1feac47-ps.asm"
+      ],
+      "constraints": [
+        "Direct means no Texture2D material-coverage sample; one variant still uses a Texture3D lookup for dithering.",
+        "These shaders write SV_DEPTH/oDepth into the shadow map and do not evaluate lighting."
+      ]
+    },
+    {
+      "familyId": "material-gbuffer-producers",
+      "stage": "ps",
+      "role": "six-MRT material/model GBuffer writers",
+      "status": "verified-structural-material-family",
+      "insertionEligibility": "excluded-not-light-evaluation",
+      "hashes": [
+        {
+          "hash": "8b1f6ebe443b5615",
+          "visualObservation": "live Page Up conditional-skip confirmed Cloud clothing disappearance; not proven clothing-only"
+        },
+        {
+          "hash": "e70021f467623b89",
+          "visualObservation": "six-MRT material writer; object/material coverage unresolved"
+        }
+      ],
+      "evidence": [
+        "docs/shader-coverage-audit-2026-08-31.md",
+        "artifacts/clothing-shader-ownership-diagnostic-20260831-v1/diagnostic-manifest.json",
+        "artifacts/validation-captures/ff7r-contact-area-baseline-20260831/assembly/8b1f6ebe443b5615-ps.asm",
+        "artifacts/validation-captures/ff7r-contact-area-baseline-20260831/assembly/e70021f467623b89-ps.asm"
+      ],
+      "constraints": [
+        "Visible object suppression identifies a material writer, not the later light/shadow evaluator.",
+        "Retain separate material classification for future dynamic-model quality analysis.",
+        "Do not paste the contact-ray evaluator into a GBuffer producer."
+      ]
+    },
+    {
+      "familyId": "skinned-material-gbuffer-vertex-producer",
+      "stage": "vs",
+      "role": "buffered multi-weight skinned material/GBuffer vertex producer paired with the confirmed Cloud clothing pixel shader",
+      "status": "verified-live-peer-and-structural-family",
+      "insertionEligibility": "excluded-not-light-or-shadow-depth-evaluation",
+      "hashes": [
+        {
+          "hash": "0fcd2a51d59b6599",
+          "visualObservation": "live 3Dmigoto peer traversal paired this vertex shader with 8b1f6ebe443b5615-ps on the confirmed Cloud clothing draw"
+        }
+      ],
+      "evidence": [
+        "artifacts/clothing-shader-ownership-diagnostic-20260831-v1/evidence/0fcd2a51d59b6599-peer-pairing-log.txt",
+        "artifacts/clothing-shader-ownership-diagnostic-20260831-v1/evidence/0fcd2a51d59b6599-vs_replace.txt",
+        "artifacts/validation-captures/ff7r-contact-area-baseline-20260831/assembly/0fcd2a51d59b6599-vs.asm"
+      ],
+      "constraints": [
+        "This is the vertex side of a material/GBuffer draw, not the separate ShadowDepth caster pass.",
+        "Its buffered bone transforms and two four-weight sets prove a skinned path but do not make later deferred lighting clothing-specific.",
+        "Do not inject the contact-ray evaluator into this vertex producer."
+      ]
+    },
+    {
+      "familyId": "temporal-screen-space-ambient-occlusion",
+      "stage": "ps",
+      "role": "native temporal screen-space ambient-occlusion evaluation and history-aware output",
+      "status": "verified-live-output-isolation-and-strength-control",
+      "insertionEligibility": "eligible-for-native-ao-adapter-not-contact-shadow-or-ssgi",
+      "hashes": [
+        {
+          "hash": "a77b589dce5822d6",
+          "visualObservation": "live output-channel isolation and native AO strength control verified; not evidence of Rebirth SSGI equivalence"
+        }
+      ],
+      "evidence": [
+        "docs/shader-coverage-audit-2026-08-31.md",
+        "artifacts/validation-captures/ff7r-contact-area-baseline-20260831/assembly/a77b589dce5822d6-ps.asm"
+      ],
+      "constraints": [
+        "Keep native temporal SSAO separate from Rebirth ReflectionEnvironment SSGI/AO.",
+        "This pass is not a local-light contact-shadow evaluator.",
+        "Any replacement must preserve temporal history, channel packing, and downstream consumers."
+      ]
+    },
+    {
+      "familyId": "screen-space-reflection-trace-resolve",
+      "stage": "ps",
+      "role": "screen-space reflection trace and resolve variants",
+      "status": "verified-resource-flow-and-retained-header-family",
+      "insertionEligibility": "eligible-only-as-complete-ssr-family-after-live-visual-gate",
+      "hashes": [
+        {
+          "hash": "b2bc6059f9a39c7f",
+          "visualObservation": "resource flow and amplified reflection response verified"
+        },
+        {
+          "hash": "8c9e92a0895efcdc",
+          "visualObservation": "exact old-Remake Helix header identifies an SSR variant with a dithering exception; not executed in saved indoor frames"
+        }
+      ],
+      "evidence": [
+        "docs/shader-coverage-audit-2026-08-31.md",
+        "artifacts/validation-captures/ff7r-contact-area-baseline-20260831/assembly/b2bc6059f9a39c7f-ps.asm",
+        "artifacts/validation-captures/ff7r-contact-area-baseline-20260831/assembly/8c9e92a0895efcdc-ps.asm",
+        "reference/HelixMod-FF7R/FixFiles/ShaderFixesDM/8c9e92a0895efcdc-ps.txt"
+      ],
+      "constraints": [
+        "Treat the two hashes as SSR variants, not interchangeable bytecode.",
+        "Preserve the downstream reflection-environment composite and native material masks.",
+        "Promotion of a visual control still requires a strong reflection-scene A/B test."
+      ]
+    },
+    {
+      "familyId": "reflection-indirect-composite",
+      "stage": "ps",
+      "role": "material-aware reflection-environment, SSR, and indirect-light composition variants",
+      "status": "verified-resource-flow-and-structural-brdf-family",
+      "insertionEligibility": "eligible-consumer-boundary-after-material-ui-and-live-visual-gates",
+      "hashes": [
+        {
+          "hash": "e2aa1c8cb39e0a55",
+          "visualObservation": "verified reflection-environment and SSR composite producer/consumer boundary"
+        },
+        {
+          "hash": "c62607f2631cf47e",
+          "visualObservation": "cache-unique sibling with the same shading-model BRDF signature and final scaling; full-GBuffer/precomputed-lighting inputs"
+        }
+      ],
+      "evidence": [
+        "docs/shader-coverage-audit-2026-08-31.md",
+        "docs/intergrade-ssgi-character-material-compatibility.md",
+        "artifacts/validation-captures/ff7r-contact-area-baseline-20260831/assembly/e2aa1c8cb39e0a55-ps.asm",
+        "artifacts/validation-captures/ff7r-contact-area-baseline-20260831/assembly/c62607f2631cf47e-ps.asm"
+      ],
+      "constraints": [
+        "This is the downstream material-aware composite boundary, not proof that Remake has Rebirth SampleGI or the same SSGI producer.",
+        "Do not fold temporal SSAO into this family merely because the donor combines AO and reflection-environment work.",
+        "Any injected indirect light must preserve material/shading-model branches, SSR input, alpha, and UI separation."
+      ]
+    }
+  ],
+  "missingFamilies": [
+    {
+      "familyId": "directional-light-evaluator",
+      "requiredScene": "outdoor scene with dominant directional lighting",
+      "reason": "No donor-equivalent directional light-evaluation pass is proven in the indoor baseline."
+    },
+    {
+      "familyId": "local-light-ies-evaluator",
+      "requiredScene": "scene with a clearly patterned IES local light",
+      "reason": "No IES-specific identity is proven among the five current compute variants."
+    },
+    {
+      "familyId": "regional-tiled-surface-light-variants",
+      "requiredScene": "at least one additional area",
+      "reason": "Shader compilation is regional; unseen compatible or exceptional permutations remain possible."
+    },
+    {
+      "familyId": "capsule-occlusion-ownership",
+      "requiredScene": "focused dynamic-character/capsule-shadow capture",
+      "reason": "b9e structure and resource flow prove capsule occlusion, but not exact object ownership or isolated visual coverage."
+    },
+    {
+      "familyId": "dynamic-shadow-receiver-lighting-permutations",
+      "requiredScene": "character and static geometry receiving the same movable light in at least two areas",
+      "reason": "The retained ShadowDepth shaders prove separate skinned/static caster permutations, but do not prove every downstream receiver/light-evaluation permutation that consumes their shadow maps."
+    }
+  ]
+}

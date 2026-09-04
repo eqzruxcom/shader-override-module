@@ -1,0 +1,13 @@
+diff --git a/tests/ShaderFamilyHost/Test-ContactShadowFamilyAutomaticProbe.ps1 b/tests/ShaderFamilyHost/Test-ContactShadowFamilyAutomaticProbe.ps1
+--- a/tests/ShaderFamilyHost/Test-ContactShadowFamilyAutomaticProbe.ps1
++++ b/tests/ShaderFamilyHost/Test-ContactShadowFamilyAutomaticProbe.ps1
+@@ -157,8 +157,7 @@ foreach ($hash in $negativeHashes) {
+     if ($log.Contains($unexpected)) {
+         $failures.Add("unrelated compute shader matched automatically: $hash")
+     }
+-    $unexpectedExports = @(Get-ChildItem -LiteralPath (Join-Path $runRoot 'ShaderCache') \
+-        -Filter "$hash-cs_*" -File -ErrorAction SilentlyContinue)
++    $unexpectedExports = @(Get-ChildItem -LiteralPath (Join-Path $runRoot 'ShaderCache') -Filter "$hash-cs_*" -File -ErrorAction SilentlyContinue)
+     if ($unexpectedExports.Count) {
+         $failures.Add("unrelated compute shader was exported as patched: $hash")
+     }

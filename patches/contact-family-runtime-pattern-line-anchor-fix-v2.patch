@@ -1,0 +1,67 @@
+diff --git a/src/Adapters/FF7RemakeIntergrade/ContactShadowFamilyAudit.ini b/src/Adapters/FF7RemakeIntergrade/ContactShadowFamilyAudit.ini
+--- a/src/Adapters/FF7RemakeIntergrade/ContactShadowFamilyAudit.ini
++++ b/src/Adapters/FF7RemakeIntergrade/ContactShadowFamilyAudit.ini
+@@ -15,33 +15,33 @@ max_instructions = 1008
+ 
+ [ShaderRegexUE4FXRemakeTiledSurfaceLightContactAudit.Pattern]
+-[ \t]*uge (?P<light_index>r\d+)\.(?P<light_index_component>[xyzw]), (?P<light_loop>r\d+)\.w, r0\.w\n
+-[ \t]*breakc_nz (?P=light_index)\.(?P=light_index_component)\n
+-[ \t]*and (?P=light_index)\.(?P=light_index_component), (?P=light_loop)\.w, l\(-4\)\n
+-[ \t]*iadd (?P=light_index)\.(?P=light_index_component), (?P=light_index)\.(?P=light_index_component), l\(16\)\n
+-[ \t]*ld_structured_indexable\(structured_buffer, stride=80\)\(mixed,mixed,mixed,mixed\) (?P=light_index)\.(?P=light_index_component), r0\.x, (?P=light_index)\.(?P=light_index_component), (?P<light_list>t1[12])\.xxxx\n
+-[ \t]*bfi (?P<light_shift>r\d+)\.(?P<light_shift_component>[xyzw]), l\(2\), l\(3\), (?P=light_loop)\.w, l\(0\)\n
+-[ \t]*ushr (?P=light_index)\.(?P=light_index_component), (?P=light_index)\.(?P=light_index_component), (?P=light_shift)\.(?P=light_shift_component)\n
+-[ \t]*and (?P=light_index)\.(?P=light_index_component), (?P=light_index)\.(?P=light_index_component), l\(255\)\n
++(?m)^[ \t]*uge (?P<light_index>r\d+)\.(?P<light_index_component>[xyzw]), (?P<light_loop>r\d+)\.w, r0\.w\n
++^[ \t]*breakc_nz (?P=light_index)\.(?P=light_index_component)\n
++^[ \t]*and (?P=light_index)\.(?P=light_index_component), (?P=light_loop)\.w, l\(-4\)\n
++^[ \t]*iadd (?P=light_index)\.(?P=light_index_component), (?P=light_index)\.(?P=light_index_component), l\(16\)\n
++^[ \t]*ld_structured_indexable\(structured_buffer, stride=80\)\(mixed,mixed,mixed,mixed\) (?P=light_index)\.(?P=light_index_component), r0\.x, (?P=light_index)\.(?P=light_index_component), (?P<light_list>t1[12])\.xxxx\n
++^[ \t]*bfi (?P<light_shift>r\d+)\.(?P<light_shift_component>[xyzw]), l\(2\), l\(3\), (?P=light_loop)\.w, l\(0\)\n
++^[ \t]*ushr (?P=light_index)\.(?P=light_index_component), (?P=light_index)\.(?P=light_index_component), (?P=light_shift)\.(?P=light_shift_component)\n
++^[ \t]*and (?P=light_index)\.(?P=light_index_component), (?P=light_index)\.(?P=light_index_component), l\(255\)\n
+ (?:[^\n]*\n)*?
+-[ \t]*mov (?P<diffuse>r\d+)\.xyz, l\(0,0,0,0\)\n
+-[ \t]*mov (?P<specular>r\d+)\.(?P<specular_mask>[xyzw]{3}), l\(0,0,0,0\)\n
+-[ \t]*endif[ \t]*\n
+-[ \t]*else[ \t]*\n
+-[ \t]*mov (?P=diffuse)\.xyz, l\(0,0,0,0\)\n
+-[ \t]*mov (?P=specular)\.(?P=specular_mask), l\(0,0,0,0\)\n
+-[ \t]*endif[ \t]*\n
+-[ \t]*add (?P<diffuse_accumulator>r\d+)\.xyz, (?P=diffuse_accumulator)\.xyzx, (?P=diffuse)\.xyzx\n
+-[ \t]*add (?P<specular_accumulator>r\d+)\.xyz, (?P=specular_accumulator)\.xyzx, (?P=specular)\.(?P<specular_pack>[xyzw]{4})\n
+-[ \t]*iadd (?P=light_loop)\.w, (?P=light_loop)\.w, l\(1\)\n
+-[ \t]*endloop[ \t]*\n
+-[ \t]*ult r0\.xy, r1\.xyxx, cb0\[1\]\.zwzz\n
+-[ \t]*and r0\.x, r0\.y, r0\.x\n
+-[ \t]*if_nz r0\.x\n
+-[ \t]*ld_indexable\(texture2d\)\(float,float,float,float\) r0\.xyzw, r1\.xyzz, (?P<scene_color>t[89])\.xyzw\n
+-[ \t]*add r2\.xyz, (?P=diffuse_accumulator)\.xyzx, (?P=specular_accumulator)\.xyzx\n
+-[ \t]*dp3 r2\.w, (?P=diffuse_accumulator)\.xyzx, l\(0\.212600, 0\.715200, 0\.072200, 0\.000000\)\n
+-[ \t]*mad r0\.xyzw, r0\.xyzw, cb1\[128\]\.yyyy, r2\.xyzw\n
+-[ \t]*mul r0\.xyzw, r0\.xyzw, cb1\[128\]\.xxxx\n
+-[ \t]*store_uav_typed u0\.xyzw, r1\.xyyy, r0\.xyzw\n
+-[ \t]*endif[ \t]*\n
+-[ \t]*ret[ \t]*
++^[ \t]*mov (?P<diffuse>r\d+)\.xyz, l\(0,0,0,0\)\n
++^[ \t]*mov (?P<specular>r\d+)\.(?P<specular_mask>[xyzw]{3}), l\(0,0,0,0\)\n
++^[ \t]*endif[ \t]*\n
++^[ \t]*else[ \t]*\n
++^[ \t]*mov (?P=diffuse)\.xyz, l\(0,0,0,0\)\n
++^[ \t]*mov (?P=specular)\.(?P=specular_mask), l\(0,0,0,0\)\n
++^[ \t]*endif[ \t]*\n
++^[ \t]*add (?P<diffuse_accumulator>r\d+)\.xyz, (?P=diffuse_accumulator)\.xyzx, (?P=diffuse)\.xyzx\n
++^[ \t]*add (?P<specular_accumulator>r\d+)\.xyz, (?P=specular_accumulator)\.xyzx, (?P=specular)\.(?P<specular_pack>[xyzw]{4})\n
++^[ \t]*iadd (?P=light_loop)\.w, (?P=light_loop)\.w, l\(1\)\n
++^[ \t]*endloop[ \t]*\n
++^[ \t]*ult r0\.xy, r1\.xyxx, cb0\[1\]\.zwzz\n
++^[ \t]*and r0\.x, r0\.y, r0\.x\n
++^[ \t]*if_nz r0\.x\n
++^[ \t]*ld_indexable\(texture2d\)\(float,float,float,float\) r0\.xyzw, r1\.xyzz, (?P<scene_color>t[89])\.xyzw\n
++^[ \t]*add r2\.xyz, (?P=diffuse_accumulator)\.xyzx, (?P=specular_accumulator)\.xyzx\n
++^[ \t]*dp3 r2\.w, (?P=diffuse_accumulator)\.xyzx, l\(0\.212600, 0\.715200, 0\.072200, 0\.000000\)\n
++^[ \t]*mad r0\.xyzw, r0\.xyzw, cb1\[128\]\.yyyy, r2\.xyzw\n
++^[ \t]*mul r0\.xyzw, r0\.xyzw, cb1\[128\]\.xxxx\n
++^[ \t]*store_uav_typed u0\.xyzw, r1\.xyyy, r0\.xyzw\n
++^[ \t]*endif[ \t]*\n
++^[ \t]*ret[ \t]*

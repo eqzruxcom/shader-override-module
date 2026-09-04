@@ -1,0 +1,51 @@
+diff --git a/tests/ShaderFamilyHost/Test-ContactShadowFamilyAutomaticProbe.ps1 b/tests/ShaderFamilyHost/Test-ContactShadowFamilyAutomaticProbe.ps1
+--- a/tests/ShaderFamilyHost/Test-ContactShadowFamilyAutomaticProbe.ps1
++++ b/tests/ShaderFamilyHost/Test-ContactShadowFamilyAutomaticProbe.ps1
+@@ -12,6 +12,13 @@ $positiveHashes = @(
+     '62b33a2d1e505241',
+     'c30cdc8365df9840'
+ )
++$expectedTempDeclarations = @{
++    '08bb8764f1840179' = 32
++    '0e97888f9a8767da' = 31
++    '5a9fbefe0ab6f815' = 30
++    '62b33a2d1e505241' = 25
++    'c30cdc8365df9840' = 40
++}
+ $negativeHashes = @(
+     'b9e2305a994308f2',
+     'c814bac1ac75b35e',
+@@ -79,7 +86,7 @@ if (-not $configuration.Contains('temps = family_probe')) {
+ $configuration += @'
+ 
+ [ShaderRegexUE4FXRemakeTiledSurfaceLightContactAudit.Pattern.Replace]
+-mov ${family_probe}.x, l(0)
++mov ${family_probe}.x, l(0)\n
+ ${0}
+ '@
+ [IO.File]::WriteAllText(
+@@ -147,10 +154,21 @@ foreach ($hash in $positiveHashes) {
+         $failures.Add("missing exported patched assembly: $hash")
+     }
+     else {
+         $exportedText = [IO.File]::ReadAllText($exportPath)
+-        if (-not $exportedText.Contains('mov r') -or
+-            -not $exportedText.Contains('// [ShaderRegexUE4FXRemakeTiledSurfaceLightContactAudit]')) {
+-            $failures.Add("exported assembly lacks the automatic family marker: $hash")
++        if (-not $exportedText.Contains('//[ShaderRegexUE4FXRemakeTiledSurfaceLightContactAudit]')) {
++            $failures.Add("exported assembly lacks the family attribution: $hash")
++        }
++        $tempDeclaration = [regex]::Match($exportedText, '(?m)^dcl_temps (?<count>\d+)\r?$')
++        if (-not $tempDeclaration.Success -or
++            [int]$tempDeclaration.Groups['count'].Value -ne $expectedTempDeclarations[$hash]) {
++            $failures.Add("temporary register allocation was not increased exactly once: $hash")
++        }
++        $probeInstructions = [regex]::Matches($exportedText, '(?m)^mov r\d+\.x, l\(0\)\r?$')
++        if ($probeInstructions.Count -ne 1) {
++            $failures.Add("exported assembly does not contain exactly one standalone probe instruction: $hash")
++        }
++        if ($exportedText -match 'l\(0\)[ \t]+uge ') {
++            $failures.Add("probe instruction was merged with the original instruction: $hash")
+         }
+         $exportedPaths.Add($exportPath)
+     }

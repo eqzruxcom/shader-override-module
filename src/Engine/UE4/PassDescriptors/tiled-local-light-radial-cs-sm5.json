@@ -1,0 +1,142 @@
+{
+  "schemaVersion": 1,
+  "id": "ue4-tiled-local-light-radial-cs-sm5",
+  "family": "local-lighting",
+  "displayName": "UE4 tiled deferred local-light radial evaluator",
+  "description": "Compute pass that reconstructs a shaded world position, iterates a per-tile local-light list, reads dynamically indexed light position and inverse radius, evaluates native finite-radius attenuation, and accumulates the result into a typed 2D UAV.",
+  "stages": [
+    "cs"
+  ],
+  "shaderModels": [
+    "cs_5_0"
+  ],
+  "hashFastPaths": [
+    {
+      "adapter": "FF7RemakeIntergrade",
+      "hash": "08bb8764f1840179",
+      "evidence": "Verified local-light compute variant; structural radial-family scanner found one compatible position/radius/attenuation chain."
+    },
+    {
+      "adapter": "FF7RemakeIntergrade",
+      "hash": "0e97888f9a8767da",
+      "evidence": "Verified local-light compute variant; structural radial-family scanner found one compatible position/radius/attenuation chain."
+    },
+    {
+      "adapter": "FF7RemakeIntergrade",
+      "hash": "5a9fbefe0ab6f815",
+      "evidence": "Verified local-light compute variant; structural radial-family scanner found one compatible position/radius/attenuation chain."
+    },
+    {
+      "adapter": "FF7RemakeIntergrade",
+      "hash": "62b33a2d1e505241",
+      "evidence": "Verified broad local-light compute variant; structural radial-family scanner found one compatible position/radius/attenuation chain."
+    },
+    {
+      "adapter": "FF7RemakeIntergrade",
+      "hash": "c30cdc8365df9840",
+      "evidence": "Verified local-light compute variant; structural radial-family scanner found one compatible position/radius/attenuation chain."
+    }
+  ],
+  "semanticSignature": {
+    "checks": [
+      {
+        "id": "dynamic-light-direction-parameters",
+        "pattern": "^dcl_constantbuffer\\s+CB3\\[1024\\],\\s+dynamicIndexed\\s*$",
+        "minCount": 1,
+        "maxCount": 1,
+        "meaning": "The verified family dynamically indexes the local-light direction, spot, and auxiliary parameter array."
+      },
+      {
+        "id": "dynamic-light-position-radius-color",
+        "pattern": "^dcl_constantbuffer\\s+CB4\\[768\\],\\s+dynamicIndexed\\s*$",
+        "minCount": 1,
+        "maxCount": 1,
+        "meaning": "The verified family dynamically indexes light position, inverse radius, color, and type data."
+      },
+      {
+        "id": "tiled-light-index-buffer",
+        "pattern": "^dcl_resource_buffer\\s+\\(uint,uint,uint,uint\\)\\s+t\\d+\\s*$",
+        "minCount": 1,
+        "maxCount": 1,
+        "meaning": "A uint buffer supplies the packed per-tile light-list entry."
+      },
+      {
+        "id": "tiled-light-list-structured-buffer",
+        "pattern": "^dcl_resource_structured\\s+t\\d+,\\s*80\\s*$",
+        "minCount": 1,
+        "maxCount": 1,
+        "meaning": "The verified Remake variants use an 80-byte structured tile/light-list record."
+      },
+      {
+        "id": "typed-lighting-output",
+        "pattern": "^dcl_uav_typed_texture2d\\s+\\(float,float,float,float\\)\\s+u0\\s*$",
+        "minCount": 1,
+        "maxCount": 1,
+        "meaning": "The pass accumulates deferred local-light radiance into one typed 2D output."
+      },
+      {
+        "id": "sixteen-square-dispatch",
+        "pattern": "^dcl_thread_group\\s+16,\\s*16,\\s*1\\s*$",
+        "minCount": 1,
+        "maxCount": 1,
+        "meaning": "The verified family shades a 16-by-16 screen tile per compute group."
+      },
+      {
+        "id": "dynamic-light-position-read",
+        "pattern": "^\\s*add\\s+r\\d+\\.xyz,\\s*-r\\d+\\.yzwy,\\s*cb4\\[r\\d+\\.[xyzw]\\s+\\+\\s+0\\]\\.xyzx\\s*$",
+        "minCount": 1,
+        "maxCount": 1,
+        "meaning": "A per-light vector is formed from the reconstructed world position and dynamically indexed light position."
+      },
+      {
+        "id": "dynamic-inverse-radius-square",
+        "pattern": "^\\s*mul\\s+r\\d+\\.[xyzw],\\s*cb4\\[r\\d+\\.[xyzw]\\s+\\+\\s+0\\]\\.w,\\s*cb4\\[r\\d+\\.[xyzw]\\s+\\+\\s+0\\]\\.w\\s*$",
+        "minCount": 1,
+        "maxCount": 1,
+        "meaning": "The inverse light radius is squared before multiplying squared world-space distance."
+      },
+      {
+        "id": "native-finite-radius-polynomial",
+        "pattern": "^\\s*mad\\s+r\\d+\\.[xyzw],\\s*-r\\d+\\.[xyzw],\\s*r\\d+\\.[xyzw],\\s*l\\(1\\.000000\\)\\s*$",
+        "minCount": 1,
+        "maxCount": null,
+        "meaning": "The local-light path contains the native one-minus-square finite-radius attenuation polynomial."
+      },
+      {
+        "id": "dynamic-light-type-bypass",
+        "pattern": "^\\s*ne\\s+r\\d+\\.[xyzw],\\s*l\\(0\\.000000\\),\\s*cb4\\[r\\d+\\.[xyzw]\\s+\\+\\s+512\\]\\.w\\s*$",
+        "minCount": 1,
+        "maxCount": 1,
+        "meaning": "A dynamically indexed light-type parameter selects the radial attenuation bypass path."
+      }
+    ]
+  },
+  "runtimeContract": {
+    "verifiedStage": "cs_5_0",
+    "nativeRadialEquation": "attenuation = max(0, 1 - (distanceSquared * inverseRadiusSquared)^2)^2",
+    "specializedVerifier": "tools/Find-IntergradeLocalLightRadialFamilies.ps1",
+    "specializedVerifierRequirement": "The generic descriptor is discovery-only. Automatic transformation requires exactly one register-consistent position/distance/radius/polynomial chain and zero structural exceptions from the specialized verifier.",
+    "transformationSafety": [
+      "Preserve zero attenuation at normalized radius one unless the engine light bounds and tile-list culling are also changed.",
+      "Do not infer a larger physical light radius by changing inverse radius in this shader alone.",
+      "Do not alter contact shadows, shadow-map attenuation, spot attenuation, IES evaluation, BRDF terms, AO, or GI as part of a radial-falloff transformation.",
+      "Flag any shader with multiple compatible radial blocks, mismatched dynamic indices, changed CB3/CB4 layouts, or changed output/dispatch bindings for manual review."
+    ],
+    "adapterMustConfirm": [
+      "dynamically indexed CB3 and CB4 layouts",
+      "per-tile list bindings",
+      "world-position reconstruction input",
+      "exact native radial attenuation chain",
+      "single typed local-light output",
+      "live Page Down native bypass and Page Up experiment ownership"
+    ]
+  },
+  "sourceEvidence": [
+    "artifacts/analysis/intergrade-contact-area-local-light-radial-family-scan-v1.json",
+    "artifacts/validation-captures/ff7r-contact-area-baseline-20260831/assembly/08bb8764f1840179-cs.asm",
+    "artifacts/validation-captures/ff7r-contact-area-baseline-20260831/assembly/0e97888f9a8767da-cs.asm",
+    "artifacts/validation-captures/ff7r-contact-area-baseline-20260831/assembly/5a9fbefe0ab6f815-cs.asm",
+    "artifacts/validation-captures/ff7r-contact-area-baseline-20260831/assembly/62b33a2d1e505241-cs.asm",
+    "artifacts/validation-captures/ff7r-contact-area-baseline-20260831/assembly/c30cdc8365df9840-cs.asm"
+  ]
+}

@@ -1,0 +1,12 @@
+diff --git a/tools/New-IntergradeContactShadowFamilyIni.ps1 b/tools/New-IntergradeContactShadowFamilyIni.ps1
+--- a/tools/New-IntergradeContactShadowFamilyIni.ps1
++++ b/tools/New-IntergradeContactShadowFamilyIni.ps1
+@@ -66,7 +66,7 @@ function Get-AddedRuns {
+         throw "Accepted shader does not preserve every original instruction in order: $Hash"
+     }
+     if ($runs.Count -ne 2 -or $runs[0].Count -ne 1 -or $runs[1].Count -ne 1971) {
+-        throw "Unexpected accepted insertion layout for $Hash: $($runs.Count) runs"
++        throw "Unexpected accepted insertion layout for ${Hash}: $($runs.Count) runs"
+     }
+     return ,$runs
+ }

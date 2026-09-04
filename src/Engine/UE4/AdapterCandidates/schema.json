@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.rebirth-effects.invalid/ue4-adapter-candidate-report.schema.json",
+  "title": "Fail-closed UE4 adapter candidate report",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "captureId",
+    "status",
+    "runtimeEligible",
+    "failClosed",
+    "gameExecutable",
+    "source",
+    "candidateCount",
+    "candidates",
+    "generatedAtUtc"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "captureId": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]+$" },
+    "status": { "const": "scan-evidence-only" },
+    "runtimeEligible": { "const": false },
+    "failClosed": { "const": true },
+    "gameExecutable": {
+      "type": "object",
+      "required": ["name", "path", "sha256"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "path": { "type": "string", "minLength": 1 },
+        "sha256": { "type": "string", "pattern": "^[0-9A-F]{64}$" }
+      },
+      "additionalProperties": false
+    },
+    "source": {
+      "type": "object",
+      "required": ["captureManifest", "captureManifestSha256", "semanticReport", "semanticReportSha256", "installManifest", "installManifestSha256"],
+      "properties": {
+        "captureManifest": { "type": "string", "minLength": 1 },
+        "captureManifestSha256": { "type": "string", "pattern": "^[0-9A-F]{64}$" },
+        "semanticReport": { "type": "string", "minLength": 1 },
+        "semanticReportSha256": { "type": "string", "pattern": "^[0-9A-F]{64}$" },
+        "installManifest": { "type": "string", "minLength": 1 },
+        "installManifestSha256": { "type": "string", "pattern": "^[0-9A-F]{64}$" }
+      },
+      "additionalProperties": false
+    },
+    "candidateCount": { "type": "integer", "minimum": 0 },
+    "candidates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "candidateId",
+          "descriptorId",
+          "family",
+          "displayName",
+          "shaderHash",
+          "stage",
+          "shaderModel",
+          "semanticChecksPassed",
+          "status",
+          "runtimeEligible",
+          "missingGates",
+          "fastPathAdapters",
+          "semanticEvidence",
+          "capturedArtifacts"
+        ],
+        "properties": {
+          "candidateId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]+/[0-9a-f]{16}-(ps|vs|cs|gs|hs|ds)$" },
+          "descriptorId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]+$" },
+          "family": { "type": "string", "minLength": 1 },
+          "displayName": { "type": "string", "minLength": 1 },
+          "shaderHash": { "type": "string", "pattern": "^[0-9a-f]{16}$" },
+          "stage": { "enum": ["ps", "vs", "cs", "gs", "hs", "ds"] },
+          "shaderModel": { "type": "string", "pattern": "^(ps|vs|cs|gs|hs|ds)_5_0$" },
+          "semanticChecksPassed": { "type": "integer", "minimum": 1 },
+          "status": { "const": "scan-evidence-only" },
+          "runtimeEligible": { "const": false },
+          "missingGates": {
+            "type": "array",
+            "minItems": 5,
+            "uniqueItems": true,
+            "items": {
+              "enum": [
+                "binding-contract",
+                "replacement-shader",
+                "control-pack",
+                "live-visual-validation",
+                "runtime-eligibility-review"
+              ]
+            }
+          },
+          "fastPathAdapters": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true },
+          "semanticEvidence": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["id", "count", "minCount", "maxCount", "satisfied", "meaning"],
+              "properties": {
+                "id": { "type": "string", "minLength": 1 },
+                "count": { "type": "integer", "minimum": 0 },
+                "minCount": { "type": "integer", "minimum": 0 },
+                "maxCount": { "type": ["integer", "null"], "minimum": 0 },
+                "satisfied": { "const": true },
+                "meaning": { "type": "string", "minLength": 1 }
+              },
+              "additionalProperties": false
+            }
+          },
+          "capturedArtifacts": {
+            "type": "object",
+            "required": ["binary", "binarySha256", "assembly", "assemblySha256"],
+            "properties": {
+              "binary": { "type": "string", "minLength": 1 },
+              "binarySha256": { "type": "string", "pattern": "^[0-9A-F]{64}$" },
+              "assembly": { "type": "string", "minLength": 1 },
+              "assemblySha256": { "type": "string", "pattern": "^[0-9A-F]{64}$" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "generatedAtUtc": { "type": "string", "format": "date-time" }
+  },
+  "additionalProperties": false
+}

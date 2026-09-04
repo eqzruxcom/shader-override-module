@@ -1,0 +1,17 @@
+diff --git a/tests/ShaderFamilyHost/Test-ContactShadowFamilyAutomaticProbe.ps1 b/tests/ShaderFamilyHost/Test-ContactShadowFamilyAutomaticProbe.ps1
+--- a/tests/ShaderFamilyHost/Test-ContactShadowFamilyAutomaticProbe.ps1
++++ b/tests/ShaderFamilyHost/Test-ContactShadowFamilyAutomaticProbe.ps1
+@@ -166,9 +166,11 @@ foreach ($hash in $positiveHashes) {
+             [int]$tempDeclaration.Groups['count'].Value -ne $expectedTempDeclarations[$hash]) {
+             $failures.Add("temporary register allocation was not increased exactly once: $hash")
+         }
+-        $probeInstructions = [regex]::Matches($exportedText, '(?m)^mov r\d+\.x, l\(0\)\r?$')
++        $probeRegister = $expectedTempDeclarations[$hash] - 1
++        $probePattern = "(?m)^mov r$probeRegister\.x, l\(0\)\r?$"
++        $probeInstructions = [regex]::Matches($exportedText, $probePattern)
+         if ($probeInstructions.Count -ne 1) {
+-            $failures.Add("exported assembly does not contain exactly one standalone probe instruction: $hash")
++            $failures.Add("exported assembly does not contain exactly one standalone r$probeRegister probe instruction: $hash")
+         }
+         if ($exportedText -match 'l\(0\)[ \t]+uge ') {
+             $failures.Add("probe instruction was merged with the original instruction: $hash")

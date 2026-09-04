@@ -1,0 +1,82 @@
+diff --git a/tools/New-IntergradeAcceptedContactShadowFamilyIni.ps1 b/tools/New-IntergradeAcceptedContactShadowFamilyIni.ps1
+--- a/tools/New-IntergradeAcceptedContactShadowFamilyIni.ps1
++++ b/tools/New-IntergradeAcceptedContactShadowFamilyIni.ps1
+@@ -245,7 +245,8 @@ function New-FamilySection(
+     [string[]]$TemplateLines,
+     [int]$TemporaryCount,
+     [int]$MinimumInstructions,
+-    [int]$MaximumInstructions) {
++    [int]$MaximumInstructions,
++    [string]$EnableVariable) {
+     $temps = (0..($TemporaryCount - 1) | ForEach-Object { 't' + $_.ToString('00') }) -join ' '
+     $requiredTextures = if ($Depth -eq 't5') {
+         't0, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12'
+@@ -266,7 +267,7 @@ function New-FamilySection(
+ max_instructions = $MaximumInstructions
+ x29 = `$ue4fx_contact_edge_width_v2
+ y29 = `$ue4fx_contact_edge_cutoff_v2
+-x31 = `$ue4fx_master_injected_v1
++x31 = `$ue4fx_master_injected_v1 * $EnableVariable
+ y31 = -1
+ z31 = 1
+ w31 = 100
+@@ -285,22 +286,43 @@ function New-FamilySection(
+ $header = @"
+ ; Generated automatic equivalent of the accepted FF7 Remake contact-shadow state.
+ ; Four variants retain the first-working Rebirth contact code; only 62b retains //Frustum Fix.
+ ; F10 remains native reload. Page Down is the accepted-code master. Page Up and F2 remain free.
++; Number row 1/2/3 independently identify the Base-T5/Base-T4/Frustum-T4 families.
+ [Constants]
+ global `$ue4fx_master_injected_v1 = 1
+ global `$ue4fx_contact_edge_width_v2 = 0.06
+ global `$ue4fx_contact_edge_cutoff_v2 = 0
++global `$ue4fx_contact_base_t5_enabled_v1 = 1
++global `$ue4fx_contact_base_t4_enabled_v1 = 1
++global `$ue4fx_contact_frustum_t4_enabled_v1 = 1
+ 
+ [KeyUE4FXMasterPageDown]
+ key = no_modifiers VK_NEXT
+ type = cycle
+ smart = true
+ `$ue4fx_master_injected_v1 = 0, 1
++
++[KeyUE4FXContactBaseT5Number1]
++key = no_modifiers 1
++type = cycle
++smart = true
++`$ue4fx_contact_base_t5_enabled_v1 = 0, 1
++
++[KeyUE4FXContactBaseT4Number2]
++key = no_modifiers 2
++type = cycle
++smart = true
++`$ue4fx_contact_base_t4_enabled_v1 = 0, 1
++
++[KeyUE4FXContactFrustumT4Number3]
++key = no_modifiers 3
++type = cycle
++smart = true
++`$ue4fx_contact_frustum_t4_enabled_v1 = 0, 1
+ "@
+ $sections = @(
+-    New-FamilySection -Name 'ShaderRegexUE4FXRemakeContactBaseT5' -Depth 't5' -LightList 't12' -SceneColor 't9' -TemplateLines $baseTemplateLines -TemporaryCount 15 -MinimumInstructions 645 -MaximumInstructions 1008
+-    New-FamilySection -Name 'ShaderRegexUE4FXRemakeContactBaseT4' -Depth 't4' -LightList 't11' -SceneColor 't8' -TemplateLines $baseTemplateLines -TemporaryCount 15 -MinimumInstructions 631 -MaximumInstructions 631
+-    New-FamilySection -Name 'ShaderRegexUE4FXRemakeContactFrustumT4' -Depth 't4' -LightList 't11' -SceneColor 't8' -TemplateLines $frustumTemplateLines -TemporaryCount 16 -MinimumInstructions 478 -MaximumInstructions 478
++    New-FamilySection -Name 'ShaderRegexUE4FXRemakeContactBaseT5' -Depth 't5' -LightList 't12' -SceneColor 't9' -TemplateLines $baseTemplateLines -TemporaryCount 15 -MinimumInstructions 645 -MaximumInstructions 1008 -EnableVariable '$ue4fx_contact_base_t5_enabled_v1'
++    New-FamilySection -Name 'ShaderRegexUE4FXRemakeContactBaseT4' -Depth 't4' -LightList 't11' -SceneColor 't8' -TemplateLines $baseTemplateLines -TemporaryCount 15 -MinimumInstructions 631 -MaximumInstructions 631 -EnableVariable '$ue4fx_contact_base_t4_enabled_v1'
++    New-FamilySection -Name 'ShaderRegexUE4FXRemakeContactFrustumT4' -Depth 't4' -LightList 't11' -SceneColor 't8' -TemplateLines $frustumTemplateLines -TemporaryCount 16 -MinimumInstructions 478 -MaximumInstructions 478 -EnableVariable '$ue4fx_contact_frustum_t4_enabled_v1'
+ )
+ 
+ [IO.Directory]::CreateDirectory($outputRoot) | Out-Null
+@@ -331,6 +353,11 @@ $report = [ordered]@{
+         [ordered]@{ name='ShaderRegexUE4FXRemakeContactBaseT4'; members=@('5a9fbefe0ab6f815') },
+         [ordered]@{ name='ShaderRegexUE4FXRemakeContactFrustumT4'; members=@('62b33a2d1e505241') }
+     )
++    diagnosticKeys = [ordered]@{
++        number1 = 'ShaderRegexUE4FXRemakeContactBaseT5'
++        number2 = 'ShaderRegexUE4FXRemakeContactBaseT4'
++        number3 = 'ShaderRegexUE4FXRemakeContactFrustumT4'
++    }
+     variants = @($variantEvidence)
+     outputIni = $familyIniPath
+     outputIniSha256 = (Get-FileHash -Algorithm SHA256 -LiteralPath $familyIniPath).Hash

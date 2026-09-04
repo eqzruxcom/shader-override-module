@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- Build-only overrides for the SDK files available on this machine.
+       Import with ForceImportBeforeCppTargets; do not edit pinned sources or
+       system SDK registration. Keep per-project intermediate files separate. -->
+  <PropertyGroup>
+    <OutDir>$(MSBuildThisFileDirectory)..\artifacts\shader-assembler-build\bin\</OutDir>
+    <IntDir>$(MSBuildThisFileDirectory)..\artifacts\shader-assembler-build\obj\$(MSBuildProjectName)\</IntDir>
+    <IncludePath>$(SolutionDir);$(SolutionDir)crc32c-hw-1.0.5\include;$(SolutionDir)BinaryDecompiler;$(SolutionDir)BinaryDecompiler\include;$(WindowsSdkDir)Include\$(WindowsTargetPlatformVersion)\ucrt;$(WindowsSdkDir)Include\$(WindowsTargetPlatformVersion)\shared;$(WindowsSdkDir)Include\$(WindowsTargetPlatformVersion)\um;$(WindowsSdkDir)Include\$(WindowsTargetPlatformVersion)\winrt;$(VCToolsInstallDir)include</IncludePath>
+    <LibraryPath>$(WindowsSdkDir)Lib\$(WindowsTargetPlatformVersion)\ucrt\x64;$(WindowsSdkDir)Lib\$(WindowsTargetPlatformVersion)\um\x64;$(VCToolsInstallDir)lib\x64</LibraryPath>
+  </PropertyGroup>
+</Project>

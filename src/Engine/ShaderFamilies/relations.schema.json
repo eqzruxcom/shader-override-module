@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.rebirth-effects.invalid/shader-family-relations.schema.json",
+  "title": "Explicit shader-family relations",
+  "type": "object",
+  "required": ["schemaVersion", "catalogs", "relations", "unresolved"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "catalogs": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "required": ["id", "path", "sha256"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]+$" },
+          "path": { "type": "string", "minLength": 1 },
+          "sha256": { "type": "string", "pattern": "^[0-9A-F]{64}$" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "relations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["from", "to", "relationType", "status", "evidence", "constraints"],
+        "properties": {
+          "from": { "$ref": "#/$defs/familyReference" },
+          "to": { "$ref": "#/$defs/familyReference" },
+          "relationType": { "type": "string", "minLength": 1 },
+          "status": { "type": "string", "minLength": 1 },
+          "evidence": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+          "constraints": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } }
+        },
+        "additionalProperties": false
+      }
+    },
+    "unresolved": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["from", "expectedRole", "reason", "requiredEvidence"],
+        "properties": {
+          "from": { "$ref": "#/$defs/familyReference" },
+          "expectedRole": { "type": "string", "minLength": 1 },
+          "reason": { "type": "string", "minLength": 1 },
+          "requiredEvidence": { "type": "string", "minLength": 1 }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "$defs": {
+    "familyReference": {
+      "type": "object",
+      "required": ["catalog", "family"],
+      "properties": {
+        "catalog": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]+$" },
+        "family": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]+$" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

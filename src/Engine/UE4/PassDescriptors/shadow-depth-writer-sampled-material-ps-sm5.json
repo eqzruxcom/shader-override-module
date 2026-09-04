@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "id": "ue4-shadow-depth-writer-sampled-material-ps-sm5",
+  "family": "shadow-depth-writers",
+  "displayName": "UE4 sampled-material shadow-depth pixel writer",
+  "description": "Pixel family that samples material coverage, optionally applies volume dithering, discards uncovered fragments, and writes SV_DEPTH for a shadow map.",
+  "stages": ["ps"],
+  "shaderModels": ["ps_5_0"],
+  "hashFastPaths": [
+    { "adapter": "FF7RemakeIntergrade", "hash": "07a10abbef52a0f2", "evidence": "Verified sampled material-coverage ShadowDepth writer variant." },
+    { "adapter": "FF7RemakeIntergrade", "hash": "7faf10d13b4e23ec", "evidence": "Verified sampled material-coverage ShadowDepth writer variant." },
+    { "adapter": "FF7RemakeIntergrade", "hash": "d20b75105323b71d", "evidence": "Verified sampled material-coverage ShadowDepth writer variant." }
+  ],
+  "semanticSignature": {
+    "checks": [
+      { "id": "shadow-depth-input-semantic", "pattern": "^//\\s*ShadowDepth\\s+0\\s+[^\\r\\n]+$", "minCount": 1, "maxCount": 1, "meaning": "The input signature receives the caster's ShadowDepth interpolant." },
+      { "id": "sv-depth-output-semantic", "pattern": "^//\\s*SV_DEPTH\\s+0\\s+[^\\r\\n]+$", "minCount": 1, "maxCount": 1, "meaning": "The output signature declares a hardware depth result." },
+      { "id": "depth-output-declaration", "pattern": "^dcl_output\\s+oDepth\\s*$", "minCount": 1, "maxCount": 1, "meaning": "The pixel shader writes oDepth." },
+      { "id": "single-material-coverage-texture", "pattern": "^dcl_resource_texture2d\\s+\\(float,float,float,float\\)\\s+t\\d+\\s*$", "minCount": 1, "maxCount": 1, "meaning": "One Texture2D supplies sampled material or opacity coverage." },
+      { "id": "single-material-sampler", "pattern": "^dcl_sampler\\s+s\\d+,\\s*mode_default\\s*$", "minCount": 1, "maxCount": 1, "meaning": "The coverage texture uses one default sampler." },
+      { "id": "material-coverage-sample", "pattern": "^\\s*sample(?:_l)?_indexable\\(texture2d\\)\\(float,float,float,float\\)\\s+[^\\r\\n]+$", "minCount": 1, "maxCount": null, "meaning": "Material coverage is sampled before the shadow-depth write." },
+      { "id": "coverage-discard", "pattern": "^\\s*discard_[a-z]+\\s+[^\\r\\n]+$", "minCount": 1, "maxCount": 1, "meaning": "Uncovered fragments are rejected from the shadow map." },
+      { "id": "zero-color-output", "pattern": "^\\s*mov\\s+o0\\.xyzw,\\s*l\\(0,0,0,0\\)\\s*$", "minCount": 1, "maxCount": 1, "meaning": "The color target is incidental and remains zero." },
+      { "id": "saturated-depth-write", "pattern": "^\\s*mad_sat\\s+oDepth,\\s*[^\\r\\n]+$", "minCount": 1, "maxCount": 1, "meaning": "The interpolated caster depth is scaled, biased, saturated, and written to SV_DEPTH." }
+    ]
+  },
+  "runtimeContract": {
+    "output": "material-masked shadow-map depth",
+    "verifiedStage": "ps_5_0",
+    "adapterMustConfirm": ["coverage texture and sampler", "alpha or opacity threshold", "optional volume-dither input", "paired caster vertex shader", "depth scale and bias constants"],
+    "controlSafety": "Preserve coverage discard and depth bias. This family casts shadow-map depth; it does not evaluate receiver lighting."
+  },
+  "sourceEvidence": ["docs/shader-coverage-audit-2026-08-31.md", "src/Adapters/FF7RemakeIntergrade/verified-shader-classifications.json"]
+}

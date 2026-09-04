@@ -1,0 +1,74 @@
+{
+  "repository": "https://github.com/frostbone25/ShaderInjector",
+  "commit": "bab25809b375f028b7c0fb603d804426f38c9b8e",
+  "sourcePath": "ModifiedShaders/Includes/PixelShaderPass_LocalLight.hlsl",
+  "sourceLfSha256": "31C59C3ACC50E495DAF6E4A1CD2A08A573B20231C25F9079DA5CC002AED77BED",
+  "rayFirstLine": 1066,
+  "originalRayLfSha256": "ABF2DB1C449B93D804924E98FA179F4A8004B5808762972D2CFD262836E27BCC",
+  "adaptedRayLfSha256": "63A0C0580282680E3D469CBBFFE717B4C24C5239BCDDA7D617F346318ED20629",
+  "substitutions": [
+    {
+      "before": "SceneTexturesStruct_SceneDepthTexture.SampleLevel(View_SharedPointClampedSampler, uv, 0.0).r",
+      "after": "Redx11ContactSampleDeviceDepth(uv)",
+      "count": 1,
+      "reason": "Remake point-depth binding"
+    }
+  ],
+  "noiseSourcePath": "ModifiedShaders/Includes/LibraryRandom.hlsl",
+  "noiseSourceLfSha256": "1DE13EEBBD7F8EFB1CFFA41E4222037952EB21E345696FBC5ED095B4E13640D1",
+  "noiseFunctionLfSha256": "27BF022D388609B8847C7DFB7C64B508B1D6EBAA87F212BD96178F84E2D7591C",
+  "reconstructionStatements": [
+    {
+      "statement": "bool checkerboardTest = ((pixelPos.x + pixelPos.y + (int)View_TemporalAAParams.x) & 1) != 0;",
+      "lfSha256": "261FF72EB9E4CBE7C842D465D479D70E91D3E68FB93A4A47A1D96D2C697A0ADC",
+      "sourceLine": 1907
+    },
+    {
+      "statement": "contactShadow = saturate((lane0 + lane1 + lane2 + lane3) * 0.5 - 1.0);",
+      "lfSha256": "835BC549B5D4901A974A5B59DBDBE5CBA8D379F0392EB15801B1795923D1BC4C",
+      "sourceLine": 1930
+    }
+  ],
+  "reconstructionAdaptation": "Unchanged parity and averaging statements; explicit scalar lanes replace SM6 quad access. Caller must supply matching neighbors/phase.",
+  "donorConfiguration": {
+    "RANDOM_ANIMATE_NOISE": true,
+    "RANDOM_INTERLEAVED_GRADIENT_NOISE": true,
+    "CONTACT_SHADOWS_SAMPLES": "16",
+    "CONTACT_SHADOWS_RAY_LENGTH": "100.0",
+    "CONTACT_SHADOWS_IMPROVED_THICKNESS": true,
+    "CONTACT_SHADOWS_THICKNESS": "25.0",
+    "CONTACT_SHADOWS_MIN_THICKNESS": "5.0",
+    "CONTACT_SHADOWS_PIXEL_THICKNESS_SCALE": "32.0",
+    "CONTACT_SHADOWS_SELF_OCCLUSION_SKIP_STEPS": "0.5",
+    "CONTACT_SHADOWS_GRAZING_EXTRA_SKIP_STEPS": "1.0",
+    "CONTACT_SHADOWS_LOCAL_LIGHT_SHADOW_EXCLUSION_RADIUS_FACTOR": "0.175",
+    "CONTACT_SHADOWS_BIAS": "1.0",
+    "CONTACT_SHADOWS_BIAS_HAIR": "1.5",
+    "CONTACT_SHADOWS_NORMAL_BIAS": "0.5",
+    "CONTACT_SHADOW_EARLY_SKY_OUT": true,
+    "CONTACT_SHADOW_CHECKERBOARD": true,
+    "CONTACT_SHADOW_CHECKERBOARD_QUAD_RECONSTRUCTION": true,
+    "CONTACT_SHADOW_CHECKERBOARD_QUAD_RECONSTRUCTION_TYPE_AVG": true,
+    "CONTACT_SHADOWS_STRENGTH": "1.0",
+    "CONTACT_SHADOWS_FALLOFF": true,
+    "CONTACT_SHADOWS_FALLOFF_CONTRAST": "3.0"
+  },
+  "files": [
+    {
+      "path": "src/ThirdParty/ShaderInjector/RebirthContactRay.hlsl",
+      "lfSha256": "52C8FC47BD2C83EC813CCBD4EBC093CD45971852FD60C511978B71C959F5C99A"
+    },
+    {
+      "path": "src/ThirdParty/ShaderInjector/RebirthContactNoise.hlsl",
+      "lfSha256": "92FE24A57B9A13A27242A4BB059EE6391F8469A1C02FA8633B441B5C0D8AB04C"
+    },
+    {
+      "path": "src/ThirdParty/ShaderInjector/RebirthContactReconstruction.hlsl",
+      "lfSha256": "FBFB1AC6B7845425D948CAAB18C55C4BFA69CC8A13F89DBB7521D1699B228903"
+    },
+    {
+      "path": "src/ThirdParty/ShaderInjector/LICENSE.txt",
+      "lfSha256": "B7186E035838D23446405B6ADEFA0E1204E154ACD6E56C3FA2AAF6501AE71CEA"
+    }
+  ]
+}

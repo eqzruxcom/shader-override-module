@@ -1,0 +1,352 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.rebirth-effects.invalid/ue4-adapter-binding.schema.json",
+  "title": "UE4 game-adapter binding input",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "adapterId",
+    "game",
+    "engineFamily",
+    "renderer",
+    "executable",
+    "passes"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "adapterId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]+$"
+    },
+    "game": {
+      "type": "string",
+      "minLength": 1
+    },
+    "engineFamily": {
+      "type": "string",
+      "minLength": 1
+    },
+    "renderer": {
+      "const": "D3D11"
+    },
+    "executable": {
+      "type": "object",
+      "required": [
+        "name",
+        "sha256"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9A-F]{64}$"
+        }
+      },
+      "additionalProperties": false
+    },
+    "passes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "descriptorId",
+          "integration",
+          "stage",
+          "shaderHash",
+          "bindings",
+          "controlPack",
+          "evidence"
+        ],
+        "properties": {
+          "descriptorId": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]+$"
+          },
+          "stage": {
+            "enum": [
+              "ps",
+              "cs"
+            ]
+          },
+          "shaderHash": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{16}$"
+          },
+          "bindings": {
+            "oneOf": [
+              {
+                "type": "object",
+                "required": [
+                  "originalOutput",
+                  "snapshotSrv",
+                  "threadGroup",
+                  "temporalCurrentWeight",
+                  "temporalHistoryWeight"
+                ],
+                "properties": {
+                  "originalOutput": {
+                    "type": "string",
+                    "pattern": "^cs-u[0-7]$"
+                  },
+                  "snapshotSrv": {
+                    "type": "string",
+                    "pattern": "^cs-t(?:[0-9]|[1-9][0-9]|1[01][0-9]|12[0-7])$"
+                  },
+                  "threadGroup": {
+                    "type": "array",
+                    "minItems": 3,
+                    "maxItems": 3,
+                    "items": {
+                      "type": "integer",
+                      "minimum": 1
+                    }
+                  },
+                  "gridResolution": {
+                    "type": "array",
+                    "minItems": 3,
+                    "maxItems": 3,
+                    "items": {
+                      "type": "integer",
+                      "minimum": 1
+                    }
+                  },
+                  "temporalCurrentWeight": {
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                    "maximum": 1
+                  },
+                  "temporalHistoryWeight": {
+                    "type": "number",
+                    "minimum": 0,
+                    "exclusiveMaximum": 1
+                  }
+                },
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "required": [
+                  "sceneColorInput",
+                  "auxiliaryInputs",
+                  "constantBuffers",
+                  "output",
+                  "alphaBehavior"
+                ],
+                "properties": {
+                  "sceneColorInput": {
+                    "const": "ps-t0"
+                  },
+                  "auxiliaryInputs": {
+                    "type": "array",
+                    "minItems": 2,
+                    "maxItems": 2,
+                    "items": {
+                      "enum": [
+                        "ps-t1",
+                        "ps-t2"
+                      ]
+                    }
+                  },
+                  "constantBuffers": {
+                    "type": "array",
+                    "minItems": 2,
+                    "maxItems": 2,
+                    "items": {
+                      "enum": [
+                        "ps-cb0",
+                        "ps-cb1"
+                      ]
+                    }
+                  },
+                  "output": {
+                    "const": "ps-o0"
+                  },
+                  "alphaBehavior": {
+                    "const": "zero"
+                  }
+                },
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "required": [
+                  "output",
+                  "controlledChannels",
+                  "preservedChannels",
+                  "neutralVisibility"
+                ],
+                "properties": {
+                  "output": {
+                    "const": "ps-o0"
+                  },
+                  "controlledChannels": {
+                    "type": "array",
+                    "minItems": 2,
+                    "maxItems": 2,
+                    "uniqueItems": true,
+                    "items": {
+                      "enum": [
+                        "x",
+                        "y"
+                      ]
+                    }
+                  },
+                  "preservedChannels": {
+                    "type": "array",
+                    "minItems": 2,
+                    "maxItems": 2,
+                    "uniqueItems": true,
+                    "items": {
+                      "enum": [
+                        "z",
+                        "w"
+                      ]
+                    }
+                  },
+                  "neutralVisibility": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  }
+                },
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "required": [
+                  "output",
+                  "controlledChannels",
+                  "preservedChannels",
+                  "alphaBehavior"
+                ],
+                "properties": {
+                  "output": {
+                    "const": "ps-o0"
+                  },
+                  "controlledChannels": {
+                    "type": "array",
+                    "minItems": 3,
+                    "maxItems": 3,
+                    "uniqueItems": true,
+                    "items": {
+                      "enum": [
+                        "x",
+                        "y",
+                        "z"
+                      ]
+                    }
+                  },
+                  "preservedChannels": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 1,
+                    "items": {
+                      "const": "w"
+                    }
+                  },
+                  "alphaBehavior": {
+                    "const": "preserve"
+                  }
+                },
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "required": [
+                  "ssrInput",
+                  "reflectionEnvironmentInput",
+                  "output",
+                  "controlledTerm",
+                  "preserveHitMask"
+                ],
+                "properties": {
+                  "ssrInput": {
+                    "const": "ps-t11"
+                  },
+                  "reflectionEnvironmentInput": {
+                    "const": "ps-t10"
+                  },
+                  "output": {
+                    "const": "ps-o0"
+                  },
+                  "controlledTerm": {
+                    "const": "additive-ssr-radiance-rgb"
+                  },
+                  "preserveHitMask": {
+                    "const": true
+                  }
+                },
+                "additionalProperties": false
+              }
+            ]
+          },
+          "controlPack": {
+            "type": "string",
+            "minLength": 1
+          },
+          "evidence": {
+            "type": "object",
+            "required": [
+              "shaderMap",
+              "passId"
+            ],
+            "properties": {
+              "shaderMap": {
+                "type": "string",
+                "minLength": 1
+              },
+              "passId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "temporalBlendContract": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "additionalProperties": false
+          },
+          "integration": {
+            "enum": [
+              "temporal-volume-post",
+              "scene-saturation-replacement",
+              "packed-ao-strength-replacement",
+              "ssr-radiance-strength-replacement",
+              "ssr-composite-strength-replacement"
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "integration": {
+                  "const": "temporal-volume-post"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "evidence": {
+                  "required": [
+                    "shaderMap",
+                    "passId",
+                    "temporalBlendContract"
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "additionalProperties": false
+}

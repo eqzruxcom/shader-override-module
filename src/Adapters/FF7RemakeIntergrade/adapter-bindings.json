@@ -1,0 +1,106 @@
+{
+  "schemaVersion": 1,
+  "adapterId": "FF7RemakeIntergrade",
+  "game": "Final Fantasy VII Remake Intergrade",
+  "engineFamily": "UE4-custom",
+  "renderer": "D3D11",
+  "executable": {
+    "name": "ff7remake_.exe",
+    "sha256": "25B54C345C94EE9F6C6876B9C7537A69E6B0EEF25F322207C32A8DDCEE816635"
+  },
+  "passes": [
+    {
+      "descriptorId": "ue4-volumetric-scattering-history-sm5",
+      "integration": "temporal-volume-post",
+      "stage": "cs",
+      "shaderHash": "ef7fe8d9c4e9ad15",
+      "bindings": {
+        "originalOutput": "cs-u0",
+        "snapshotSrv": "cs-t113",
+        "threadGroup": [
+          4,
+          4,
+          4
+        ],
+        "gridResolution": [
+          120,
+          68,
+          96
+        ],
+        "temporalCurrentWeight": 0.15,
+        "temporalHistoryWeight": 0.85
+      },
+      "controlPack": "artifacts/replacement-shaders/ef7fe8d9c4e9ad15-scattering-control-pack.json",
+      "evidence": {
+        "shaderMap": "src/Adapters/FF7RemakeIntergrade/shader-map.json",
+        "passId": "volumetric_scattering_history",
+        "temporalBlendContract": "artifacts/temporal-blend-contracts/ef7fe8d9c4e9ad15.json"
+      }
+    },
+    {
+      "descriptorId": "ue4-motion-blur-scene-color-resolve-ps-sm5",
+      "integration": "scene-saturation-replacement",
+      "stage": "ps",
+      "shaderHash": "af6cd28a0108a18a",
+      "bindings": {
+        "sceneColorInput": "ps-t0",
+        "auxiliaryInputs": [
+          "ps-t1",
+          "ps-t2"
+        ],
+        "constantBuffers": [
+          "ps-cb0",
+          "ps-cb1"
+        ],
+        "output": "ps-o0",
+        "alphaBehavior": "zero"
+      },
+      "controlPack": "artifacts/replacement-shaders/af6cd28a0108a18a-scene-saturation-control-pack.json",
+      "evidence": {
+        "shaderMap": "src/Adapters/FF7RemakeIntergrade/shader-map.json",
+        "passId": "post_process_final"
+      }
+    },
+    {
+      "descriptorId": "ue4-temporal-ssao-horizon-ps-sm5",
+      "integration": "packed-ao-strength-replacement",
+      "stage": "ps",
+      "shaderHash": "a77b589dce5822d6",
+      "bindings": {
+        "output": "ps-o0",
+        "controlledChannels": [
+          "x",
+          "y"
+        ],
+        "preservedChannels": [
+          "z",
+          "w"
+        ],
+        "neutralVisibility": 1.0
+      },
+      "controlPack": "artifacts/replacement-shaders/a77b589dce5822d6-ao-strength-control-pack.json",
+      "evidence": {
+        "shaderMap": "src/Adapters/FF7RemakeIntergrade/shader-map.json",
+        "passId": "ambient_occlusion"
+      }
+    },
+    {
+      "descriptorId": "ue4-reflection-environment-ssr-composite-ps-sm5",
+      "integration": "ssr-composite-strength-replacement",
+      "stage": "ps",
+      "shaderHash": "e2aa1c8cb39e0a55",
+      "bindings": {
+        "ssrInput": "ps-t11",
+        "reflectionEnvironmentInput": "ps-t10",
+        "output": "ps-o0",
+        "controlledTerm": "additive-ssr-radiance-rgb",
+        "preserveHitMask": true
+      },
+      "controlPack": "artifacts/replacement-shaders/e2aa1c8cb39e0a55-ssr-composite-strength-control-pack.json",
+      "evidence": {
+        "shaderMap": "src/Adapters/FF7RemakeIntergrade/shader-map.json",
+        "passId": "reflection_environment"
+      }
+    }
+  ]
+}

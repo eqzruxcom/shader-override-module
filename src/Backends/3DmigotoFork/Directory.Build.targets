@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!--
+    The upstream projects pin Windows SDK 10.0.19041.0. This host has SDK
+    10.0.26100.0, but its Installed Roots registry entry is absent. VsDevCmd
+    still selects the SDK correctly, so restore those paths after the legacy
+    project files have evaluated their own IncludePath/LibraryPath values.
+
+    Project and bundled third-party include directories must remain first.
+    In particular, DirectXTK's Effects.h must win over similarly named SDK
+    headers.
+  -->
+  <PropertyGroup>
+    <ShaderFamilyWindowsSdkVersion Condition="'$(WindowsSDKVersion)' != ''">$([System.String]::Copy('$(WindowsSDKVersion)').TrimEnd('\'))</ShaderFamilyWindowsSdkVersion>
+    <ShaderFamilyWindowsSdkVersion Condition="'$(ShaderFamilyWindowsSdkVersion)' == ''">10.0.26100.0</ShaderFamilyWindowsSdkVersion>
+    <WindowsTargetPlatformVersion>$(ShaderFamilyWindowsSdkVersion)</WindowsTargetPlatformVersion>
+    <TargetPlatformVersion>$(ShaderFamilyWindowsSdkVersion)</TargetPlatformVersion>
+    <WindowsSDKInstalled>true</WindowsSDKInstalled>
+    <WindowsSDK_Desktop_Support>true</WindowsSDK_Desktop_Support>
+    <IncludePath>$(IncludePath);$(MSBuildThisFileDirectory);$(VCToolsInstallDir)include;$(WindowsSdkDir)Include\$(ShaderFamilyWindowsSdkVersion)\ucrt;$(WindowsSdkDir)Include\$(ShaderFamilyWindowsSdkVersion)\shared;$(WindowsSdkDir)Include\$(ShaderFamilyWindowsSdkVersion)\um;$(WindowsSdkDir)Include\$(ShaderFamilyWindowsSdkVersion)\winrt;$(WindowsSdkDir)Include\$(ShaderFamilyWindowsSdkVersion)\cppwinrt</IncludePath>
+    <LibraryPath Condition="'$(Platform)' == 'x64'">$(LibraryPath);$(VCToolsInstallDir)lib\x64;$(WindowsSdkDir)Lib\$(ShaderFamilyWindowsSdkVersion)\ucrt\x64;$(WindowsSdkDir)Lib\$(ShaderFamilyWindowsSdkVersion)\um\x64</LibraryPath>
+    <LibraryPath Condition="'$(Platform)' == 'Win32'">$(LibraryPath);$(VCToolsInstallDir)lib\x86;$(WindowsSdkDir)Lib\$(ShaderFamilyWindowsSdkVersion)\ucrt\x86;$(WindowsSdkDir)Lib\$(ShaderFamilyWindowsSdkVersion)\um\x86</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory);$(VCToolsInstallDir)include;$(WindowsSdkDir)Include\$(ShaderFamilyWindowsSdkVersion)\ucrt;$(WindowsSdkDir)Include\$(ShaderFamilyWindowsSdkVersion)\shared;$(WindowsSdkDir)Include\$(ShaderFamilyWindowsSdkVersion)\um;$(WindowsSdkDir)Include\$(ShaderFamilyWindowsSdkVersion)\winrt;$(WindowsSdkDir)Include\$(ShaderFamilyWindowsSdkVersion)\cppwinrt</AdditionalIncludeDirectories>
+    </ClCompile>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(WindowsSdkDir)Include\$(ShaderFamilyWindowsSdkVersion)\shared;$(WindowsSdkDir)Include\$(ShaderFamilyWindowsSdkVersion)\um</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalLibraryDirectories Condition="'$(Platform)' == 'x64'">%(AdditionalLibraryDirectories);$(VCToolsInstallDir)lib\x64;$(WindowsSdkDir)Lib\$(ShaderFamilyWindowsSdkVersion)\ucrt\x64;$(WindowsSdkDir)Lib\$(ShaderFamilyWindowsSdkVersion)\um\x64</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories Condition="'$(Platform)' == 'Win32'">%(AdditionalLibraryDirectories);$(VCToolsInstallDir)lib\x86;$(WindowsSdkDir)Lib\$(ShaderFamilyWindowsSdkVersion)\ucrt\x86;$(WindowsSdkDir)Lib\$(ShaderFamilyWindowsSdkVersion)\um\x86</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+</Project>

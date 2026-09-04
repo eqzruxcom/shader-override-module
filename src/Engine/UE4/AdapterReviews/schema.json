@@ -1,0 +1,124 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.rebirth-effects.invalid/ue4-adapter-review-workspace.schema.json",
+  "title": "Fail-closed UE4 adapter review workspace",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "reviewWorkspaceId",
+    "captureId",
+    "status",
+    "runtimeEligible",
+    "failClosed",
+    "sourceCandidateReport",
+    "gameExecutable",
+    "requiredGates",
+    "candidateReviewCount",
+    "candidates",
+    "createdAtUtc"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "reviewWorkspaceId": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]+$" },
+    "captureId": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]+$" },
+    "status": { "const": "review-pending" },
+    "runtimeEligible": { "const": false },
+    "failClosed": { "const": true },
+    "sourceCandidateReport": {
+      "type": "object",
+      "required": ["path", "sha256", "status", "candidateCount"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "sha256": { "type": "string", "pattern": "^[0-9A-F]{64}$" },
+        "status": { "const": "scan-evidence-only" },
+        "candidateCount": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "gameExecutable": {
+      "type": "object",
+      "required": ["name", "path", "sha256"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "path": { "type": "string", "minLength": 1 },
+        "sha256": { "type": "string", "pattern": "^[0-9A-F]{64}$" }
+      },
+      "additionalProperties": false
+    },
+    "requiredGates": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "binding-contract",
+          "replacement-shader",
+          "control-pack",
+          "live-visual-validation",
+          "runtime-eligibility-review"
+        ]
+      }
+    },
+    "candidateReviewCount": { "type": "integer", "minimum": 0 },
+    "candidates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "candidateId",
+          "descriptorId",
+          "family",
+          "shaderHash",
+          "stage",
+          "shaderModel",
+          "status",
+          "runtimeEligible",
+          "completedGateCount",
+          "gates"
+        ],
+        "properties": {
+          "candidateId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]+/[0-9a-f]{16}-(ps|vs|cs|gs|hs|ds)$" },
+          "descriptorId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]+$" },
+          "family": { "type": "string", "minLength": 1 },
+          "shaderHash": { "type": "string", "pattern": "^[0-9a-f]{16}$" },
+          "stage": { "enum": ["ps", "vs", "cs", "gs", "hs", "ds"] },
+          "shaderModel": { "type": "string", "pattern": "^(ps|vs|cs|gs|hs|ds)_5_0$" },
+          "status": { "const": "review-pending" },
+          "runtimeEligible": { "const": false },
+          "completedGateCount": { "const": 0 },
+          "gates": {
+            "type": "array",
+            "minItems": 5,
+            "maxItems": 5,
+            "items": {
+              "type": "object",
+              "required": ["id", "status", "evidence", "evidenceSha256", "reviewedBy", "reviewedAtUtc", "notes"],
+              "properties": {
+                "id": {
+                  "enum": [
+                    "binding-contract",
+                    "replacement-shader",
+                    "control-pack",
+                    "live-visual-validation",
+                    "runtime-eligibility-review"
+                  ]
+                },
+                "status": { "const": "pending" },
+                "evidence": { "type": "null" },
+                "evidenceSha256": { "type": "null" },
+                "reviewedBy": { "type": "null" },
+                "reviewedAtUtc": { "type": "null" },
+                "notes": { "type": "null" }
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "createdAtUtc": { "type": "string", "format": "date-time" }
+  },
+  "additionalProperties": false
+}

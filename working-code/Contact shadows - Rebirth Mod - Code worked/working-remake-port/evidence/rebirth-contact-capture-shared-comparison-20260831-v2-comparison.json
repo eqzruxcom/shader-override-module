@@ -1,0 +1,882 @@
+{
+  "schemaVersion": 1,
+  "result": "passed-reconstruction-identity-only",
+  "runtimeEligible": false,
+  "gameFilesModified": false,
+  "sampleCountPerLight": 518400,
+  "selectedPerLight": 259200,
+  "capturedPhase": 5,
+  "capturedNoiseIndex": 61,
+  "sampledMaterialCounts": {
+    "0": 40717,
+    "1": 473568,
+    "3": 1803,
+    "7": 2110,
+    "8": 202
+  },
+  "rawManifest": {
+    "path": "C:\\Users\\EQZITARA\\Documents\\ChatGPT\\FF7 Rebirth mod\\artifacts\\rebirth-contact-capture-raw-20260831-v3\\manifest.json",
+    "sha256": "5BA4D4992D39221BEE7043A4817B4B1B43B6CCA7E43C604726F191C80B3A15CF"
+  },
+  "quadManifest": {
+    "path": "C:\\Users\\EQZITARA\\Documents\\ChatGPT\\FF7 Rebirth mod\\artifacts\\rebirth-contact-capture-quad-20260831-v3\\manifest.json",
+    "sha256": "37407E07DC6414B5AB02A1A3D326993DBBEDCDCD871938411F8F3E84FBE221F4"
+  },
+  "sharedManifest": {
+    "path": "C:\\Users\\EQZITARA\\Documents\\ChatGPT\\FF7 Rebirth mod\\artifacts\\rebirth-contact-capture-shared-20260831-v2\\manifest.json",
+    "sha256": "B0FB3BEC2091F22C706AC058599F654CA84296F7D4BB557690A1933F94A71336"
+  },
+  "analysisInputs": {
+    "cb0": {
+      "path": "C:\\Games\\Final.Fantasy.VII.Remake.Intergrade-InsaneRamZes\\End\\Binaries\\Win64\\FrameAnalysis-2026-08-30-211238\\001452.0-[commandlist_mods_contactshadowcapture.ini_contactdata]-cs-cb0=06450352.buf",
+      "sha256": "2114F4293746D295D674CF9A469CAE3284198691116F938BF8E09EF2D4463314"
+    },
+    "cb1": {
+      "path": "C:\\Games\\Final.Fantasy.VII.Remake.Intergrade-InsaneRamZes\\End\\Binaries\\Win64\\FrameAnalysis-2026-08-30-211238\\001452.1-[commandlist_mods_contactshadowcapture.ini_contactdata]-cs-cb1=a394978d.buf",
+      "sha256": "49E608301F0F9A4E1A54C82ACD94C20563007A19014B75B3C3C59735B4372FA4"
+    },
+    "cb3": {
+      "path": "C:\\Games\\Final.Fantasy.VII.Remake.Intergrade-InsaneRamZes\\End\\Binaries\\Win64\\FrameAnalysis-2026-08-30-211238\\001452.2-[commandlist_mods_contactshadowcapture.ini_contactdata]-cs-cb3=f02baf77.buf",
+      "sha256": "9E7BB7E9B7AF3A09514EBDDEE27869884757EBBC73627B19B9D99F48D687EC06"
+    },
+    "cb4": {
+      "path": "C:\\Games\\Final.Fantasy.VII.Remake.Intergrade-InsaneRamZes\\End\\Binaries\\Win64\\FrameAnalysis-2026-08-30-211238\\001452.3-[commandlist_mods_contactshadowcapture.ini_contactdata]-cs-cb4=f02baf77.buf",
+      "sha256": "DCD2AC6527F963F657FC72A53859936D4C26EF6F296914021008C8C0BCA29E5E"
+    },
+    "normal": {
+      "path": "C:\\Games\\Final.Fantasy.VII.Remake.Intergrade-InsaneRamZes\\End\\Binaries\\Win64\\FrameAnalysis-2026-08-30-211238\\001452.4-[commandlist_mods_contactshadowcapture.ini_contactdata]-cs-t1=7b255aa9.dds",
+      "sha256": "99952BE1E8BF8D029CE6CB9DA5E7E1A69D27C233D0EBAD0F3647BA1186FD6A6D"
+    },
+    "material": {
+      "path": "C:\\Games\\Final.Fantasy.VII.Remake.Intergrade-InsaneRamZes\\End\\Binaries\\Win64\\FrameAnalysis-2026-08-30-211238\\001452.5-[commandlist_mods_contactshadowcapture.ini_contactdata]-cs-t2=2d6d9e98.dds",
+      "sha256": "A7AD79D2195C427034C083B95AD30F0B83C3D40762ED9B8F5C39EB8EDC83EA5B"
+    },
+    "depth": {
+      "path": "C:\\Games\\Final.Fantasy.VII.Remake.Intergrade-InsaneRamZes\\End\\Binaries\\Win64\\FrameAnalysis-2026-08-30-211238\\001452.6-[ShaderOverride_Mods_ContactShadowCapture.ini_ContactC30]-cs-t5=ccf295fb.dds",
+      "sha256": "FA97EC472A52BFDD08ECCE70421CCF9E9FE0AF776AF2B973BBB980D142DDBA03"
+    },
+    "tile_records": {
+      "path": "C:\\Games\\Final.Fantasy.VII.Remake.Intergrade-InsaneRamZes\\End\\Binaries\\Win64\\FrameAnalysis-2026-08-30-211238\\001452.8-[ShaderOverride_Mods_ContactShadowCapture.ini_ContactC30]-cs-t12=d995d911.buf",
+      "sha256": "A632E4009C5B2BF0F556D60F3B41E7E382B335D84C2AB0AFECDDFBBB0ADD727E"
+    }
+  },
+  "sources": {
+    "compare_rebirth_contact_capture.py": "7D7AF68BCD4236FCF9F52A5F77B58AA359F34490DDC999B854CA1F1F087964CE",
+    "analyze_intergrade_contact_capture.py": "0CADACE51DCF3205F33B9701344177C9AF566E48DFD6F6ABB9B8345968E74EDE"
+  },
+  "lights": [
+    {
+      "light": 50,
+      "maxReconstructionError": 2.384185791015625e-07,
+      "shared": {
+        "maxRawReferenceError": 2.384185791015625e-07,
+        "maxRecomputeDifference": 0.0,
+        "bitIdenticalToRecompute": true,
+        "samplesVerified": 518400,
+        "partialFinalGroupSamples": 11520
+      },
+      "selectedPixelsBitIdentical": true,
+      "allValidReceivers": {
+        "samples": 518400,
+        "rawShadowed": 126544,
+        "quadShadowed": 133398,
+        "changedAboveTolerance": 48038,
+        "darkenedAtLeastOnePercent": 11479,
+        "lightenedAtLeastOnePercent": 11544,
+        "acquiredShadowFromNeutral": 10165,
+        "returnedToNeutral": 3320,
+        "meanRawVisibility": 0.7594558000564575,
+        "meanQuadVisibility": 0.759578287601471,
+        "maxAbsoluteChange": 1.0
+      },
+      "nativeLightFacingProxy": {
+        "samples": 301865,
+        "rawShadowed": 24827,
+        "quadShadowed": 28235,
+        "changedAboveTolerance": 13049,
+        "darkenedAtLeastOnePercent": 4859,
+        "lightenedAtLeastOnePercent": 3533,
+        "acquiredShadowFromNeutral": 4251,
+        "returnedToNeutral": 851,
+        "meanRawVisibility": 0.92111736536026,
+        "meanQuadVisibility": 0.9184717535972595,
+        "maxAbsoluteChange": 1.0
+      },
+      "proxyMaterialBoundaries": {
+        "samples": 429,
+        "rawShadowed": 74,
+        "quadShadowed": 94,
+        "changedAboveTolerance": 43,
+        "darkenedAtLeastOnePercent": 28,
+        "lightenedAtLeastOnePercent": 13,
+        "acquiredShadowFromNeutral": 28,
+        "returnedToNeutral": 8,
+        "meanRawVisibility": 0.82756507396698,
+        "meanQuadVisibility": 0.8112344741821289,
+        "maxAbsoluteChange": 1.0
+      },
+      "proxyByMaterial": {
+        "1": {
+          "samples": 300449,
+          "rawShadowed": 24562,
+          "quadShadowed": 27927,
+          "changedAboveTolerance": 12925,
+          "darkenedAtLeastOnePercent": 4791,
+          "lightenedAtLeastOnePercent": 3486,
+          "acquiredShadowFromNeutral": 4183,
+          "returnedToNeutral": 826,
+          "meanRawVisibility": 0.9216277003288269,
+          "meanQuadVisibility": 0.9190127849578857,
+          "maxAbsoluteChange": 1.0
+        },
+        "3": {
+          "samples": 664,
+          "rawShadowed": 121,
+          "quadShadowed": 142,
+          "changedAboveTolerance": 66,
+          "darkenedAtLeastOnePercent": 34,
+          "lightenedAtLeastOnePercent": 31,
+          "acquiredShadowFromNeutral": 34,
+          "returnedToNeutral": 13,
+          "meanRawVisibility": 0.8177734613418579,
+          "meanQuadVisibility": 0.8087373971939087,
+          "maxAbsoluteChange": 1.0
+        },
+        "7": {
+          "samples": 642,
+          "rawShadowed": 120,
+          "quadShadowed": 142,
+          "changedAboveTolerance": 52,
+          "darkenedAtLeastOnePercent": 34,
+          "lightenedAtLeastOnePercent": 16,
+          "acquiredShadowFromNeutral": 34,
+          "returnedToNeutral": 12,
+          "meanRawVisibility": 0.8130843043327332,
+          "meanQuadVisibility": 0.8021808862686157,
+          "maxAbsoluteChange": 1.0
+        },
+        "8": {
+          "samples": 110,
+          "rawShadowed": 24,
+          "quadShadowed": 24,
+          "changedAboveTolerance": 6,
+          "darkenedAtLeastOnePercent": 0,
+          "lightenedAtLeastOnePercent": 0,
+          "acquiredShadowFromNeutral": 0,
+          "returnedToNeutral": 0,
+          "meanRawVisibility": 0.7818273305892944,
+          "meanQuadVisibility": 0.7818272113800049,
+          "maxAbsoluteChange": 7.027387619018555e-05
+        }
+      },
+      "largestProxyChanges": [
+        {
+          "pixel": [
+            2512,
+            2105
+          ],
+          "materialId": 1,
+          "linearDepth": 410.7979736328125,
+          "raw": 0.0,
+          "quad": 1.0
+        },
+        {
+          "pixel": [
+            2161,
+            440
+          ],
+          "materialId": 1,
+          "linearDepth": 3919.86376953125,
+          "raw": 1.0,
+          "quad": 0.0
+        },
+        {
+          "pixel": [
+            3153,
+            472
+          ],
+          "materialId": 1,
+          "linearDepth": 3271.091552734375,
+          "raw": 1.0,
+          "quad": 0.0
+        },
+        {
+          "pixel": [
+            2400,
+            2081
+          ],
+          "materialId": 1,
+          "linearDepth": 418.5865783691406,
+          "raw": 1.0,
+          "quad": 0.0
+        },
+        {
+          "pixel": [
+            2232,
+            2081
+          ],
+          "materialId": 1,
+          "linearDepth": 433.04168701171875,
+          "raw": 1.0,
+          "quad": 0.0
+        },
+        {
+          "pixel": [
+            2113,
+            1696
+          ],
+          "materialId": 1,
+          "linearDepth": 623.027587890625,
+          "raw": 0.0,
+          "quad": 1.0
+        },
+        {
+          "pixel": [
+            2673,
+            2144
+          ],
+          "materialId": 1,
+          "linearDepth": 398.6937255859375,
+          "raw": 0.0,
+          "quad": 1.0
+        },
+        {
+          "pixel": [
+            2544,
+            2113
+          ],
+          "materialId": 1,
+          "linearDepth": 408.2530822753906,
+          "raw": 1.0,
+          "quad": 0.0
+        }
+      ]
+    },
+    {
+      "light": 38,
+      "maxReconstructionError": 2.384185791015625e-07,
+      "shared": {
+        "maxRawReferenceError": 2.384185791015625e-07,
+        "maxRecomputeDifference": 0.0,
+        "bitIdenticalToRecompute": true,
+        "samplesVerified": 518400,
+        "partialFinalGroupSamples": 11520
+      },
+      "selectedPixelsBitIdentical": true,
+      "allValidReceivers": {
+        "samples": 518400,
+        "rawShadowed": 272732,
+        "quadShadowed": 281566,
+        "changedAboveTolerance": 66248,
+        "darkenedAtLeastOnePercent": 15544,
+        "lightenedAtLeastOnePercent": 16428,
+        "acquiredShadowFromNeutral": 13167,
+        "returnedToNeutral": 4338,
+        "meanRawVisibility": 0.4804665148258209,
+        "meanQuadVisibility": 0.4808051586151123,
+        "maxAbsoluteChange": 1.0
+      },
+      "nativeLightFacingProxy": {
+        "samples": 10613,
+        "rawShadowed": 3207,
+        "quadShadowed": 3369,
+        "changedAboveTolerance": 1400,
+        "darkenedAtLeastOnePercent": 359,
+        "lightenedAtLeastOnePercent": 339,
+        "acquiredShadowFromNeutral": 249,
+        "returnedToNeutral": 87,
+        "meanRawVisibility": 0.7134965658187866,
+        "meanQuadVisibility": 0.7131896018981934,
+        "maxAbsoluteChange": 1.0
+      },
+      "proxyMaterialBoundaries": {
+        "samples": 2,
+        "rawShadowed": 0,
+        "quadShadowed": 0,
+        "changedAboveTolerance": 0,
+        "darkenedAtLeastOnePercent": 0,
+        "lightenedAtLeastOnePercent": 0,
+        "acquiredShadowFromNeutral": 0,
+        "returnedToNeutral": 0,
+        "meanRawVisibility": 1.0,
+        "meanQuadVisibility": 1.0,
+        "maxAbsoluteChange": 0.0
+      },
+      "proxyByMaterial": {
+        "1": {
+          "samples": 10613,
+          "rawShadowed": 3207,
+          "quadShadowed": 3369,
+          "changedAboveTolerance": 1400,
+          "darkenedAtLeastOnePercent": 359,
+          "lightenedAtLeastOnePercent": 339,
+          "acquiredShadowFromNeutral": 249,
+          "returnedToNeutral": 87,
+          "meanRawVisibility": 0.7134965658187866,
+          "meanQuadVisibility": 0.7131896018981934,
+          "maxAbsoluteChange": 1.0
+        }
+      },
+      "largestProxyChanges": [
+        {
+          "pixel": [
+            1224,
+            633
+          ],
+          "materialId": 1,
+          "linearDepth": 3951.751708984375,
+          "raw": 1.0,
+          "quad": 0.0
+        },
+        {
+          "pixel": [
+            944,
+            609
+          ],
+          "materialId": 1,
+          "linearDepth": 3734.93310546875,
+          "raw": 0.0,
+          "quad": 1.0
+        },
+        {
+          "pixel": [
+            1225,
+            632
+          ],
+          "materialId": 1,
+          "linearDepth": 3950.712646484375,
+          "raw": 1.0,
+          "quad": 0.0
+        },
+        {
+          "pixel": [
+            912,
+            169
+          ],
+          "materialId": 1,
+          "linearDepth": 3750.606689453125,
+          "raw": 0.0,
+          "quad": 1.0
+        },
+        {
+          "pixel": [
+            1273,
+            168
+          ],
+          "materialId": 1,
+          "linearDepth": 3981.01123046875,
+          "raw": 1.0,
+          "quad": 0.0
+        },
+        {
+          "pixel": [
+            1000,
+            649
+          ],
+          "materialId": 1,
+          "linearDepth": 3666.6689453125,
+          "raw": 1.0,
+          "quad": 0.0
+        },
+        {
+          "pixel": [
+            880,
+            649
+          ],
+          "materialId": 1,
+          "linearDepth": 3800.720703125,
+          "raw": 0.0,
+          "quad": 1.0
+        },
+        {
+          "pixel": [
+            1025,
+            592
+          ],
+          "materialId": 1,
+          "linearDepth": 3638.06396484375,
+          "raw": 1.0,
+          "quad": 0.0
+        }
+      ]
+    },
+    {
+      "light": 54,
+      "maxReconstructionError": 2.384185791015625e-07,
+      "shared": {
+        "maxRawReferenceError": 2.384185791015625e-07,
+        "maxRecomputeDifference": 0.0,
+        "bitIdenticalToRecompute": true,
+        "samplesVerified": 518400,
+        "partialFinalGroupSamples": 11520
+      },
+      "selectedPixelsBitIdentical": true,
+      "allValidReceivers": {
+        "samples": 518400,
+        "rawShadowed": 30679,
+        "quadShadowed": 33522,
+        "changedAboveTolerance": 14448,
+        "darkenedAtLeastOnePercent": 4578,
+        "lightenedAtLeastOnePercent": 4459,
+        "acquiredShadowFromNeutral": 3976,
+        "returnedToNeutral": 1134,
+        "meanRawVisibility": 0.9426522850990295,
+        "meanQuadVisibility": 0.9426872134208679,
+        "maxAbsoluteChange": 1.0
+      },
+      "nativeLightFacingProxy": {
+        "samples": 86330,
+        "rawShadowed": 4692,
+        "quadShadowed": 4957,
+        "changedAboveTolerance": 1975,
+        "darkenedAtLeastOnePercent": 636,
+        "lightenedAtLeastOnePercent": 678,
+        "acquiredShadowFromNeutral": 517,
+        "returnedToNeutral": 252,
+        "meanRawVisibility": 0.9474612474441528,
+        "meanQuadVisibility": 0.9476528763771057,
+        "maxAbsoluteChange": 1.0
+      },
+      "proxyMaterialBoundaries": {
+        "samples": 487,
+        "rawShadowed": 47,
+        "quadShadowed": 66,
+        "changedAboveTolerance": 44,
+        "darkenedAtLeastOnePercent": 27,
+        "lightenedAtLeastOnePercent": 16,
+        "acquiredShadowFromNeutral": 27,
+        "returnedToNeutral": 8,
+        "meanRawVisibility": 0.9034908413887024,
+        "meanQuadVisibility": 0.9015727043151855,
+        "maxAbsoluteChange": 1.0
+      },
+      "proxyByMaterial": {
+        "1": {
+          "samples": 83089,
+          "rawShadowed": 4288,
+          "quadShadowed": 4498,
+          "changedAboveTolerance": 1762,
+          "darkenedAtLeastOnePercent": 527,
+          "lightenedAtLeastOnePercent": 575,
+          "acquiredShadowFromNeutral": 408,
+          "returnedToNeutral": 198,
+          "meanRawVisibility": 0.9502741694450378,
+          "meanQuadVisibility": 0.9504785537719727,
+          "maxAbsoluteChange": 1.0
+        },
+        "3": {
+          "samples": 1294,
+          "rawShadowed": 291,
+          "quadShadowed": 321,
+          "changedAboveTolerance": 136,
+          "darkenedAtLeastOnePercent": 67,
+          "lightenedAtLeastOnePercent": 69,
+          "acquiredShadowFromNeutral": 67,
+          "returnedToNeutral": 37,
+          "meanRawVisibility": 0.7751160264015198,
+          "meanQuadVisibility": 0.7724112272262573,
+          "maxAbsoluteChange": 1.0
+        },
+        "7": {
+          "samples": 1947,
+          "rawShadowed": 113,
+          "quadShadowed": 138,
+          "changedAboveTolerance": 77,
+          "darkenedAtLeastOnePercent": 42,
+          "lightenedAtLeastOnePercent": 34,
+          "acquiredShadowFromNeutral": 42,
+          "returnedToNeutral": 17,
+          "meanRawVisibility": 0.9419620037078857,
+          "meanQuadVisibility": 0.9435366988182068,
+          "maxAbsoluteChange": 1.0
+        }
+      },
+      "largestProxyChanges": [
+        {
+          "pixel": [
+            3321,
+            1880
+          ],
+          "materialId": 1,
+          "linearDepth": 508.69488525390625,
+          "raw": 1.0,
+          "quad": 0.0
+        },
+        {
+          "pixel": [
+            3257,
+            1952
+          ],
+          "materialId": 1,
+          "linearDepth": 476.3716125488281,
+          "raw": 1.0,
+          "quad": 0.0
+        },
+        {
+          "pixel": [
+            2321,
+            2096
+          ],
+          "materialId": 1,
+          "linearDepth": 427.95562744140625,
+          "raw": 1.0,
+          "quad": 0.0
+        },
+        {
+          "pixel": [
+            3112,
+            2137
+          ],
+          "materialId": 1,
+          "linearDepth": 409.511962890625,
+          "raw": 0.0,
+          "quad": 1.0
+        },
+        {
+          "pixel": [
+            3265,
+            1952
+          ],
+          "materialId": 1,
+          "linearDepth": 476.3716125488281,
+          "raw": 1.0,
+          "quad": 0.0
+        },
+        {
+          "pixel": [
+            2288,
+            2089
+          ],
+          "materialId": 1,
+          "linearDepth": 430.314208984375,
+          "raw": 1.0,
+          "quad": 0.0
+        },
+        {
+          "pixel": [
+            2592,
+            2121
+          ],
+          "materialId": 1,
+          "linearDepth": 405.7773132324219,
+          "raw": 0.0,
+          "quad": 1.0
+        },
+        {
+          "pixel": [
+            3265,
+            1928
+          ],
+          "materialId": 1,
+          "linearDepth": 486.67974853515625,
+          "raw": 1.0,
+          "quad": 0.0
+        }
+      ]
+    },
+    {
+      "light": 20,
+      "maxReconstructionError": 2.384185791015625e-07,
+      "shared": {
+        "maxRawReferenceError": 2.384185791015625e-07,
+        "maxRecomputeDifference": 0.0,
+        "bitIdenticalToRecompute": true,
+        "samplesVerified": 518400,
+        "partialFinalGroupSamples": 11520
+      },
+      "selectedPixelsBitIdentical": true,
+      "allValidReceivers": {
+        "samples": 518400,
+        "rawShadowed": 227006,
+        "quadShadowed": 231743,
+        "changedAboveTolerance": 43570,
+        "darkenedAtLeastOnePercent": 8167,
+        "lightenedAtLeastOnePercent": 7433,
+        "acquiredShadowFromNeutral": 7239,
+        "returnedToNeutral": 2508,
+        "meanRawVisibility": 0.5653330087661743,
+        "meanQuadVisibility": 0.5652176141738892,
+        "maxAbsoluteChange": 1.0
+      },
+      "nativeLightFacingProxy": {
+        "samples": 31714,
+        "rawShadowed": 1317,
+        "quadShadowed": 1410,
+        "changedAboveTolerance": 688,
+        "darkenedAtLeastOnePercent": 116,
+        "lightenedAtLeastOnePercent": 99,
+        "acquiredShadowFromNeutral": 112,
+        "returnedToNeutral": 19,
+        "meanRawVisibility": 0.958942174911499,
+        "meanQuadVisibility": 0.9585984349250793,
+        "maxAbsoluteChange": 1.0
+      },
+      "proxyMaterialBoundaries": {
+        "samples": 0,
+        "rawShadowed": 0,
+        "quadShadowed": 0,
+        "changedAboveTolerance": 0,
+        "darkenedAtLeastOnePercent": 0,
+        "lightenedAtLeastOnePercent": 0,
+        "acquiredShadowFromNeutral": 0,
+        "returnedToNeutral": 0,
+        "meanRawVisibility": null,
+        "meanQuadVisibility": null,
+        "maxAbsoluteChange": null
+      },
+      "proxyByMaterial": {
+        "1": {
+          "samples": 31714,
+          "rawShadowed": 1317,
+          "quadShadowed": 1410,
+          "changedAboveTolerance": 688,
+          "darkenedAtLeastOnePercent": 116,
+          "lightenedAtLeastOnePercent": 99,
+          "acquiredShadowFromNeutral": 112,
+          "returnedToNeutral": 19,
+          "meanRawVisibility": 0.958942174911499,
+          "meanQuadVisibility": 0.9585984349250793,
+          "maxAbsoluteChange": 1.0
+        }
+      },
+      "largestProxyChanges": [
+        {
+          "pixel": [
+            3312,
+            1065
+          ],
+          "materialId": 1,
+          "linearDepth": 2245.9619140625,
+          "raw": 1.0,
+          "quad": 0.0
+        },
+        {
+          "pixel": [
+            3529,
+            1072
+          ],
+          "materialId": 1,
+          "linearDepth": 2171.922119140625,
+          "raw": 1.0,
+          "quad": 0.0
+        },
+        {
+          "pixel": [
+            3512,
+            1073
+          ],
+          "materialId": 1,
+          "linearDepth": 2177.628173828125,
+          "raw": 1.0,
+          "quad": 0.0
+        },
+        {
+          "pixel": [
+            3713,
+            1080
+          ],
+          "materialId": 1,
+          "linearDepth": 2112.965576171875,
+          "raw": 1.0,
+          "quad": 0.0
+        },
+        {
+          "pixel": [
+            3513,
+            1072
+          ],
+          "materialId": 1,
+          "linearDepth": 2177.241455078125,
+          "raw": 1.0,
+          "quad": 0.0
+        },
+        {
+          "pixel": [
+            3313,
+            1064
+          ],
+          "materialId": 1,
+          "linearDepth": 2245.550537109375,
+          "raw": 1.0,
+          "quad": 0.0
+        },
+        {
+          "pixel": [
+            3528,
+            1073
+          ],
+          "materialId": 1,
+          "linearDepth": 2172.306640625,
+          "raw": 1.0,
+          "quad": 0.0
+        },
+        {
+          "pixel": [
+            3520,
+            1073
+          ],
+          "materialId": 1,
+          "linearDepth": 2174.964111328125,
+          "raw": 0.0,
+          "quad": 1.0
+        }
+      ]
+    },
+    {
+      "light": 52,
+      "maxReconstructionError": 2.384185791015625e-07,
+      "shared": {
+        "maxRawReferenceError": 2.384185791015625e-07,
+        "maxRecomputeDifference": 0.0,
+        "bitIdenticalToRecompute": true,
+        "samplesVerified": 518400,
+        "partialFinalGroupSamples": 11520
+      },
+      "selectedPixelsBitIdentical": true,
+      "allValidReceivers": {
+        "samples": 518400,
+        "rawShadowed": 187328,
+        "quadShadowed": 199350,
+        "changedAboveTolerance": 73012,
+        "darkenedAtLeastOnePercent": 24812,
+        "lightenedAtLeastOnePercent": 22564,
+        "acquiredShadowFromNeutral": 23606,
+        "returnedToNeutral": 11587,
+        "meanRawVisibility": 0.6418159008026123,
+        "meanQuadVisibility": 0.6421738862991333,
+        "maxAbsoluteChange": 1.0
+      },
+      "nativeLightFacingProxy": {
+        "samples": 14589,
+        "rawShadowed": 2199,
+        "quadShadowed": 2514,
+        "changedAboveTolerance": 1337,
+        "darkenedAtLeastOnePercent": 486,
+        "lightenedAtLeastOnePercent": 362,
+        "acquiredShadowFromNeutral": 437,
+        "returnedToNeutral": 122,
+        "meanRawVisibility": 0.8588172197341919,
+        "meanQuadVisibility": 0.8556853532791138,
+        "maxAbsoluteChange": 1.0
+      },
+      "proxyMaterialBoundaries": {
+        "samples": 20,
+        "rawShadowed": 0,
+        "quadShadowed": 4,
+        "changedAboveTolerance": 4,
+        "darkenedAtLeastOnePercent": 4,
+        "lightenedAtLeastOnePercent": 0,
+        "acquiredShadowFromNeutral": 4,
+        "returnedToNeutral": 0,
+        "meanRawVisibility": 1.0,
+        "meanQuadVisibility": 0.9000002145767212,
+        "maxAbsoluteChange": 0.5
+      },
+      "proxyByMaterial": {
+        "1": {
+          "samples": 14589,
+          "rawShadowed": 2199,
+          "quadShadowed": 2514,
+          "changedAboveTolerance": 1337,
+          "darkenedAtLeastOnePercent": 486,
+          "lightenedAtLeastOnePercent": 362,
+          "acquiredShadowFromNeutral": 437,
+          "returnedToNeutral": 122,
+          "meanRawVisibility": 0.8588172197341919,
+          "meanQuadVisibility": 0.8556853532791138,
+          "maxAbsoluteChange": 1.0
+        }
+      },
+      "largestProxyChanges": [
+        {
+          "pixel": [
+            1208,
+            737
+          ],
+          "materialId": 1,
+          "linearDepth": 3130.86669921875,
+          "raw": 1.0,
+          "quad": 0.0
+        },
+        {
+          "pixel": [
+            1304,
+            753
+          ],
+          "materialId": 1,
+          "linearDepth": 3236.04150390625,
+          "raw": 0.0,
+          "quad": 1.0
+        },
+        {
+          "pixel": [
+            1609,
+            856
+          ],
+          "materialId": 1,
+          "linearDepth": 3550.973876953125,
+          "raw": 0.0,
+          "quad": 1.0
+        },
+        {
+          "pixel": [
+            1209,
+            768
+          ],
+          "materialId": 1,
+          "linearDepth": 3133.649658203125,
+          "raw": 1.0,
+          "quad": 0.0
+        },
+        {
+          "pixel": [
+            1265,
+            752
+          ],
+          "materialId": 1,
+          "linearDepth": 3192.79296875,
+          "raw": 0.0,
+          "quad": 1.0
+        },
+        {
+          "pixel": [
+            1353,
+            752
+          ],
+          "materialId": 1,
+          "linearDepth": 3291.93017578125,
+          "raw": 0.0,
+          "quad": 1.0
+        },
+        {
+          "pixel": [
+            1449,
+            856
+          ],
+          "materialId": 1,
+          "linearDepth": 3343.054931640625,
+          "raw": 1.0,
+          "quad": 0.0
+        },
+        {
+          "pixel": [
+            1296,
+            761
+          ],
+          "materialId": 1,
+          "linearDepth": 3227.5615234375,
+          "raw": 0.0,
+          "quad": 1.0
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "Acquired/lost coverage is descriptive, not false-shadow ground truth",
+    "One saved frame; no camera motion, phase progression, animation or engine TAA",
+    "Sparse complete quads, not a full-frame render",
+    "Light proxy omits native shadows, BRDF, IES and actual dispatch coverage",
+    "Material ID 7/hair mapping is structural, not a visually verified material mask",
+    "No quality or performance approval; earlier motion regressions remain"
+  ]
+}

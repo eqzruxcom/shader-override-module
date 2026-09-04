@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "upstreamCommit": "8f329bd94fecc9bbcb9211ffd42a95dd7fe6b43e",
+  "generatedUtc": "2026-09-02T17:45:42.5522728Z",
+  "feature": "fail-closed-shader-family-gates",
+  "files": [
+    {
+      "path": "src/Backends/3DmigotoFork/DirectX11/ShaderRegex.cpp",
+      "sha256": "4543CCCDFBAF520F7D066BEF8B86EF2286D782F25C8C949722035AB95EA74735"
+    },
+    {
+      "path": "src/Backends/3DmigotoFork/DirectX11/IniHandler.cpp",
+      "sha256": "BD7C73288F7913A4740957452E712988BBEDC5FF30A7EB5714E4DB32706C5745"
+    },
+    {
+      "path": "src/Backends/3DmigotoFork/DirectX11/DirectX11.vcxproj",
+      "sha256": "A176EA99958D28657E2E3B7599DF5EAAD205DE552DF2E558531C59BAE355680B"
+    },
+    {
+      "path": "src/Backends/3DmigotoFork/DirectX11/ShaderFamily.cpp",
+      "sha256": "FCA993FAC125596E5882B019A084A040C791790FDCBC220A03DB337359CCF694"
+    },
+    {
+      "path": "src/Backends/3DmigotoFork/DirectX11/ShaderFamily.h",
+      "sha256": "75EBAF16C899F677B723382BDC291D6713D00BB67F6DAD942C721CAF71011088"
+    }
+  ]
+}

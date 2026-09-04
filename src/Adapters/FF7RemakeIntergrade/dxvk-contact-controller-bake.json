@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "kind": "migoto-texture1d-constant-map",
+  "resource": "t120",
+  "description": "Offline DXVK specialization of the promoted Remake contact/frustum controller. Master is baked on; the 3Dmigoto-only Page Down resource is not part of the DXVK binding contract.",
+  "entries": {
+    "29": [0.06, 0.0, 0.0, 0.0],
+    "31": [1.0, -1.0, 1.0, 100.0]
+  }
+}

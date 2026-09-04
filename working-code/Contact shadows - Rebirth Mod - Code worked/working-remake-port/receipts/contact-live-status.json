@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "checkedAtUtc": "2026-08-31T14:52:31.5221986Z",
+  "classification": "passed-parser-and-five-native-asm-reloads",
+  "mode": "rebirth-donor-shared-experiment-v1",
+  "processId": 8168,
+  "processAlive": true,
+  "processResponding": true,
+  "logBytesSinceInstall": 74639,
+  "keyParsed": true,
+  "configReloadSeen": true,
+  "shaders": [
+    {
+      "hash": "c30cdc8365df9840",
+      "assemblyLoadSeen": true,
+      "creationSeen": true,
+      "overrideParsed": true
+    },
+    {
+      "hash": "62b33a2d1e505241",
+      "assemblyLoadSeen": true,
+      "creationSeen": true,
+      "overrideParsed": true
+    },
+    {
+      "hash": "5a9fbefe0ab6f815",
+      "assemblyLoadSeen": true,
+      "creationSeen": true,
+      "overrideParsed": true
+    },
+    {
+      "hash": "0e97888f9a8767da",
+      "assemblyLoadSeen": true,
+      "creationSeen": true,
+      "overrideParsed": true
+    },
+    {
+      "hash": "08bb8764f1840179",
+      "assemblyLoadSeen": true,
+      "creationSeen": true,
+      "overrideParsed": true
+    }
+  ],
+  "errorLines": [],
+  "changedPayloadFiles": [],
+  "changedProtectedFiles": [],
+  "visualResult": "Requires user observation; parser/creation success is not proof of correct pixels",
+  "currentToggleState": "Not inferred from INI default",
+  "performanceVerified": false
+}

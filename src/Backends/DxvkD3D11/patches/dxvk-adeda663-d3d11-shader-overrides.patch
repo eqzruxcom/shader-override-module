@@ -1,0 +1,562 @@
+diff --git a/src/d3d11/d3d11_device.cpp b/src/d3d11/d3d11_device.cpp
+index 97df7a07..f3032262 100644
+--- a/src/d3d11/d3d11_device.cpp
++++ b/src/d3d11/d3d11_device.cpp
+@@ -51,6 +51,7 @@ namespace dxvk {
+     m_d3d11Formats      (m_dxvkDevice),
+     m_d3d11Options      (m_dxvkDevice->instance()->config()),
+     m_shaderOptions     (GetShaderOptions(m_dxvkDevice, m_d3d11Options)),
++    m_shaderOverride    (m_d3d11Options.shaderOverridePath),
+     m_maxFeatureLevel   (D3D11DeviceFeatures::GetMaxFeatureLevel(*m_dxvkDevice)),
+     m_deviceFeatures    (*m_dxvkDevice, m_d3d11Options, m_featureLevel) {
+     m_initializer = new D3D11Initializer(this);
+@@ -795,9 +796,8 @@ namespace dxvk {
+     DxvkIrShaderCreateInfo moduleInfo = { };
+     moduleInfo.options = m_shaderOptions;
+ 
+-    HRESULT hr = CreateShaderModule(&module, pClassLinkage,
+-      ComputeShaderKey(VK_SHADER_STAGE_VERTEX_BIT, pShaderBytecode, BytecodeLength),
+-      pShaderBytecode, BytecodeLength, moduleInfo);
++    HRESULT hr = CreateShaderModuleWithOverride(&module, pClassLinkage,
++      VK_SHADER_STAGE_VERTEX_BIT, pShaderBytecode, BytecodeLength, moduleInfo);
+     
+     if (FAILED(hr))
+       return hr;
+@@ -821,9 +821,8 @@ namespace dxvk {
+     DxvkIrShaderCreateInfo moduleInfo = { };
+     moduleInfo.options = m_shaderOptions;
+ 
+-    HRESULT hr = CreateShaderModule(&module, pClassLinkage,
+-      ComputeShaderKey(VK_SHADER_STAGE_GEOMETRY_BIT, pShaderBytecode, BytecodeLength),
+-      pShaderBytecode, BytecodeLength, moduleInfo);
++    HRESULT hr = CreateShaderModuleWithOverride(&module, pClassLinkage,
++      VK_SHADER_STAGE_GEOMETRY_BIT, pShaderBytecode, BytecodeLength, moduleInfo);
+ 
+     if (FAILED(hr))
+       return hr;
+@@ -895,13 +894,9 @@ namespace dxvk {
+       entry.stride = xfbOffsets.at(entry.buffer);
+     }
+ 
+-    // Create the actual shader module
+-    auto shaderKey = ComputeShaderKey(VK_SHADER_STAGE_GEOMETRY_BIT,
+-      pShaderBytecode, BytecodeLength, pSODeclaration, NumEntries,
+-      pBufferStrides, NumStrides, RasterizedStream);
+-    
+-    HRESULT hr = CreateShaderModule(&module, pClassLinkage, shaderKey,
+-      pShaderBytecode, BytecodeLength, moduleInfo);
++    HRESULT hr = CreateShaderModuleWithOverride(&module, pClassLinkage,
++      VK_SHADER_STAGE_GEOMETRY_BIT, pShaderBytecode, BytecodeLength, moduleInfo,
++      pSODeclaration, NumEntries, pBufferStrides, NumStrides, RasterizedStream);
+ 
+     if (FAILED(hr))
+       return E_INVALIDARG;
+@@ -925,9 +920,8 @@ namespace dxvk {
+     DxvkIrShaderCreateInfo moduleInfo = { };
+     moduleInfo.options = m_shaderOptions;
+ 
+-    HRESULT hr = CreateShaderModule(&module, pClassLinkage,
+-      ComputeShaderKey(VK_SHADER_STAGE_FRAGMENT_BIT, pShaderBytecode, BytecodeLength),
+-      pShaderBytecode, BytecodeLength, moduleInfo);
++    HRESULT hr = CreateShaderModuleWithOverride(&module, pClassLinkage,
++      VK_SHADER_STAGE_FRAGMENT_BIT, pShaderBytecode, BytecodeLength, moduleInfo);
+ 
+     if (FAILED(hr))
+       return hr;
+@@ -951,9 +945,8 @@ namespace dxvk {
+     DxvkIrShaderCreateInfo moduleInfo = { };
+     moduleInfo.options = m_shaderOptions;
+ 
+-    HRESULT hr = CreateShaderModule(&module, pClassLinkage,
+-      ComputeShaderKey(VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT, pShaderBytecode, BytecodeLength),
+-      pShaderBytecode, BytecodeLength, moduleInfo);
++    HRESULT hr = CreateShaderModuleWithOverride(&module, pClassLinkage,
++      VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT, pShaderBytecode, BytecodeLength, moduleInfo);
+ 
+     if (FAILED(hr))
+       return hr;
+@@ -977,9 +970,8 @@ namespace dxvk {
+     DxvkIrShaderCreateInfo moduleInfo = { };
+     moduleInfo.options = m_shaderOptions;
+ 
+-    HRESULT hr = CreateShaderModule(&module, pClassLinkage,
+-      ComputeShaderKey(VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT, pShaderBytecode, BytecodeLength),
+-      pShaderBytecode, BytecodeLength, moduleInfo);
++    HRESULT hr = CreateShaderModuleWithOverride(&module, pClassLinkage,
++      VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT, pShaderBytecode, BytecodeLength, moduleInfo);
+ 
+     if (FAILED(hr))
+       return hr;
+@@ -1003,9 +995,8 @@ namespace dxvk {
+     DxvkIrShaderCreateInfo moduleInfo = { };
+     moduleInfo.options = m_shaderOptions;
+ 
+-    HRESULT hr = CreateShaderModule(&module, pClassLinkage,
+-      ComputeShaderKey(VK_SHADER_STAGE_COMPUTE_BIT, pShaderBytecode, BytecodeLength),
+-      pShaderBytecode, BytecodeLength, moduleInfo);
++    HRESULT hr = CreateShaderModuleWithOverride(&module, pClassLinkage,
++      VK_SHADER_STAGE_COMPUTE_BIT, pShaderBytecode, BytecodeLength, moduleInfo);
+ 
+     if (FAILED(hr))
+       return hr;
+@@ -2253,6 +2244,151 @@ namespace dxvk {
+   }
+ 
+ 
++  HRESULT D3D11Device::CreateShaderModuleWithOverride(
++          D3D11CommonShader*      pShaderModule,
++          ID3D11ClassLinkage*     pLinkage,
++          VkShaderStageFlagBits   Stage,
++    const void*                   pShaderBytecode,
++          size_t                  BytecodeLength,
++    const DxvkIrShaderCreateInfo& ModuleInfo,
++    const D3D11_SO_DECLARATION_ENTRY* pSODeclaration,
++          UINT                    NumEntries,
++    const UINT*                   pBufferStrides,
++          UINT                    NumStrides,
++          UINT                    RasterizedStream) {
++    auto computeKey = [&] (const void* bytes, size_t length) {
++      return ComputeShaderKey(Stage, bytes, length,
++        pSODeclaration, NumEntries, pBufferStrides, NumStrides, RasterizedStream);
++    };
++
++    auto replacement = m_shaderOverride.resolve(Stage, pShaderBytecode, BytecodeLength);
++
++    if (!replacement) {
++      return CreateShaderModule(pShaderModule, pLinkage,
++        computeKey(pShaderBytecode, BytecodeLength),
++        pShaderBytecode, BytecodeLength, ModuleInfo);
++    }
++
++    D3D11CommonShader originalModule;
++    HRESULT originalHr = CreateShaderModule(&originalModule, pLinkage,
++      computeKey(pShaderBytecode, BytecodeLength),
++      pShaderBytecode, BytecodeLength, ModuleInfo);
++
++    if (FAILED(originalHr))
++      return originalHr;
++
++    auto originalContainer = dxbc_spv::dxbc::Container(pShaderBytecode, BytecodeLength);
++    auto replacementContainer = dxbc_spv::dxbc::Container(
++      replacement.replacement->data(), replacement.replacement->size());
++
++    auto sameChunk = [] (dxbc_spv::util::ByteReader a, dxbc_spv::util::ByteReader b) {
++      return a.getSize() == b.getSize()
++          && (!a.getSize() || !std::memcmp(a.getData(0u), b.getData(0u), a.getSize()));
++    };
++
++    bool signaturesMatch = replacementContainer
++      && sameChunk(originalContainer.getInputSignatureChunk(), replacementContainer.getInputSignatureChunk())
++      && sameChunk(originalContainer.getOutputSignatureChunk(), replacementContainer.getOutputSignatureChunk())
++      && sameChunk(originalContainer.getPatchConstantSignatureChunk(), replacementContainer.getPatchConstantSignatureChunk());
++
++    if (!signaturesMatch) {
++      Logger::warn(str::format("D3D11: Rejecting shader replacement ", replacement.identity,
++        ": input/output signature mismatch"));
++      *pShaderModule = std::move(originalModule);
++      return S_OK;
++    }
++
++    auto collectExternalDeclarations = [] (
++      const dxbc_spv::dxbc::Container& container,
++            std::vector<std::vector<unsigned char>>& declarations) {
++      dxbc_spv::dxbc::Parser parser(container.getCodeChunk());
++      auto shaderInfo = parser.getShaderInfo();
++
++      while (parser) {
++        auto op = parser.parseInstruction();
++
++        if (!op)
++          return false;
++
++        bool isExternalDeclaration = false;
++
++        switch (op.getOpToken().getOpCode()) {
++          case dxbc_spv::dxbc::OpCode::eDclSampler:
++          case dxbc_spv::dxbc::OpCode::eDclConstantBuffer:
++          case dxbc_spv::dxbc::OpCode::eDclResource:
++          case dxbc_spv::dxbc::OpCode::eDclResourceRaw:
++          case dxbc_spv::dxbc::OpCode::eDclResourceStructured:
++          case dxbc_spv::dxbc::OpCode::eDclUavTyped:
++          case dxbc_spv::dxbc::OpCode::eDclUavRaw:
++          case dxbc_spv::dxbc::OpCode::eDclUavStructured:
++          case dxbc_spv::dxbc::OpCode::eDclThreadGroup:
++            isExternalDeclaration = true;
++            break;
++
++          default:
++            break;
++        }
++
++        if (isExternalDeclaration) {
++          dxbc_spv::util::ByteWriter writer;
++
++          if (!op.write(writer, shaderInfo))
++            return false;
++
++          declarations.push_back(std::move(writer).extract());
++        }
++      }
++
++      std::sort(declarations.begin(), declarations.end());
++      return true;
++    };
++
++    std::vector<std::vector<unsigned char>> originalDeclarations;
++    std::vector<std::vector<unsigned char>> replacementDeclarations;
++    bool declarationsMatch = collectExternalDeclarations(originalContainer, originalDeclarations)
++      && collectExternalDeclarations(replacementContainer, replacementDeclarations)
++      && originalDeclarations == replacementDeclarations;
++
++    if (!declarationsMatch) {
++      Logger::warn(str::format("D3D11: Rejecting shader replacement ", replacement.identity,
++        ": resource or thread-group declaration mismatch"));
++      *pShaderModule = std::move(originalModule);
++      return S_OK;
++    }
++
++    D3D11CommonShader replacementModule;
++    HRESULT replacementHr = CreateShaderModule(&replacementModule, pLinkage,
++      computeKey(replacement.replacement->data(), replacement.replacement->size()),
++      replacement.replacement->data(), replacement.replacement->size(), ModuleInfo);
++
++    if (FAILED(replacementHr)) {
++      Logger::warn(str::format("D3D11: Rejecting shader replacement ", replacement.identity,
++        ": invalid replacement DXBC"));
++      *pShaderModule = std::move(originalModule);
++      return S_OK;
++    }
++
++    auto a = originalModule.GetBindingMask();
++    auto b = replacementModule.GetBindingMask();
++    bool bindingsMatch = a.cbvMask == b.cbvMask
++      && a.samplerMask == b.samplerMask
++      && a.uavMask == b.uavMask
++      && a.srvMask == b.srvMask;
++
++    if (!bindingsMatch) {
++      Logger::warn(str::format("D3D11: Rejecting shader replacement ", replacement.identity,
++        ": accessed resource-register mismatch"));
++      *pShaderModule = std::move(originalModule);
++      return S_OK;
++    }
++
++    Logger::info(str::format("D3D11: Loaded shader replacement ", replacement.identity,
++      " from ", replacement.path.string()));
++    *pShaderModule = std::move(replacementModule);
++    return S_OK;
++  }
++
++
+   DxvkShaderHash D3D11Device::ComputeShaderKey(
+           VkShaderStageFlagBits   Stage,
+     const void*                   pShaderBytecode,
+diff --git a/src/d3d11/d3d11_device.h b/src/d3d11/d3d11_device.h
+index 0b90bc7b..e3f08db6 100644
+--- a/src/d3d11/d3d11_device.h
++++ b/src/d3d11/d3d11_device.h
+@@ -22,6 +22,7 @@
+ #include "d3d11_on_12.h"
+ #include "d3d11_options.h"
+ #include "d3d11_shader.h"
++#include "d3d11_shader_override.h"
+ #include "d3d11_state.h"
+ #include "d3d11_util.h"
+ 
+@@ -502,6 +503,8 @@ namespace dxvk {
+ 
+     DxvkShaderOptions               m_shaderOptions = { };
+ 
++    D3D11ShaderOverride             m_shaderOverride;
++
+     DxvkCsChunkPool                 m_csChunkPool;
+ 
+     D3D11Initializer*               m_initializer = nullptr;
+@@ -526,6 +529,19 @@ namespace dxvk {
+             size_t                  BytecodeLength,
+       const DxvkIrShaderCreateInfo& ModuleInfo);
+ 
++    HRESULT CreateShaderModuleWithOverride(
++            D3D11CommonShader*      pShaderModule,
++            ID3D11ClassLinkage*     pLinkage,
++            VkShaderStageFlagBits   Stage,
++      const void*                   pShaderBytecode,
++            size_t                  BytecodeLength,
++      const DxvkIrShaderCreateInfo& ModuleInfo,
++      const D3D11_SO_DECLARATION_ENTRY* pSODeclaration = nullptr,
++            UINT                    NumEntries = 0u,
++      const UINT*                   pBufferStrides = nullptr,
++            UINT                    NumStrides = 0u,
++            UINT                    RasterizedStream = 0u);
++
+     DxvkShaderHash ComputeShaderKey(
+             VkShaderStageFlagBits   Stage,
+       const void*                   pShaderBytecode,
+diff --git a/src/d3d11/d3d11_options.cpp b/src/d3d11/d3d11_options.cpp
+index adf426d4..dc01c7be 100644
+--- a/src/d3d11/d3d11_options.cpp
++++ b/src/d3d11/d3d11_options.cpp
+@@ -57,6 +57,9 @@ namespace dxvk {
+ 
+     // Shader dump path is only available via an environment variable
+     this->shaderDumpPath = env::getEnvVar("DXVK_SHADER_DUMP_PATH");
++
++    // Shader replacements are opt-in and disabled when this is empty.
++    this->shaderOverridePath = config.getOption<std::string>("d3d11.shaderOverridePath", std::string());
+   }
+   
+ }
+diff --git a/src/d3d11/d3d11_options.h b/src/d3d11/d3d11_options.h
+index 3bf1e5ef..1f3cbf44 100644
+--- a/src/d3d11/d3d11_options.h
++++ b/src/d3d11/d3d11_options.h
+@@ -104,6 +104,9 @@ namespace dxvk {
+ 
+     /// Shader dump path
+     std::string shaderDumpPath;
++
++    /// 3Dmigoto-compatible DXBC replacement path
++    std::string shaderOverridePath;
+   };
+   
+ }
+diff --git a/src/d3d11/d3d11_shader_override.cpp b/src/d3d11/d3d11_shader_override.cpp
+new file mode 100644
+index 00000000..0ed8309e
+--- /dev/null
++++ b/src/d3d11/d3d11_shader_override.cpp
+@@ -0,0 +1,161 @@
++#include <fstream>
++#include <iomanip>
++#include <sstream>
++
++#include "../util/log/log.h"
++#include "../util/util_string.h"
++
++#include "d3d11_shader_override.h"
++
++namespace dxvk {
++
++  namespace {
++
++    constexpr std::uintmax_t MaxReplacementSize = 64ull * 1024ull * 1024ull;
++    constexpr std::uintmax_t MaxReplacementCacheSize = 64ull * 1024ull * 1024ull;
++
++  }
++
++  D3D11ShaderOverride::D3D11ShaderOverride(std::string path)
++  : m_path(std::move(path)) { }
++
++
++  D3D11ShaderOverrideSource D3D11ShaderOverride::resolve(
++          VkShaderStageFlagBits stage,
++    const void*                 bytecode,
++          std::size_t           bytecodeLength) const {
++    D3D11ShaderOverrideSource result;
++
++    if (m_path.empty() || !bytecode || !bytecodeLength)
++      return result;
++
++    const char* suffix = getStageSuffix(stage);
++    if (!suffix)
++      return result;
++
++    result.originalHash = compute3DmigotoHash(bytecode, bytecodeLength);
++
++    std::ostringstream name;
++    name << std::hex << std::nouppercase << std::setfill('0')
++         << std::setw(16) << result.originalHash << "-" << suffix;
++    result.identity = name.str();
++    result.path = m_path / (result.identity + "_replace.bin");
++
++    auto invalidateCached = [&] {
++      std::lock_guard<std::mutex> lock(m_cacheMutex);
++      auto entry = m_cache.find(result.identity);
++
++      if (entry != m_cache.end()) {
++        m_cacheBytes -= entry->second.fileSize;
++        m_cache.erase(entry);
++      }
++    };
++
++    std::error_code error;
++    auto size = std::filesystem::file_size(result.path, error);
++
++    if (error || !size) {
++      invalidateCached();
++      return result;
++    }
++
++    if (size > MaxReplacementSize) {
++      invalidateCached();
++      Logger::warn(str::format("D3D11: Rejecting oversized shader replacement ", result.path.string()));
++      return result;
++    }
++
++    auto writeTime = std::filesystem::last_write_time(result.path, error);
++    if (error) {
++      invalidateCached();
++      return result;
++    }
++
++    {
++      std::lock_guard<std::mutex> lock(m_cacheMutex);
++      auto entry = m_cache.find(result.identity);
++
++      if (entry != m_cache.end()
++       && entry->second.fileSize == size
++       && entry->second.writeTime == writeTime) {
++        result.replacement = entry->second.replacement;
++        return result;
++      }
++    }
++
++    auto bytes = std::make_shared<std::vector<std::uint8_t>>(static_cast<std::size_t>(size));
++
++    std::ifstream stream(result.path, std::ios::binary);
++    stream.read(reinterpret_cast<char*>(bytes->data()), static_cast<std::streamsize>(bytes->size()));
++
++    if (!stream) {
++      Logger::warn(str::format("D3D11: Failed to read shader replacement ", result.path.string()));
++      invalidateCached();
++      return result;
++    }
++
++    std::lock_guard<std::mutex> lock(m_cacheMutex);
++    auto publishSize = std::filesystem::file_size(result.path, error);
++    auto publishTime = std::filesystem::last_write_time(result.path, error);
++
++    if (error || publishSize != size || publishTime != writeTime) {
++      Logger::warn(str::format("D3D11: Shader replacement changed while reading ", result.path.string()));
++      return result;
++    }
++
++    auto current = m_cache.find(result.identity);
++    if (current != m_cache.end()
++     && current->second.fileSize == size
++     && current->second.writeTime == writeTime) {
++      result.replacement = current->second.replacement;
++      return result;
++    }
++
++    if (current != m_cache.end()) {
++      m_cacheBytes -= current->second.fileSize;
++      m_cache.erase(current);
++    }
++
++    while (m_cacheBytes + size > MaxReplacementCacheSize && !m_cache.empty()) {
++      auto victim = m_cache.begin();
++      m_cacheBytes -= victim->second.fileSize;
++      m_cache.erase(victim);
++    }
++
++    result.replacement = std::move(bytes);
++    m_cache.emplace(result.identity, CacheEntry { writeTime, size, result.replacement });
++    m_cacheBytes += size;
++    return result;
++  }
++
++
++  std::uint64_t D3D11ShaderOverride::compute3DmigotoHash(
++    const void*       bytecode,
++          std::size_t bytecodeLength) {
++    constexpr std::uint64_t Fnv64Prime = 0x100000001b3ULL;
++
++    std::uint64_t hash = 0u;
++    const auto* bytes = reinterpret_cast<const std::uint8_t*>(bytecode);
++
++    for (std::size_t i = 0u; i < bytecodeLength; i++) {
++      hash *= Fnv64Prime;
++      hash ^= bytes[i];
++    }
++
++    return hash;
++  }
++
++
++  const char* D3D11ShaderOverride::getStageSuffix(VkShaderStageFlagBits stage) {
++    switch (stage) {
++      case VK_SHADER_STAGE_VERTEX_BIT:                  return "vs";
++      case VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT:    return "hs";
++      case VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT: return "ds";
++      case VK_SHADER_STAGE_GEOMETRY_BIT:                return "gs";
++      case VK_SHADER_STAGE_FRAGMENT_BIT:                return "ps";
++      case VK_SHADER_STAGE_COMPUTE_BIT:                 return "cs";
++      default:                                          return nullptr;
++    }
++  }
++
++}
+diff --git a/src/d3d11/d3d11_shader_override.h b/src/d3d11/d3d11_shader_override.h
+new file mode 100644
+index 00000000..12404005
+--- /dev/null
++++ b/src/d3d11/d3d11_shader_override.h
+@@ -0,0 +1,55 @@
++#pragma once
++
++#include <cstddef>
++#include <cstdint>
++#include <filesystem>
++#include <memory>
++#include <mutex>
++#include <string>
++#include <unordered_map>
++#include <vector>
++
++#include <vulkan/vulkan.h>
++
++namespace dxvk {
++
++  struct D3D11ShaderOverrideSource {
++    std::uint64_t originalHash = 0u;
++    std::string identity;
++    std::filesystem::path path;
++    std::shared_ptr<const std::vector<std::uint8_t>> replacement;
++
++    explicit operator bool () const {
++      return replacement && !replacement->empty();
++    }
++  };
++
++  class D3D11ShaderOverride {
++  public:
++    explicit D3D11ShaderOverride(std::string path);
++
++    D3D11ShaderOverrideSource resolve(
++            VkShaderStageFlagBits stage,
++      const void*                 bytecode,
++            std::size_t           bytecodeLength) const;
++
++  private:
++    struct CacheEntry {
++      std::filesystem::file_time_type writeTime;
++      std::uintmax_t fileSize = 0u;
++      std::shared_ptr<const std::vector<std::uint8_t>> replacement;
++    };
++
++    std::filesystem::path m_path;
++    mutable std::mutex m_cacheMutex;
++    mutable std::unordered_map<std::string, CacheEntry> m_cache;
++    mutable std::uintmax_t m_cacheBytes = 0u;
++
++    static std::uint64_t compute3DmigotoHash(
++      const void*       bytecode,
++            std::size_t bytecodeLength);
++
++    static const char* getStageSuffix(VkShaderStageFlagBits stage);
++  };
++
++}
+diff --git a/src/d3d11/meson.build b/src/d3d11/meson.build
+index af2b7b27..77963d45 100644
+--- a/src/d3d11/meson.build
++++ b/src/d3d11/meson.build
+@@ -49,6 +49,7 @@ d3d11_src = [
+   'd3d11_resource.cpp',
+   'd3d11_sampler.cpp',
+   'd3d11_shader.cpp',
++  'd3d11_shader_override.cpp',
+   'd3d11_state.cpp',
+   'd3d11_state_object.cpp',
+   'd3d11_swapchain.cpp',

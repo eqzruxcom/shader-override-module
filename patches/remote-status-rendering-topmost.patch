@@ -1,0 +1,38 @@
+diff --git a/tests/ShaderFamilyHost/Test-RemoteStatusRendering.ps1 b/tests/ShaderFamilyHost/Test-RemoteStatusRendering.ps1
+--- a/tests/ShaderFamilyHost/Test-RemoteStatusRendering.ps1
++++ b/tests/ShaderFamilyHost/Test-RemoteStatusRendering.ps1
+@@ -34,6 +34,17 @@ public static class RemoteStatusWindowBounds
+         out RECT value,
+         int size);
++
++    [DllImport("user32.dll", SetLastError = true)]
++    public static extern bool SetWindowPos(
++        IntPtr hwnd,
++        IntPtr insertAfter,
++        int x,
++        int y,
++        int width,
++        int height,
++        uint flags);
+ }
+ '@
+ 
+@@ -106,6 +117,17 @@ try {
+     }
+ 
+     $hostProcess.Refresh()
++    $noSize = 0x0001
++    $noMove = 0x0002
++    $noActivate = 0x0010
++    $madeTopmost = [RemoteStatusWindowBounds]::SetWindowPos(
++        $hostProcess.MainWindowHandle,
++        [IntPtr](-1),
++        0, 0, 0, 0,
++        ($noSize -bor $noMove -bor $noActivate))
++    if (-not $madeTopmost) {
++        throw "SetWindowPos failed with Win32 error $([Runtime.InteropServices.Marshal]::GetLastWin32Error())."
++    }
++    Start-Sleep -Milliseconds 150
+     Save-WindowScreenshot -WindowHandle $hostProcess.MainWindowHandle -Path $beforePath
+     $receipt = & $senderPath -Message $statusMessage -ProcessId $hostProcess.Id
+     if (-not $receipt.Acknowledged) { throw 'The wrapper did not acknowledge the message.' }

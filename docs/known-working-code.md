@@ -1,0 +1,168 @@
+# Known working code
+
+Maintain this list for the **Universal Unreal Engine Shader Changer**. Preserve
+successful implementations separately from later tuning and experiments. A known
+flaw qualifies a success; it does not erase the fact that the code worked.
+
+## Contact shadows - Rebirth Mod - Code worked
+
+User-requested label, 2026-08-31. The original Rebirth mod is the donor/reference;
+the adapted code has also worked in FF7 Remake Intergrade's modified UE4.
+
+- **What worked:** the source-preserving donor contact-shadow port loads and
+  produces added contact shadows in Remake. User: "its stable" and "that said it
+  looks working in most cases". The original live experiment used Home. The
+  currently promoted runtime uses **Page Down** as the sole accepted-code master;
+  Page Up is free for the next experiment and F10 remains reload-only.
+- **Preserve:** original pinned donor HLSL, its license/provenance, untouched
+  captured Remake shader bytecode/assembly, and the tested Remake port. These are
+  different things, stored under different subfolders.
+- **Folder:** [Contact shadows - Rebirth Mod - Code worked](../working-code/Contact%20shadows%20-%20Rebirth%20Mod%20-%20Code%20worked/README.md).
+- **Known refinement:** user identifies hard/sharp added shadow edges on the
+  sword and scenery cone alongside existing softer native shadows. The request
+  is an edge transition, not simply reduced darkness. Preserve native shadows.
+- **Cross-game qualification:** Rebirth's existing shadows/lighting may blend
+  differently. This is not proof of a donor bug, nor proof of an identical look
+  across games. We have not independently run Rebirth in this test session.
+- **Evidence:** six original screenshots and 38 payload/source/evidence files
+  are preserved in `artifacts/checkpoints/rebirth-contact-first-working-20260831-v1`.
+  Its manifest records user reports, hashes, and unknown screenshot ON/OFF order.
+- **Scope:** five native lighting variants, not a complete inventory of all
+  Remake or UE lighting shaders. Synthetic motion failures remain recorded;
+  performance and whole-game compatibility are not approved by this entry.
+- **Next experiments:** must be separate copies. Do not overwrite this baseline
+  or silently rewrite the pinned donor to improve a test result.
+
+### Left-edge frustum fix qualification (2026-08-31, promoted 2026-09-01)
+
+The early left-only fade experiments remain historical evidence, including the
+reported snap-back. A later spatial profile was promoted as `//Frustum Fix` in
+`62b33a2d1e505241-cs.txt`. The user then motion-tested it while running and
+reported that it worked "phenomenally" and became easy to forget. It fades only
+the added contact contribution near the left screen boundary; it does not add
+geometry, extend the camera frustum, accumulate temporal history, or soften all
+contact-shadow shapes. Resolution/FOV behavior is normalized to the shader's
+screen coordinate rather than a fixed pixel count.
+
+Authoritative live audit:
+`artifacts/runtime-toggle-audits/20260901-164027-570/manifest.json`. It records
+the five accepted compute replacements, their hashes, the Page Down guard, and
+zero Page Up consumers. Preserve the original first-working snapshot and the
+Frustum Fix checkpoint separately; neither is overwritten by this status note.
+
+## Other working results to retain
+
+These entries preserve historical successes; they are not claims that every
+earlier effect or keyboard assignment is currently installed.
+
+| Item | Evidence/status | Keep separate from |
+| --- | --- | --- |
+| 3Dmigoto DX11 interception/replacement in Remake | Device/swap-chain/shader creation logged; native replacements reload successfully | Automatic family discovery and correctness in another game |
+| Donor exposure/gamma adjustment | User-confirmed brightness/tonal change; [live observation](author-image-adjustments-observation.md); code/evidence retained, obsolete live Page Down comparison removed on 2026-08-31 | Preference, donor color-look equivalence, full-game compatibility, reintegration under the future master gate |
+| UI-safe scene saturation | Earlier grayscale and intermediate-level tests worked, recorded in project README/runtime history | Current Home contact toggle and final grading choices |
+| Native temporal AO strength control | Earlier live control tests worked, recorded in project README/runtime history | Added contact shadows; these are distinct effects |
+| Native volumetric scattering control | Earlier partial/off tests worked, recorded in project README/runtime history | Bloom, surface lighting, or replacement of all fog |
+| Reflection shader identification | Diagnostic material coverage worked | Normal-range reflection strength, still not visually validated in a suitable view |
+
+### Current reviewed shader-family coverage (2026-09-02)
+
+The authoritative Remake catalog now contains **34 exact shader identities in
+13 verified families**. It preserves the dynamic/static ShadowDepth split, the
+Cloud clothing VS/PS material pair, all five accepted tiled local-light compute
+variants, temporal SSAO, SSR, and the reflection/indirect composite boundary.
+
+Three of the 11 Rebirth donor families now have explicit Remake relations:
+
+1. `local-light` -> `tiled-surface-light-evaluation`: working contact-shadow
+   adapter in the current area.
+2. `ssr` -> `screen-space-reflection-trace-resolve`: verified semantic role and
+   two known Remake variants; effect port still requires a live visual gate.
+3. `reflection-environment` -> `reflection-indirect-composite`: verified only as
+   a **partial downstream consumer boundary**. This does not equate Rebirth's
+   SSGI/AO producer with Remake's temporal SSAO.
+
+All 11 donor families retain exactly one reviewed decision; the other eight
+remain unresolved rather than guessed. The machine-readable sources are
+`src/Adapters/FF7RemakeIntergrade/verified-shader-classifications.json` and
+`src/Adapters/FF7RemakeIntergrade/rebirth-family-relations.json`.
+
+The live replacement-header audit now passes for all 12 installed shader
+replacements: five native ASM replacements preserve Microsoft disassembly
+headers, and seven decompiled HLSL replacements preserve their 3Dmigoto source
+headers plus exact original binary peers. Do not paste ASM headers into HLSL
+files. Evidence: `artifacts/shader-header-audits/20260903-000125-229/manifest.json`.
+
+The five contact-light variants expose position, inverse attenuation radius,
+color, and a native flag, but no verified physical emitter radius. Attenuation
+radius must not be reused as shadow softness. See
+[`contact-shadow-light-binding-audit.md`](contact-shadow-light-binding-audit.md).
+
+For terminology and controls, see
+[`helixmod-to-3dmigoto-workflow.md`](helixmod-to-3dmigoto-workflow.md).
+
+## Universal design requirement
+
+### Agreed order and older-game priority (2026-08-31)
+
+1. Get the selected effects working correctly in the current Remake area,
+   including motion and edge quality. Preserve each working implementation.
+2. Move to a second area and reconfirm the effects, including any new variants.
+3. Only then generalize the successful edits into shader-family recognition and
+   patch rules that handle newly encountered compatible shaders throughout play.
+4. Extend the framework to other games. Older Unreal games are the user's more
+   interesting destination; Remake is the development test case. Investigate
+   native DX9 tooling and DX9-to-DX11 translation rather than assuming UE4-only scope.
+
+Immediate priority is contact-shadow hard-edge refinement and the user-reported
+camera-dependent artifact at the very screen edge, before that second-area gate.
+The user initially suspects the left edge; the width estimate is explicitly a
+guess. Do not tune a hardcoded 48-pixel strip based on that estimate. See
+[refinement issue record](contact-shadow-refinement-issues.md).
+
+The current ShaderCache contains 184 original compiled binaries (95 PS, 70 VS,
+18 CS, 1 GS), observed 2026-08-31. Its 184 text companions are not additional
+shaders. This is captured coverage, not a whole-game inventory or live residency
+count. The six installed replacements are five contact-lighting variants and one
+image-adjustment shader. The five contact hashes do not cover unseen hashes.
+
+**Runtime discovery requirement:** observe newly created/encountered shaders
+after level changes as well as startup. Retain unique originals, deduplicate
+observations, match compatible families, verify bindings, and cache the transformed
+variant keyed by original bytecode and rule version. Leave unsupported variants
+native and log the reason. Test shader recreation/reloads too. Do not describe
+the current fixed-hash prototype as this runtime system already implemented.
+
+**Comparison requirement:** expose each effect and agreed strength options on
+keypresses, with clear state and a true-original global baseline. Comparisons
+must continue to work for newly matched variants; no shader reload is required
+merely to compare. Keep F10/reload distinct from A/B. Avoid Ctrl/Shift combinations.
+
+**Historical reference:** [Helix's BioShock Infinite DX11 fix](https://helixmod.blogspot.com/2014/06/bioshock-infinite-dx11-helix.html)
+was documented in June 2014. BioShock Infinite is the user's UE3 precedent, not
+UE4, and this was Helix's separate implementation, not 3Dmigoto. Preserve the
+user-supplied [Lua reference](../reference/external/Helix-BioShockInfinite-UE3-DX11/README.md)
+separately. It demonstrates resource-name/instruction-pattern-driven assembly
+rewriting, not just a list of hand-edited hashes. It is not the wrapper source.
+
+User direction: discover **shader families**, not thousands of individual hashes.
+If an effect has a few structural families and thousands of permutations, identify
+and transform every compatible member of those families. Keep a coverage report
+of matches, unsupported variants, and reasons for rejection; do not silently claim
+all variants from a small successful sample.
+
+Separate:
+
+1. Reusable effect algorithm and original donor/source provenance.
+2. Engine/API-generation recognition and transformation rules.
+3. Game-specific resources, conventions, integration points, and overrides.
+4. Visual tuning against that game's native lighting and shadows.
+5. Tested status, known flaws, and reversible working checkpoints.
+
+Shader injection has existing cross-game precedent; our task is reusable family
+recognition and correct integration, not proving interception from scratch.
+UE3/UE4 and other generations/APIs are portability targets; this modified-UE4
+Remake success is evidence for the design, not a blanket all-generation test.
+
+The user requested external backups at `F:\Shader3Dmigoto`. Each backup must be a
+new dated snapshot, hash-verified, without replacing earlier snapshots or touching
+the live game. Store the working list with the code, not only in conversation.

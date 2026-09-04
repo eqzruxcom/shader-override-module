@@ -1,0 +1,105 @@
+{
+  "schemaVersion": 1,
+  "id": "ue4-volumetric-fog-grid-injection-ps-sm5",
+  "family": "volumetrics-and-fog",
+  "displayName": "UE4 volumetric fog-grid raster injection",
+  "description": "Pixel pass that reconstructs a froxel from screen position plus render-target array layer, samples volume textures, and injects scattering or light into a 3D fog-grid target.",
+  "stages": ["ps"],
+  "shaderModels": ["ps_5_0"],
+  "hashFastPaths": [
+    {
+      "adapter": "FF7RemakeIntergrade",
+      "hash": "cbc771ff8a37a0b3",
+      "evidence": "Verified live as broad noise-modulated volumetric injection at event 807."
+    },
+    {
+      "adapter": "FF7RemakeIntergrade",
+      "hash": "c25d7f5229662b97",
+      "evidence": "Verified live as local-light volumetric injection at events 808-810."
+    }
+  ],
+  "semanticSignature": {
+    "checks": [
+      {
+        "id": "screen-position-input",
+        "pattern": "^dcl_input_ps_siv\\s+linear\\s+noperspective\\s+v\\d+\\.xy,\\s*position\\s*$",
+        "minCount": 1,
+        "maxCount": 1,
+        "meaning": "The rasterized froxel is reconstructed from its screen-space position."
+      },
+      {
+        "id": "array-layer-input",
+        "pattern": "^dcl_input_ps_siv\\s+constant\\s+v\\d+\\.x,\\s*rendertarget_array_index\\s*$",
+        "minCount": 1,
+        "maxCount": 1,
+        "meaning": "The geometry stage or instanced draw supplies the destination 3D texture layer."
+      },
+      {
+        "id": "three-volume-inputs",
+        "pattern": "^dcl_resource_texture3d\\s+\\(float,float,float,float\\)\\s+t\\d+\\s*$",
+        "minCount": 3,
+        "maxCount": 3,
+        "meaning": "The verified permutations declare three volumetric source textures."
+      },
+      {
+        "id": "no-screen-texture-inputs",
+        "pattern": "^dcl_resource_texture2d\\s+",
+        "minCount": 0,
+        "maxCount": 0,
+        "meaning": "This pass operates directly in the fog grid rather than sampling scene-color or G-buffer screens."
+      },
+      {
+        "id": "array-layer-to-froxel-coordinate",
+        "pattern": "^\\s*utof\\s+r\\d+\\.[xyzw]+,\\s*v\\d+\\.x\\s*$",
+        "minCount": 1,
+        "maxCount": null,
+        "meaning": "The integer render-target layer is converted into the continuous froxel Z coordinate."
+      },
+      {
+        "id": "exponential-depth-reconstruction",
+        "pattern": "^\\s*exp\\s+[^\\r\\n]+$",
+        "minCount": 1,
+        "maxCount": null,
+        "meaning": "Exponential slice-depth reconstruction maps the fog-grid layer into view space."
+      },
+      {
+        "id": "lod-zero-volume-sampling",
+        "pattern": "^\\s*sample_l_indexable\\(texture3d\\)\\(float,float,float,float\\)\\s+[^\\r\\n]+,\\s*s\\d+,\\s*l\\(0\\.000000\\)\\s*$",
+        "minCount": 3,
+        "maxCount": null,
+        "meaning": "Three or more 3D source-volume samples contribute to the injected froxel."
+      },
+      {
+        "id": "half-scale-volume-output",
+        "pattern": "^\\s*mul\\s+o0\\.xyzw,\\s*[^\\r\\n]+l\\(0\\.500000,\\s*0\\.500000,\\s*0\\.500000,\\s*(?:0\\.500000|1\\.000000)\\)\\s*$",
+        "minCount": 1,
+        "maxCount": 1,
+        "meaning": "The verified UE4 permutations apply the common half-scale encoding to scattering RGB."
+      },
+      {
+        "id": "zero-outside-volume-fallback",
+        "pattern": "^\\s*mov\\s+o0\\.xyzw,\\s*l\\(0,0,0,0\\)\\s*$",
+        "minCount": 1,
+        "maxCount": 1,
+        "meaning": "Pixels outside the valid injected volume explicitly write no contribution."
+      }
+    ]
+  },
+  "runtimeContract": {
+    "output": "float4 scattering, light, density, or extinction contribution into a 3D render-target array",
+    "verifiedStage": "ps_5_0",
+    "adapterMustConfirm": [
+      "render target is a 3D texture or array-backed fog grid",
+      "geometry-stage or instanced layer routing",
+      "volume dimensions and slice count",
+      "each Texture3D source role",
+      "blend state and accumulation order",
+      "downstream temporal scattering integration pass"
+    ]
+  },
+  "sourceEvidence": [
+    "artifacts/captured-shaders/cbc771ff8a37a0b3-ps/cbc771ff8a37a0b3-ps_dumpbin.asm",
+    "artifacts/captured-shaders/c25d7f5229662b97-ps/c25d7f5229662b97-ps_dumpbin.asm",
+    "src/Adapters/FF7RemakeIntergrade/shader-map.json"
+  ]
+}

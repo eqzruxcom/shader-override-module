@@ -1,0 +1,71 @@
+{
+  "limitation": "Synthetic tracked surfaces and moving box, not FF7 animation, full lighting composition, or temporal history",
+  "reconstruction": "RecomputeQuad",
+  "endpointRepeatsNoiseFrame": true,
+  "runnerSha256": "5319FAD588DF1EAE7091F4AE07ECC60677135FB357E53B5F78A2E5146D6F73EF",
+  "noiseMode": "donor-animated-IGN",
+  "implementation": "Rebirth",
+  "sources": [
+    {
+      "path": "src/Effects/Lighting/ContactShadowCommon.hlsl",
+      "sha256": "4BEB4FD3AEEE935BE7E239CA9C927A25D53810E608495A820E2CC7658B66EB67"
+    },
+    {
+      "path": "src/Effects/Lighting/ContactShadows.hlsl",
+      "sha256": "C811841A25CE6851CED7E501B9AC5B919C76A89A828C36406B03BE3CCD0A4A20"
+    },
+    {
+      "path": "src/Tests/ContactShadowsMotion_cs.hlsl",
+      "sha256": "60D70D6EDA3E3752DDBDC116D782422174B6EDB9DDD4B57EEF6FF3BB419CB88E"
+    },
+    {
+      "path": "tools/Audit-ContactShadowMotion.cpp",
+      "sha256": "4612F28A0D6334EDBD0435F7D7D0EF281B0C311B9B104CE39D7801AB47DE975A"
+    },
+    {
+      "path": "tools/Audit-ContactShadowMotion.ps1",
+      "sha256": "D8DEEC6B235BEF879EEC5BD125F366EBFAAE0DDF5383CFBC3CBA6C0E47AAAD96"
+    },
+    {
+      "path": "tools/ContactShadowAdapterTests.h",
+      "sha256": "E59B4B599DBE595E27C1DA01C8FEF237E1DF2858BEFF4BAFC092090256369EF8"
+    },
+    {
+      "path": "src/Effects/Lighting/RebirthContactShadows.hlsl",
+      "sha256": "D7F38CC14D8D4939840D536F700B62EDCC14285D6BD4FF1F44E980EBBECF1FB9"
+    },
+    {
+      "path": "src/ThirdParty/ShaderInjector/RebirthContactRay.hlsl",
+      "sha256": "52C8FC47BD2C83EC813CCBD4EBC093CD45971852FD60C511978B71C959F5C99A"
+    },
+    {
+      "path": "src/ThirdParty/ShaderInjector/RebirthContactNoise.hlsl",
+      "sha256": "92FE24A57B9A13A27242A4BB059EE6391F8469A1C02FA8633B441B5C0D8AB04C"
+    },
+    {
+      "path": "src/ThirdParty/ShaderInjector/RebirthContactReconstruction.hlsl",
+      "sha256": "FBFB1AC6B7845425D948CAAB18C55C4BFA69CC8A13F89DBB7521D1699B228903"
+    },
+    {
+      "path": "src/ThirdParty/ShaderInjector/provenance.json",
+      "sha256": "527615E23B30055E887DB621C6B434B05E99CB2EB491E4115ECD2D32B688CD90"
+    },
+    {
+      "path": "src/Tests/RebirthContactMotion_cs.hlsl",
+      "sha256": "2AD976E087607A6C03871C54118FA281E4B53454FFE7923C10215E69CB8D9750"
+    }
+  ],
+  "framesPerScene": 96,
+  "receiversPerFrame": 512,
+  "liveGameChanged": false,
+  "scenes": 4,
+  "depthDimensions": [
+    1280,
+    720
+  ],
+  "regressionDetected": true,
+  "reconstructionLimit": "Pixel/quad modes trace pixel-center depth and generated normals; tracked CPU truth can differ at silhouettes. Raw uses exact tracked receivers. No full native dispatch, raster-helper coverage or temporal AA.",
+  "execution": "completed-offline-WARP-synthetic-motion",
+  "samples": 16,
+  "createdAtUtc": "2026-08-31T14:23:42.2646035Z"
+}

@@ -1,0 +1,121 @@
+{
+  "schemaVersion": 1,
+  "adapterId": "FF7RemakeIntergradeContactShadows",
+  "mode": "rebirth-donor-shared-experiment-v1",
+  "createdAtUtc": "2026-08-31T14:27:39.3191430Z",
+  "licensedRegexDependency": false,
+  "diagnosticOnly": true,
+  "runtimeEligible": false,
+  "releaseEligible": false,
+  "qualityGatePassed": false,
+  "knownMotionArtifacts": true,
+  "experimentalTestAuthorized": true,
+  "authorization": "User confirmed disclosed experimental comparison with oka; no release approval",
+  "executable": {
+    "path": "C:\\Games\\Final.Fantasy.VII.Remake.Intergrade-InsaneRamZes\\End\\Binaries\\Win64\\ff7remake_.exe",
+    "sha256": "25B54C345C94EE9F6C6876B9C7537A69E6B0EEF25F322207C32A8DDCEE816635"
+  },
+  "files": [
+    {
+      "relativePath": "ShaderFixes/c30cdc8365df9840-cs.txt",
+      "sha256": "876F6E27D7F216002C58CD4666868FE909CBFBF9169D855B73D202581BC3D5CA"
+    },
+    {
+      "relativePath": "ShaderFixes/62b33a2d1e505241-cs.txt",
+      "sha256": "55DAD282FD3690E59C076BEDB431FC73D10B99B7218C337A75E9DFB01E9B2C5C"
+    },
+    {
+      "relativePath": "ShaderFixes/5a9fbefe0ab6f815-cs.txt",
+      "sha256": "4E2E1AE9D91342D483D09FB71EEE62FF40AABC17FF8FC569F2D096E5511EB68F"
+    },
+    {
+      "relativePath": "ShaderFixes/0e97888f9a8767da-cs.txt",
+      "sha256": "A0005099446203611C56438B1A4459D661F76D3B2C81C38021432A4E57E26BDD"
+    },
+    {
+      "relativePath": "ShaderFixes/08bb8764f1840179-cs.txt",
+      "sha256": "CE61BDC44960A642348DAD91710524CA166363B10325394195B9E5101DE87939"
+    },
+    {
+      "relativePath": "Mods/ContactShadows.ini",
+      "sha256": "06379B553D2818227112C7A1EC219A3F1B7A680320219E557690CD683BB6D1D9"
+    }
+  ],
+  "evidence": [
+    {
+      "scope": "passed-shared-interface-only",
+      "sha256": "6E04E070F66399E4FBF0F14B0151018FCB2DE60376A465F6257385064DA2E4A9",
+      "path": "C:\\Users\\EQZITARA\\Documents\\ChatGPT\\FF7 Rebirth mod\\artifacts\\rebirth-contact-shared-single-interface-20260831-v3\\manifest.json"
+    },
+    {
+      "scope": "passed-shared-interface-only",
+      "sha256": "8050502E7A9AA396EABCF999416E8A1ACC285841CB2D0EDC641D52869CD39EE7",
+      "path": "C:\\Users\\EQZITARA\\Documents\\ChatGPT\\FF7 Rebirth mod\\artifacts\\rebirth-contact-shared-repeat-interface-20260831-v2\\manifest.json"
+    },
+    {
+      "scope": "passed-reconstruction-identity-only",
+      "sha256": "5575AD326361BAAF3D5A46B8FCA7DACA14BA4EC8CB51D8337931F6BEB24AD0FA",
+      "path": "C:\\Users\\EQZITARA\\Documents\\ChatGPT\\FF7 Rebirth mod\\artifacts\\rebirth-contact-capture-shared-comparison-20260831-v2\\comparison.json"
+    },
+    {
+      "scope": "FAILED synthetic motion; explicitly acknowledged, not waived as passing",
+      "sha256": "F563AC6DA411C53A6F226888DDED558A392F678E00C66ECC6C84984D785CD4F0",
+      "path": "C:\\Users\\EQZITARA\\Documents\\ChatGPT\\FF7 Rebirth mod\\artifacts\\rebirth-contact-experiment-motion16-20260831-v1\\manifest.json"
+    }
+  ],
+  "unchangedReleaseGates": [
+    {
+      "sha256": "9FC2482212BA49D7E364F80497FEBBD2187853946B79A60733115B3D6629F57D",
+      "path": "tools/Assert-IntergradeContactMotionGate.ps1"
+    },
+    {
+      "sha256": "4C226D802EE5B0E6FF4A529D632DCD41A72A7F6B3E922D6FC157069CD168F7D1",
+      "path": "tools/Assert-IntergradeContactSoftwareGate.ps1"
+    },
+    {
+      "sha256": "D4FC692E4F283C8C2E5E397D51904EFD2315F560D266460A6EC30054DB376864",
+      "path": "tools/Stage-IntergradeContactAllLights.ps1"
+    }
+  ],
+  "candidateManifestSha256": "3FDD26E45F76320345B0330FAD150AA4AE8426BA2D95B63FC7CC012E4C62CA7B",
+  "stagerSha256": "A8CEF49EC60E78AA84857406FF4A1DA0193D43E300B163B9A64A161B375D6620",
+  "implementation": "Rebirth",
+  "reconstruction": "SharedQuad",
+  "samples": 16,
+  "selectedLight": -1,
+  "strength": 1,
+  "rayLength": 100,
+  "key": "Home",
+  "defaultEnabled": false,
+  "predecessorReceipt": "C:\\Users\\EQZITARA\\Documents\\ChatGPT\\FF7 Rebirth mod\\artifacts\\installed-contact-all-lights-overlay-v1.json",
+  "protectedLiveFiles": [
+    {
+      "path": "d3dx.ini",
+      "sha256": "4AE9AD49699235326744C9C5BAE01DEF35631D2E27A96651CB0915C5CEB7C120"
+    },
+    {
+      "path": "d3d11.dll",
+      "sha256": "A338374D1C1A335322D868A483369D8AA754DDBDC511AE48807662A7A9165F30"
+    },
+    {
+      "path": "Mods/UE4EffectsGenerated.ini",
+      "sha256": "9848840A9F25DDB5C4F136DC83404574230F4C74448BC613E32F14A7F3C2DEAA"
+    },
+    {
+      "path": "ShaderFixes/41f1bf8b79d01319-ps.txt",
+      "sha256": "6A91C4A82D098DE8C57648544F572CB0DD5C091909F2F48A0D8E2D846F8C9368"
+    },
+    {
+      "path": "Mods/ContactShadowCapture.ini",
+      "sha256": "0763B8AEBE17EB7794F8A7A923C3A9332D1A0ECEE807E1278DF69C30D83389A6"
+    }
+  ],
+  "liveTested": false,
+  "performanceTested": false,
+  "limitations": [
+    "Known synthetic false shadows, misses and motion variation",
+    "Native temporal phase and hardware cost unverified",
+    "OFF preserves native lighting math, not original shader execution cost",
+    "Home compares only this effect; other installed adjustments unchanged"
+  ]
+}

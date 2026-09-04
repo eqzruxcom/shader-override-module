@@ -1,0 +1,133 @@
+{
+  "schemaVersion": 1,
+  "id": "ue4-screen-space-reflection-trace-resolve-ps-sm5",
+  "family": "screen-space-reflections",
+  "displayName": "UE4 screen-space reflection trace and temporal resolve",
+  "description": "Full-screen pixel pass that reconstructs the reflected ray from G-buffer geometry, marches hierarchical depth, reprojects temporal data with velocity, samples scene color or reflection history, and writes reflection radiance plus hit confidence.",
+  "stages": [
+    "ps"
+  ],
+  "shaderModels": [
+    "ps_5_0"
+  ],
+  "hashFastPaths": [
+    {
+      "adapter": "FF7RemakeIntergrade",
+      "hash": "b2bc6059f9a39c7f",
+      "evidence": "Live solid-magenta A/B selectively marked reflective/specular materials, including wet ground, metal, fencing, and a smaller hair contribution, while leaving the HUD intact."
+    }
+  ],
+  "semanticSignature": {
+    "checks": [
+      {
+        "id": "single-volume-noise-input",
+        "pattern": "^dcl_resource_texture3d\\s+\\(float,float,float,float\\)\\s+t\\d+\\s*$",
+        "minCount": 1,
+        "maxCount": 1,
+        "meaning": "A 3D frame-varying noise sequence jitters screen-space reflection rays."
+      },
+      {
+        "id": "eight-screen-inputs",
+        "pattern": "^dcl_resource_texture2d\\s+\\(float,float,float,float\\)\\s+t\\d+\\s*$",
+        "minCount": 8,
+        "maxCount": 8,
+        "meaning": "The pass binds G-buffer normal and material data, scene depth, hierarchical depth, velocity, and two scene-color or reflection-history inputs."
+      },
+      {
+        "id": "direct-volume-noise-load",
+        "pattern": "^\\s*ld_indexable\\(texture3d\\)\\(float,float,float,float\\)\\s+[^\\r\\n]+$",
+        "minCount": 1,
+        "maxCount": 1,
+        "meaning": "The trace seed is loaded directly from the 3D noise volume."
+      },
+      {
+        "id": "single-ray-march-loop",
+        "pattern": "^\\s*loop\\s*$",
+        "minCount": 1,
+        "maxCount": 1,
+        "meaning": "A bounded loop advances the reflected ray through screen space."
+      },
+      {
+        "id": "hierarchical-depth-query",
+        "pattern": "^\\s*resinfo_indexable\\(texture2d\\)\\(float,float,float,float\\)\\s+[^\\r\\n]+,\\s*t5\\.[xyzw]+\\s*$",
+        "minCount": 1,
+        "maxCount": 1,
+        "meaning": "The hierarchical-depth dimensions bound the ray-march coordinates."
+      },
+      {
+        "id": "hierarchical-depth-load",
+        "pattern": "^\\s*ld_indexable\\(texture2d\\)\\(float,float,float,float\\)\\s+[^\\r\\n]+,\\s*t5\\.[xyzw]+\\s*$",
+        "minCount": 1,
+        "maxCount": 1,
+        "meaning": "Each ray step tests the reflected ray against hierarchical scene depth."
+      },
+      {
+        "id": "velocity-reprojection-load",
+        "pattern": "^\\s*ld_indexable\\(texture2d\\)\\(float,float,float,float\\)\\s+[^\\r\\n]+,\\s*t6\\.[xyzw]+\\s*$",
+        "minCount": 1,
+        "maxCount": 1,
+        "meaning": "Motion vectors reproject the valid reflection hit into temporal history."
+      },
+      {
+        "id": "dual-scene-history-loads",
+        "pattern": "^\\s*ld_indexable\\(texture2d\\)\\(float,float,float,float\\)\\s+[^\\r\\n]+,\\s*t[78]\\.[xyzw]+\\s*$",
+        "minCount": 2,
+        "maxCount": 2,
+        "meaning": "Two scene-color or reflection-history inputs are resolved at the reprojected hit."
+      },
+      {
+        "id": "reflection-geometry-dot-products",
+        "pattern": "^\\s*dp3\\s+[^\\r\\n]+$",
+        "minCount": 8,
+        "maxCount": null,
+        "meaning": "Repeated vector normalization and reflection tests reconstruct view geometry and the reflected direction."
+      },
+      {
+        "id": "separate-radiance-output",
+        "pattern": "^\\s*mul\\s+o0\\.xyz,\\s*[^\\r\\n]+$",
+        "minCount": 1,
+        "maxCount": 1,
+        "meaning": "Reflection radiance is written separately to RGB, enabling strength control without corrupting the hit mask."
+      },
+      {
+        "id": "separate-confidence-output",
+        "pattern": "^\\s*mov\\s+o0\\.w,\\s*[^\\r\\n]+$",
+        "minCount": 1,
+        "maxCount": 1,
+        "meaning": "The reflection hit or confidence mask is preserved independently in alpha."
+      },
+      {
+        "id": "explicit-miss-output",
+        "pattern": "^\\s*mov\\s+o0\\.xyzw,\\s*l\\(0,0,0,0\\)\\s*$",
+        "minCount": 2,
+        "maxCount": 2,
+        "meaning": "Material rejection and failed ray hits explicitly return no reflection."
+      }
+    ]
+  },
+  "runtimeContract": {
+    "output": "screen-space reflection radiance RGB plus hit or confidence alpha",
+    "verifiedStage": "ps_5_0",
+    "adapterMustConfirm": [
+      "normal and material G-buffer slots",
+      "scene-depth and hierarchical-depth slots",
+      "velocity slot",
+      "scene-color or reflection-history slots",
+      "full-screen draw",
+      "reflection-only live coverage",
+      "RGB-only strength behavior with alpha preserved"
+    ],
+    "outputEncodingStatus": "Reflection coverage is live-verified. Consecutive-draw resource flow proves the downstream composite uses SSR RGB additively and one minus SSR alpha for environment fallback. Total-zero RGBA and safe RGB-only zero both produced no visible difference in the tested scene while reflections were enabled, so strength remains unconfirmed and runtime promotion is blocked pending a screen-space-only reflection view.",
+    "controlSafety": "Scale output RGB only. Preserve output alpha because downstream stages may use it as reflection-hit confidence or temporal validity."
+  },
+  "sourceEvidence": [
+    "artifacts/captured-shaders/b2bc6059f9a39c7f-ps/b2bc6059f9a39c7f-ps_dumpbin.asm",
+    "artifacts/captured-shaders/b2bc6059f9a39c7f-ps/resource-contract.json",
+    "artifacts/probe-screenshots/b2bc6059f9a39c7f-magenta-coverage-live-validation.json",
+    "artifacts/probe-screenshots/b2bc6059f9a39c7f-total-zero-live-validation.json",
+    "artifacts/intergrade-ssr-semantic-shadercache.json",
+    "artifacts/probe-screenshots/b2bc6059f9a39c7f-rgb-zero-alpha-preserved-live-validation.json",
+    "artifacts/captured-shaders/e2aa1c8cb39e0a55-ps/resource-flow-evidence.json",
+    "artifacts/intergrade-reflection-composite-semantic-shadercache.json"
+  ]
+}

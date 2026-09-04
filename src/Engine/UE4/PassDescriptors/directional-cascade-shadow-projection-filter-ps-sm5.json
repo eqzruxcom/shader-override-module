@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "id": "ue4-directional-cascade-shadow-projection-filter-ps-sm5",
+  "family": "shadow-projection",
+  "displayName": "UE4 directional cascade shadow projection and filter",
+  "description": "Pixel pass that reconstructs a receiver from scene depth, selects a Texture2DArray cascade, performs four offset shadow gathers, and writes packed directional-shadow factors.",
+  "stages": ["ps"],
+  "shaderModels": ["ps_5_0"],
+  "hashFastPaths": [
+    {
+      "adapter": "FF7RemakeIntergrade",
+      "hash": "aadc1c2374853914",
+      "evidence": "Verified Remake directional/cascade shadow projection filter; it is a receiver-side shadow-map filter, not the directional-light BRDF evaluator."
+    }
+  ],
+  "semanticSignature": {
+    "checks": [
+      { "id": "early-depth-stencil", "pattern": "^dcl_globalFlags\\s+[^\\r\\n]*forceEarlyDepthStencil[^\\r\\n]*$", "minCount": 1, "maxCount": 1, "meaning": "The verified projection pass executes with early depth/stencil enabled." },
+      { "id": "single-noise-volume", "pattern": "^dcl_resource_texture3d\\s+\\(float,float,float,float\\)\\s+t\\d+\\s*$", "minCount": 1, "maxCount": 1, "meaning": "A small volume input supplies the verified per-pixel cascade-filter rotation or jitter." },
+      { "id": "single-scene-depth-input", "pattern": "^dcl_resource_texture2d\\s+\\(float,float,float,float\\)\\s+t\\d+\\s*$", "minCount": 1, "maxCount": 1, "meaning": "One screen Texture2D supplies receiver depth." },
+      { "id": "single-shadow-map-array", "pattern": "^dcl_resource_texture2darray\\s+\\(float,float,float,float\\)\\s+t\\d+\\s*$", "minCount": 1, "maxCount": 1, "meaning": "A Texture2DArray stores the directional shadow cascades." },
+      { "id": "two-default-samplers", "pattern": "^dcl_sampler\\s+s\\d+,\\s*mode_default\\s*$", "minCount": 2, "maxCount": 2, "meaning": "Separate depth/noise and shadow-array samplers are declared." },
+      { "id": "screen-position-input", "pattern": "^dcl_input_ps_siv\\s+linear\\s+noperspective\\s+v\\d+\\.xy,\\s*position\\s*$", "minCount": 1, "maxCount": 1, "meaning": "Receiver coordinates are reconstructed from the current pixel position." },
+      { "id": "single-depth-sample", "pattern": "^\\s*sample_l_indexable\\(texture2d\\)\\(float,float,float,float\\)\\s+[^\\r\\n]+,\\s*s\\d+,\\s*l\\(0\\.000000\\)\\s*$", "minCount": 1, "maxCount": 1, "meaning": "The receiver scene depth is sampled once at mip zero." },
+      { "id": "four-offset-shadow-gathers", "pattern": "^\\s*gather4_aoffimmi_indexable\\([^\\r\\n]+\\)\\(texture2darray\\)\\(float,float,float,float\\)\\s+[^\\r\\n]+$", "minCount": 4, "maxCount": 4, "meaning": "Four offset Texture2DArray gathers form the verified cascade PCF footprint." },
+      { "id": "packed-shadow-output-xz", "pattern": "^\\s*mad\\s+o0\\.xz,\\s*[^\\r\\n]+$", "minCount": 1, "maxCount": 1, "meaning": "Two filtered shadow factors are packed into output X and Z." },
+      { "id": "packed-shadow-output-yw", "pattern": "^\\s*mov\\s+o0\\.yw,\\s*l\\(0,1\\.000000,0,1\\.000000\\)\\s*$", "minCount": 1, "maxCount": 1, "meaning": "The remaining packed channels retain the verified zero/one constants." }
+    ]
+  },
+  "runtimeContract": {
+    "output": "packed directional cascade shadow factors",
+    "verifiedStage": "ps_5_0",
+    "classificationBoundary": "receiver-side shadow projection/filter; not a directional-light evaluator",
+    "adapterMustConfirm": ["scene-depth binding", "shadow Texture2DArray binding and cascade count", "cascade-selection constants", "packed output channel consumers", "viewport and reversed-Z reconstruction", "native PCF comparison semantics"],
+    "controlSafety": "Do not transplant local-light BRDF or contact-ray code here. Any filter change must preserve cascade selection, comparison direction, channel packing, and downstream consumers."
+  },
+  "sourceEvidence": [
+    "artifacts/validation-captures/ff7r-contact-area-baseline-20260831/assembly/aadc1c2374853914-ps.asm",
+    "docs/shader-coverage-audit-2026-08-31.md",
+    "src/Adapters/FF7RemakeIntergrade/verified-shader-classifications.json"
+  ]
+}

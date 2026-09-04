@@ -1,0 +1,36 @@
+{
+  "predecessorReceipt": "C:\\Users\\EQZITARA\\Documents\\ChatGPT\\FF7 Rebirth mod\\artifacts\\installed-contact-all-lights-overlay-v1.json",
+  "files": [
+    {
+      "originalSha256": "E72BF754D31817D4E6B9BEB99EDE59A00E9496B963C1B6A038B7AA8793FCEA0A",
+      "experimentalSha256": "876F6E27D7F216002C58CD4666868FE909CBFBF9169D855B73D202581BC3D5CA",
+      "relativePath": "ShaderFixes/c30cdc8365df9840-cs.txt"
+    },
+    {
+      "originalSha256": "283B124E73272D639F01FF59C07BDD1B2BFB98AE3850F9FF32AFB9D01CB48554",
+      "experimentalSha256": "55DAD282FD3690E59C076BEDB431FC73D10B99B7218C337A75E9DFB01E9B2C5C",
+      "relativePath": "ShaderFixes/62b33a2d1e505241-cs.txt"
+    },
+    {
+      "originalSha256": "40D0C79C4310A0AED8B5CFE798A3CE59B68B8D0825416FC8421DD569B54F5CF9",
+      "experimentalSha256": "4E2E1AE9D91342D483D09FB71EEE62FF40AABC17FF8FC569F2D096E5511EB68F",
+      "relativePath": "ShaderFixes/5a9fbefe0ab6f815-cs.txt"
+    },
+    {
+      "originalSha256": "D8FD958B8585078DFA8DF66D0581789599F1B77C2DE1CD6D08708CD0D398DC21",
+      "experimentalSha256": "A0005099446203611C56438B1A4459D661F76D3B2C81C38021432A4E57E26BDD",
+      "relativePath": "ShaderFixes/0e97888f9a8767da-cs.txt"
+    },
+    {
+      "originalSha256": "BA976B5CC1794E8BA8CDB5CE66A3C4CB2BA2DD627B81AE73E48E3A437040B8AB",
+      "experimentalSha256": "CE61BDC44960A642348DAD91710524CA166363B10325394195B9E5101DE87939",
+      "relativePath": "ShaderFixes/08bb8764f1840179-cs.txt"
+    },
+    {
+      "originalSha256": "3868ECC25C92DC6DCCA8377B3988C4A4A4286C5A25F6B19BC8980BB92EA9A4BB",
+      "experimentalSha256": "06379B553D2818227112C7A1EC219A3F1B7A680320219E557690CD683BB6D1D9",
+      "relativePath": "Mods/ContactShadows.ini"
+    }
+  ],
+  "targetRoot": "C:\\Games\\Final.Fantasy.VII.Remake.Intergrade-InsaneRamZes\\End\\Binaries\\Win64"
+}

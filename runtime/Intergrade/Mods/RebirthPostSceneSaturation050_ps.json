@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "adapter": "FF7RemakeIntergrade",
+  "shaderHash": "af6cd28a0108a18a",
+  "stage": "ps",
+  "effect": "scene-saturation",
+  "saturation": 0.5,
+  "source": "runtime/Intergrade/Mods/RebirthPostSceneSaturation050_ps.hlsl",
+  "sourceSha256": "F835E80B49FF9E42B1AF23974FD563AAF0F918F034E59D9A767029270296886A",
+  "object": "runtime/Intergrade/Mods/RebirthPostSceneSaturation050_ps.cso",
+  "objectSha256": "4D0C2067B964C7F9EC90389DCC4DBC24AF2BC08FC6008D8CA9097B7DB1D6B8E7",
+  "assembly": "runtime/Intergrade/Mods/RebirthPostSceneSaturation050_ps.asm",
+  "assemblySha256": "67C4092B2397813D80B09DDB252033BB12D627AB9F8656A03F96E5ECC322628D",
+  "compiler": {
+    "profile": "ps_5_0",
+    "entry": "main",
+    "flags": [
+      "/Ges",
+      "/WX",
+      "/O3"
+    ]
+  },
+  "contract": {
+    "inputs": [
+      "t0",
+      "t1",
+      "t2",
+      "cb0",
+      "cb1"
+    ],
+    "output": "SV_Target0",
+    "preserveAlphaBehavior": "o0.w = 0",
+    "uiComposedAfterPass": true
+  }
+}

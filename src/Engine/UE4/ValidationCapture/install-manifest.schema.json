@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.rebirth-effects.invalid/ue4-validation-capture-install-manifest.schema.json",
+  "title": "Installed neutral UE4 validation capture kit manifest",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "captureId",
+    "installedAtUtc",
+    "gameExecutable",
+    "targetRoot",
+    "kitManifest",
+    "kitManifestSha256",
+    "backupRoot",
+    "files"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "captureId": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]+$" },
+    "installedAtUtc": { "type": "string", "format": "date-time" },
+    "gameExecutable": {
+      "type": "object",
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "sha256": { "type": "string", "pattern": "^[0-9A-F]{64}$" }
+      },
+      "additionalProperties": false
+    },
+    "targetRoot": { "type": "string", "minLength": 1 },
+    "kitManifest": { "type": "string", "pattern": "^artifacts/ue4-validation-capture-kit/capture-kit-manifest\\.json$" },
+    "kitManifestSha256": { "type": "string", "pattern": "^[0-9A-F]{64}$" },
+    "backupRoot": { "type": "string", "minLength": 1 },
+    "files": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "required": ["relativePath", "hadOriginal", "originalSha256", "installedSha256"],
+        "properties": {
+          "relativePath": { "enum": ["d3d11.dll", "d3dcompiler_46.dll", "nvapi64.dll", "d3dx.ini"] },
+          "hadOriginal": { "type": "boolean" },
+          "originalSha256": { "type": ["string", "null"], "pattern": "^[0-9A-F]{64}$" },
+          "installedSha256": { "type": "string", "pattern": "^[0-9A-F]{64}$" }
+        },
+        "additionalProperties": false,
+        "allOf": [
+          {
+            "if": { "properties": { "hadOriginal": { "const": false } } },
+            "then": { "properties": { "originalSha256": { "const": null } } },
+            "else": { "properties": { "originalSha256": { "type": "string", "pattern": "^[0-9A-F]{64}$" } } }
+          }
+        ]
+      }
+    }
+  },
+  "additionalProperties": false
+}

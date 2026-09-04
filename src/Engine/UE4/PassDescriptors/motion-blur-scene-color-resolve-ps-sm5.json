@@ -1,0 +1,141 @@
+{
+  "schemaVersion": 1,
+  "id": "ue4-motion-blur-scene-color-resolve-ps-sm5",
+  "family": "post-processing",
+  "displayName": "UE4 integer-fetch motion-blur scene-color resolve",
+  "description": "Pixel pass that hashes pixel position for jitter, reconstructs motion from auxiliary buffers, gathers many integer scene-color samples, and emits a scene-only post-process target.",
+  "stages": [
+    "ps"
+  ],
+  "shaderModels": [
+    "ps_5_0"
+  ],
+  "hashFastPaths": [
+    {
+      "adapter": "FF7RemakeIntergrade",
+      "hash": "af6cd28a0108a18a",
+      "evidence": "Verified live by a neutral replacement and a solid-magenta scene-only coverage test with UI unaffected."
+    }
+  ],
+  "semanticSignature": {
+    "checks": [
+      {
+        "id": "screen-position-input",
+        "pattern": "^dcl_input_ps_siv\\s+linear\\s+noperspective\\s+v\\d+\\.xy,\\s*position\\s*$",
+        "minCount": 1,
+        "maxCount": 1,
+        "meaning": "The pass derives integer fetch positions from the current output pixel."
+      },
+      {
+        "id": "three-screen-inputs",
+        "pattern": "^dcl_resource_texture2d\\s+\\(float,float,float,float\\)\\s+t\\d+\\s*$",
+        "minCount": 3,
+        "maxCount": 3,
+        "meaning": "Scene color and two motion or tile metadata buffers feed the verified permutation."
+      },
+      {
+        "id": "no-samplers",
+        "pattern": "^dcl_sampler\\s+",
+        "minCount": 0,
+        "maxCount": 0,
+        "meaning": "All inputs are addressed with integer pixel loads rather than filtered sampling."
+      },
+      {
+        "id": "dense-integer-gather",
+        "pattern": "^\\s*ld_indexable\\(texture2d\\)\\(float,float,float,float\\)\\s+[^\\r\\n]+$",
+        "minCount": 20,
+        "maxCount": null,
+        "meaning": "A dense set of scene-color and motion-buffer loads forms the blur gather."
+      },
+      {
+        "id": "repeated-pixel-rounding",
+        "pattern": "^\\s*round_ni\\s+[^\\r\\n]+$",
+        "minCount": 10,
+        "maxCount": null,
+        "meaning": "Candidate sample positions are repeatedly rounded to integer pixel coordinates."
+      },
+      {
+        "id": "repeated-integer-coordinate-conversion",
+        "pattern": "^\\s*ftoi\\s+[^\\r\\n]+$",
+        "minCount": 10,
+        "maxCount": null,
+        "meaning": "Rounded positions are converted for direct Texture2D loads."
+      },
+      {
+        "id": "pixel-jitter-dot-hash",
+        "pattern": "^\\s*dp2\\s+[^\\r\\n]+l\\(0\\.067111,\\s*0\\.005837,\\s*0\\.000000,\\s*0\\.000000\\)\\s*$",
+        "minCount": 2,
+        "maxCount": null,
+        "meaning": "The verified UE4 permutation hashes pixel position with the same two-component jitter seed."
+      },
+      {
+        "id": "pixel-jitter-hash-scale",
+        "pattern": "^\\s*mul\\s+[^\\r\\n]+l\\(52\\.982918\\)\\s*$",
+        "minCount": 2,
+        "maxCount": null,
+        "meaning": "The position hash uses the verified UE4 jitter multiplier."
+      },
+      {
+        "id": "eight-tap-normalization",
+        "pattern": "^\\s*(?:mul|mad)\\s+[^\\r\\n]+l\\(0\\.125000(?:,\\s*0\\.125000){0,3}[^\\r\\n]*$",
+        "minCount": 1,
+        "maxCount": null,
+        "meaning": "Gathered scene-color samples are normalized as an eight-tap contribution."
+      },
+      {
+        "id": "rgb-output",
+        "pattern": "^\\s*mov\\s+o0\\.xyz,\\s*[^\\r\\n]+$",
+        "minCount": 1,
+        "maxCount": 1,
+        "meaning": "The resolved scene color is written to RGB."
+      },
+      {
+        "id": "zero-alpha-output",
+        "pattern": "^\\s*mov\\s+o0\\.w,\\s*l\\(0\\)\\s*$",
+        "minCount": 1,
+        "maxCount": 1,
+        "meaning": "The verified scene-only intermediate emits zero alpha."
+      }
+    ]
+  },
+  "runtimeContract": {
+    "output": "scene-only motion-blur or post-process intermediate",
+    "verifiedStage": "ps_5_0",
+    "postControlSynthesis": {
+      "controlledChannels": "RGB scene color only; preserve the pass's zero-alpha output behavior",
+      "formula": "output = lerp(luminance.xxx, sceneColor, saturation)",
+      "luminanceWeights": [
+        0.2126,
+        0.7152,
+        0.0722
+      ],
+      "compileVerifiedTargets": [
+        0.0,
+        0.25,
+        0.5,
+        0.75
+      ],
+      "originalTarget": 1.0,
+      "adapterRequirement": "Confirm output is consumed before UI composition and determine the scene-color transfer function before treating luminance weights as colorimetrically exact.",
+      "liveVerifiedTargets": [
+        0.0,
+        0.5,
+        0.75
+      ],
+      "liveEvidenceRequirement": "Confirm scene-only color change with HUD unaffected and instant Original/Current A/B restoration.",
+      "perceptualUniformity": "not established; 0.5 linear RGB appeared mostly gray in the verified dark scene"
+    },
+    "adapterMustConfirm": [
+      "which input is scene color",
+      "motion-vector and tile metadata roles",
+      "output target is consumed before UI composition",
+      "solid-color coverage excludes HUD and menus",
+      "neutral replacement parity at native resolution",
+      "scene-color transfer function and HDR state"
+    ]
+  },
+  "sourceEvidence": [
+    "artifacts/captured-shaders/af6cd28a0108a18a-ps/af6cd28a0108a18a-ps_dumpbin.asm",
+    "src/Adapters/FF7RemakeIntergrade/shader-map.json"
+  ]
+}

@@ -1,0 +1,30 @@
+diff --git a/src/Adapters/FF7RemakeIntergrade/ContactShadowFamilyAudit.ini b/src/Adapters/FF7RemakeIntergrade/ContactShadowFamilyAudit.ini
+--- a/src/Adapters/FF7RemakeIntergrade/ContactShadowFamilyAudit.ini
++++ b/src/Adapters/FF7RemakeIntergrade/ContactShadowFamilyAudit.ini
+@@ -26,14 +26,14 @@
+ [ \t]*mov (?P<diffuse>r\d+)\.xyz, l\(0,0,0,0\)\n
+ [ \t]*mov (?P<specular>r\d+)\.(?P<specular_mask>[xyzw]{3}), l\(0,0,0,0\)\n
+-[ \t]*endif\n
+-[ \t]*else\n
++[ \t]*endif[ \t]*\n
++[ \t]*else[ \t]*\n
+ [ \t]*mov (?P=diffuse)\.xyz, l\(0,0,0,0\)\n
+ [ \t]*mov (?P=specular)\.(?P=specular_mask), l\(0,0,0,0\)\n
+-[ \t]*endif\n
++[ \t]*endif[ \t]*\n
+ [ \t]*add (?P<diffuse_accumulator>r\d+)\.xyz, (?P=diffuse_accumulator)\.xyzx, (?P=diffuse)\.xyzx\n
+ [ \t]*add (?P<specular_accumulator>r\d+)\.xyz, (?P=specular_accumulator)\.xyzx, (?P=specular)\.(?P<specular_pack>[xyzw]{4})\n
+ [ \t]*iadd (?P=light_loop)\.w, (?P=light_loop)\.w, l\(1\)\n
+-[ \t]*endloop\n
++[ \t]*endloop[ \t]*\n
+ [ \t]*ult r0\.xy, r1\.xyxx, cb0\[1\]\.zwzz\n
+ [ \t]*and r0\.x, r0\.y, r0\.x\n
+ [ \t]*if_nz r0\.x\n
+@@ -43,5 +43,5 @@
+ [ \t]*mad r0\.xyzw, r0\.xyzw, cb1\[128\]\.yyyy, r2\.xyzw\n
+ [ \t]*mul r0\.xyzw, r0\.xyzw, cb1\[128\]\.xxxx\n
+ [ \t]*store_uav_typed u0\.xyzw, r1\.xyyy, r0\.xyzw\n
+-[ \t]*endif\n
+-[ \t]*ret
++[ \t]*endif[ \t]*\n
++[ \t]*ret[ \t]*

@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "id": "ue4-shadow-depth-writer-direct-ps-sm5",
+  "family": "shadow-depth-writers",
+  "displayName": "UE4 direct shadow-depth pixel writer",
+  "description": "Pixel family that writes SV_DEPTH for a shadow map without sampling a 2D material-coverage texture; one verified variant retains a volume-dither rejection path.",
+  "stages": ["ps"],
+  "shaderModels": ["ps_5_0"],
+  "hashFastPaths": [
+    { "adapter": "FF7RemakeIntergrade", "hash": "33153ff4a6cd3b14", "evidence": "Expanded-census direct ShadowDepth writer with optional volume dithering, discard, and no Texture2D material-coverage sample." },
+    { "adapter": "FF7RemakeIntergrade", "hash": "42894c73f58ae15e", "evidence": "Expanded-census direct ShadowDepth writer with optional volume dithering, discard, and no Texture2D material-coverage sample." },
+    { "adapter": "FF7RemakeIntergrade", "hash": "50218fe92282b9b2", "evidence": "Verified direct ShadowDepth writer variant." },
+    { "adapter": "FF7RemakeIntergrade", "hash": "7077f8d972fbd198", "evidence": "Expanded-census direct ShadowDepth writer with optional volume dithering, discard, and no Texture2D material-coverage sample." },
+    { "adapter": "FF7RemakeIntergrade", "hash": "859e9302e9dc9520", "evidence": "Verified direct ShadowDepth writer variant." },
+    { "adapter": "FF7RemakeIntergrade", "hash": "ac87aba3f1feac47", "evidence": "Verified direct ShadowDepth writer with volume-dither rejection and no Texture2D coverage sample." },
+    { "adapter": "FF7RemakeIntergrade", "hash": "bae7ee67de90d1d4", "evidence": "Verified direct ShadowDepth writer variant." }
+  ],
+  "semanticSignature": {
+    "checks": [
+      { "id": "shadow-depth-input-semantic", "pattern": "^//\\s*ShadowDepth\\s+0\\s+[^\\r\\n]+$", "minCount": 1, "maxCount": 1, "meaning": "The input signature receives the caster's ShadowDepth interpolant." },
+      { "id": "sv-depth-output-semantic", "pattern": "^//\\s*SV_DEPTH\\s+0\\s+[^\\r\\n]+$", "minCount": 1, "maxCount": 1, "meaning": "The output signature declares a hardware depth result." },
+      { "id": "depth-output-declaration", "pattern": "^dcl_output\\s+oDepth\\s*$", "minCount": 1, "maxCount": 1, "meaning": "The pixel shader writes oDepth." },
+      { "id": "no-material-coverage-texture", "pattern": "^dcl_resource_texture2d\\s+", "minCount": 0, "maxCount": 0, "meaning": "No Texture2D material or opacity coverage is sampled in this direct family." },
+      { "id": "no-material-sampler", "pattern": "^dcl_sampler\\s+", "minCount": 0, "maxCount": 0, "meaning": "The direct family declares no filtered material sampler." },
+      { "id": "zero-color-output", "pattern": "^\\s*mov\\s+o0\\.xyzw,\\s*l\\(0,0,0,0\\)\\s*$", "minCount": 1, "maxCount": 1, "meaning": "The color target is incidental and remains zero." },
+      { "id": "saturated-depth-write", "pattern": "^\\s*mad_sat\\s+oDepth,\\s*[^\\r\\n]+$", "minCount": 1, "maxCount": 1, "meaning": "The interpolated caster depth is scaled, biased, saturated, and written to SV_DEPTH." }
+    ]
+  },
+  "runtimeContract": {
+    "output": "direct shadow-map depth",
+    "verifiedStage": "ps_5_0",
+    "adapterMustConfirm": ["paired caster vertex shader", "depth scale and bias constants", "optional Texture3D volume-dither rejection", "absence of Texture2D material coverage"],
+    "controlSafety": "Preserve depth bias and any volume-dither rejection. This family casts shadow-map depth; it does not evaluate receiver lighting."
+  },
+  "sourceEvidence": ["docs/shader-coverage-audit-2026-08-31.md", "src/Adapters/FF7RemakeIntergrade/verified-shader-classifications.json"]
+}

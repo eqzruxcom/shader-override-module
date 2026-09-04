@@ -1,0 +1,247 @@
+{
+  "label": "Contact shadows - Rebirth Mod - Code worked",
+  "createdAtUtc": "2026-08-31T15:17:45.0087332Z",
+  "donorCommit": "bab25809b375f028b7c0fb603d804426f38c9b8e",
+  "donorRepository": "https://github.com/frostbone25/ShaderInjector",
+  "checkpoint": "C:\\Users\\EQZITARA\\Documents\\ChatGPT\\FF7 Rebirth mod\\artifacts\\checkpoints\\rebirth-contact-first-working-20260831-v1",
+  "checkpointSha256": "FA545E0B520B9A6AAE9494D5951C5A034EEE9AF84B1D0EB7251B305EA8A9B6BC",
+  "candidateSha256": "3FDD26E45F76320345B0330FAD150AA4AE8426BA2D95B63FC7CC012E4C62CA7B",
+  "scriptSha256": "2505DE5E72ACB2F1C5ED603CDC49961A018FA2AF5F3288A57BC8B38CC8B206C1",
+  "observedGame": "FF7 Remake Intergrade modified UE4, DX11",
+  "userReportedWorking": true,
+  "knownFlaw": "Hard added sword/cone shadow edges beside softer native shadows",
+  "releaseEligible": false,
+  "gameFilesModified": false,
+  "files": [
+    {
+      "source": "C:\\Users\\EQZITARA\\Documents\\ChatGPT\\FF7 Rebirth mod\\artifacts\\checkpoints\\rebirth-contact-first-working-20260831-v1\\payload\\ShaderFixes\\c30cdc8365df9840-cs.txt",
+      "relativePath": "working-remake-port/payload/ShaderFixes/c30cdc8365df9840-cs.txt",
+      "sha256": "876F6E27D7F216002C58CD4666868FE909CBFBF9169D855B73D202581BC3D5CA"
+    },
+    {
+      "source": "C:\\Users\\EQZITARA\\Documents\\ChatGPT\\FF7 Rebirth mod\\artifacts\\checkpoints\\rebirth-contact-first-working-20260831-v1\\payload\\ShaderFixes\\62b33a2d1e505241-cs.txt",
+      "relativePath": "working-remake-port/payload/ShaderFixes/62b33a2d1e505241-cs.txt",
+      "sha256": "55DAD282FD3690E59C076BEDB431FC73D10B99B7218C337A75E9DFB01E9B2C5C"
+    },
+    {
+      "source": "C:\\Users\\EQZITARA\\Documents\\ChatGPT\\FF7 Rebirth mod\\artifacts\\checkpoints\\rebirth-contact-first-working-20260831-v1\\payload\\ShaderFixes\\5a9fbefe0ab6f815-cs.txt",
+      "relativePath": "working-remake-port/payload/ShaderFixes/5a9fbefe0ab6f815-cs.txt",
+      "sha256": "4E2E1AE9D91342D483D09FB71EEE62FF40AABC17FF8FC569F2D096E5511EB68F"
+    },
+    {
+      "source": "C:\\Users\\EQZITARA\\Documents\\ChatGPT\\FF7 Rebirth mod\\artifacts\\checkpoints\\rebirth-contact-first-working-20260831-v1\\payload\\ShaderFixes\\0e97888f9a8767da-cs.txt",
+      "relativePath": "working-remake-port/payload/ShaderFixes/0e97888f9a8767da-cs.txt",
+      "sha256": "A0005099446203611C56438B1A4459D661F76D3B2C81C38021432A4E57E26BDD"
+    },
+    {
+      "source": "C:\\Users\\EQZITARA\\Documents\\ChatGPT\\FF7 Rebirth mod\\artifacts\\checkpoints\\rebirth-contact-first-working-20260831-v1\\payload\\ShaderFixes\\08bb8764f1840179-cs.txt",
+      "relativePath": "working-remake-port/payload/ShaderFixes/08bb8764f1840179-cs.txt",
+      "sha256": "CE61BDC44960A642348DAD91710524CA166363B10325394195B9E5101DE87939"
+    },
+    {
+      "source": "C:\\Users\\EQZITARA\\Documents\\ChatGPT\\FF7 Rebirth mod\\artifacts\\checkpoints\\rebirth-contact-first-working-20260831-v1\\payload\\Mods\\ContactShadows.ini",
+      "relativePath": "working-remake-port/payload/Mods/ContactShadows.ini",
+      "sha256": "06379B553D2818227112C7A1EC219A3F1B7A680320219E557690CD683BB6D1D9"
+    },
+    {
+      "source": "C:\\Users\\EQZITARA\\Documents\\ChatGPT\\FF7 Rebirth mod\\artifacts\\checkpoints\\rebirth-contact-first-working-20260831-v1\\receipts\\runtime-manifest.json",
+      "relativePath": "working-remake-port/receipts/runtime-manifest.json",
+      "sha256": "B40B8554DB23C620940D8DD09E627D1A13C0837B2CC2BE948AD496E129FA98C3"
+    },
+    {
+      "source": "C:\\Users\\EQZITARA\\Documents\\ChatGPT\\FF7 Rebirth mod\\artifacts\\checkpoints\\rebirth-contact-first-working-20260831-v1\\receipts\\install-receipt.json",
+      "relativePath": "working-remake-port/receipts/install-receipt.json",
+      "sha256": "79BC9CCB927ED33BBD9C6F02949EF35CBF6E15987007CED08C7B17D132ECD960"
+    },
+    {
+      "source": "C:\\Users\\EQZITARA\\Documents\\ChatGPT\\FF7 Rebirth mod\\artifacts\\checkpoints\\rebirth-contact-first-working-20260831-v1\\receipts\\live-reload-baseline.json",
+      "relativePath": "working-remake-port/receipts/live-reload-baseline.json",
+      "sha256": "A9CC15838BB8E77F4B85DC24A7E6BAD733482CB8C8C650F223427B7D7C35E897"
+    },
+    {
+      "source": "C:\\Users\\EQZITARA\\Documents\\ChatGPT\\FF7 Rebirth mod\\artifacts\\checkpoints\\rebirth-contact-first-working-20260831-v1\\receipts\\contact-live-status.json",
+      "relativePath": "working-remake-port/receipts/contact-live-status.json",
+      "sha256": "70F6434057701824D169F7ED09345D0A7BF2E7B470FF3550D94753219249C487"
+    },
+    {
+      "source": "C:\\Users\\EQZITARA\\Documents\\ChatGPT\\FF7 Rebirth mod\\artifacts\\checkpoints\\rebirth-contact-first-working-20260831-v1\\receipts\\rollback-manifest.json",
+      "relativePath": "working-remake-port/receipts/rollback-manifest.json",
+      "sha256": "9C1372F594D79C9E9C0B8BCBEA2888F95CE675F9DFDDA5795FB6A6B1E4507F77"
+    },
+    {
+      "source": "C:\\Users\\EQZITARA\\Documents\\ChatGPT\\FF7 Rebirth mod\\artifacts\\checkpoints\\rebirth-contact-first-working-20260831-v1\\receipts\\ShaderInjector-MIT.txt",
+      "relativePath": "working-remake-port/receipts/ShaderInjector-MIT.txt",
+      "sha256": "B7186E035838D23446405B6ADEFA0E1204E154ACD6E56C3FA2AAF6501AE71CEA"
+    },
+    {
+      "source": "C:\\Users\\EQZITARA\\Documents\\ChatGPT\\FF7 Rebirth mod\\artifacts\\checkpoints\\rebirth-contact-first-working-20260831-v1\\source\\tools\\New-IntergradeContactShadowCandidate.ps1",
+      "relativePath": "working-remake-port/source/tools/New-IntergradeContactShadowCandidate.ps1",
+      "sha256": "E082C47E38E172E8AAC7669111127EF3377B5F814386C946B4AF39D8A03662A8"
+    },
+    {
+      "source": "C:\\Users\\EQZITARA\\Documents\\ChatGPT\\FF7 Rebirth mod\\artifacts\\checkpoints\\rebirth-contact-first-working-20260831-v1\\source\\tools\\Stage-IntergradeRebirthContactExperiment.ps1",
+      "relativePath": "working-remake-port/source/tools/Stage-IntergradeRebirthContactExperiment.ps1",
+      "sha256": "A8CEF49EC60E78AA84857406FF4A1DA0193D43E300B163B9A64A161B375D6620"
+    },
+    {
+      "source": "C:\\Users\\EQZITARA\\Documents\\ChatGPT\\FF7 Rebirth mod\\artifacts\\checkpoints\\rebirth-contact-first-working-20260831-v1\\source\\tools\\Restore-IntergradeRebirthContactExperiment.ps1",
+      "relativePath": "working-remake-port/source/tools/Restore-IntergradeRebirthContactExperiment.ps1",
+      "sha256": "714E70C9EF7B557747594B7F0C5BD58DB7AEDEA8C3AF40A71E96C53A2A5D01D7"
+    },
+    {
+      "source": "C:\\Users\\EQZITARA\\Documents\\ChatGPT\\FF7 Rebirth mod\\artifacts\\checkpoints\\rebirth-contact-first-working-20260831-v1\\source\\tools\\import_rebirth_contact_source.py",
+      "relativePath": "working-remake-port/source/tools/import_rebirth_contact_source.py",
+      "sha256": "25DA83985CE193FDF054399DDDE0005EE46E68B15A740431F51A907C0D4F58EE"
+    },
+    {
+      "source": "C:\\Users\\EQZITARA\\Documents\\ChatGPT\\FF7 Rebirth mod\\artifacts\\checkpoints\\rebirth-contact-first-working-20260831-v1\\source\\src\\Effects\\Lighting\\ContactShadowCommon.hlsl",
+      "relativePath": "working-remake-port/source/src/Effects/Lighting/ContactShadowCommon.hlsl",
+      "sha256": "4BEB4FD3AEEE935BE7E239CA9C927A25D53810E608495A820E2CC7658B66EB67"
+    },
+    {
+      "source": "C:\\Users\\EQZITARA\\Documents\\ChatGPT\\FF7 Rebirth mod\\artifacts\\checkpoints\\rebirth-contact-first-working-20260831-v1\\source\\src\\Effects\\Lighting\\RebirthContactShadows.hlsl",
+      "relativePath": "working-remake-port/source/src/Effects/Lighting/RebirthContactShadows.hlsl",
+      "sha256": "D7F38CC14D8D4939840D536F700B62EDCC14285D6BD4FF1F44E980EBBECF1FB9"
+    },
+    {
+      "source": "C:\\Users\\EQZITARA\\Documents\\ChatGPT\\FF7 Rebirth mod\\artifacts\\checkpoints\\rebirth-contact-first-working-20260831-v1\\source\\src\\Adapters\\FF7RemakeIntergrade\\ContactShadowKernel_ps.hlsl",
+      "relativePath": "working-remake-port/source/src/Adapters/FF7RemakeIntergrade/ContactShadowKernel_ps.hlsl",
+      "sha256": "272CBC775E21E78750E0E0E62D926AA8819F7B2BDD575C736540EA1BBC1F7C97"
+    },
+    {
+      "source": "C:\\Users\\EQZITARA\\Documents\\ChatGPT\\FF7 Rebirth mod\\artifacts\\checkpoints\\rebirth-contact-first-working-20260831-v1\\source\\src\\Adapters\\FF7RemakeIntergrade\\RebirthContactShadowKernel_ps.hlsl",
+      "relativePath": "working-remake-port/source/src/Adapters/FF7RemakeIntergrade/RebirthContactShadowKernel_ps.hlsl",
+      "sha256": "33FCF0FB367915C5657EA0298F9A9DC47351F1DD9ABEF67BC5EEF1172723D872"
+    },
+    {
+      "source": "C:\\Users\\EQZITARA\\Documents\\ChatGPT\\FF7 Rebirth mod\\artifacts\\checkpoints\\rebirth-contact-first-working-20260831-v1\\source\\src\\Adapters\\FF7RemakeIntergrade\\RebirthContactInputMapping.hlsl",
+      "relativePath": "working-remake-port/source/src/Adapters/FF7RemakeIntergrade/RebirthContactInputMapping.hlsl",
+      "sha256": "F3666F9DF1CDCE62C5B55565D8CAB6D557F98569EA70D06DF5DB92417EAD468F"
+    },
+    {
+      "source": "C:\\Users\\EQZITARA\\Documents\\ChatGPT\\FF7 Rebirth mod\\artifacts\\checkpoints\\rebirth-contact-first-working-20260831-v1\\source\\src\\Adapters\\FF7RemakeIntergrade\\RebirthContactShared.hlsl",
+      "relativePath": "working-remake-port/source/src/Adapters/FF7RemakeIntergrade/RebirthContactShared.hlsl",
+      "sha256": "16A1FE89D4755F47A4DFFC4F0A2F39D10D8802AB3B547800B7C6E6EC9FF85BE2"
+    },
+    {
+      "source": "C:\\Users\\EQZITARA\\Documents\\ChatGPT\\FF7 Rebirth mod\\artifacts\\checkpoints\\rebirth-contact-first-working-20260831-v1\\source\\src\\Adapters\\FF7RemakeIntergrade\\RebirthContactSharedKernel_cs.hlsl",
+      "relativePath": "working-remake-port/source/src/Adapters/FF7RemakeIntergrade/RebirthContactSharedKernel_cs.hlsl",
+      "sha256": "A8AF0542AB19103C3E805AF5CF78613461FDC7715EC772F7DF1A6D6ADC4931D2"
+    },
+    {
+      "source": "C:\\Users\\EQZITARA\\Documents\\ChatGPT\\FF7 Rebirth mod\\artifacts\\checkpoints\\rebirth-contact-first-working-20260831-v1\\source\\src\\ThirdParty\\ShaderInjector\\RebirthContactRay.hlsl",
+      "relativePath": "working-remake-port/source/src/ThirdParty/ShaderInjector/RebirthContactRay.hlsl",
+      "sha256": "52C8FC47BD2C83EC813CCBD4EBC093CD45971852FD60C511978B71C959F5C99A"
+    },
+    {
+      "source": "C:\\Users\\EQZITARA\\Documents\\ChatGPT\\FF7 Rebirth mod\\artifacts\\checkpoints\\rebirth-contact-first-working-20260831-v1\\source\\src\\ThirdParty\\ShaderInjector\\RebirthContactNoise.hlsl",
+      "relativePath": "working-remake-port/source/src/ThirdParty/ShaderInjector/RebirthContactNoise.hlsl",
+      "sha256": "92FE24A57B9A13A27242A4BB059EE6391F8469A1C02FA8633B441B5C0D8AB04C"
+    },
+    {
+      "source": "C:\\Users\\EQZITARA\\Documents\\ChatGPT\\FF7 Rebirth mod\\artifacts\\checkpoints\\rebirth-contact-first-working-20260831-v1\\source\\src\\ThirdParty\\ShaderInjector\\RebirthContactReconstruction.hlsl",
+      "relativePath": "working-remake-port/source/src/ThirdParty/ShaderInjector/RebirthContactReconstruction.hlsl",
+      "sha256": "FBFB1AC6B7845425D948CAAB18C55C4BFA69CC8A13F89DBB7521D1699B228903"
+    },
+    {
+      "source": "C:\\Users\\EQZITARA\\Documents\\ChatGPT\\FF7 Rebirth mod\\artifacts\\checkpoints\\rebirth-contact-first-working-20260831-v1\\source\\src\\ThirdParty\\ShaderInjector\\LICENSE.txt",
+      "relativePath": "working-remake-port/source/src/ThirdParty/ShaderInjector/LICENSE.txt",
+      "sha256": "B7186E035838D23446405B6ADEFA0E1204E154ACD6E56C3FA2AAF6501AE71CEA"
+    },
+    {
+      "source": "C:\\Users\\EQZITARA\\Documents\\ChatGPT\\FF7 Rebirth mod\\artifacts\\checkpoints\\rebirth-contact-first-working-20260831-v1\\source\\src\\ThirdParty\\ShaderInjector\\provenance.json",
+      "relativePath": "working-remake-port/source/src/ThirdParty/ShaderInjector/provenance.json",
+      "sha256": "527615E23B30055E887DB621C6B434B05E99CB2EB491E4115ECD2D32B688CD90"
+    },
+    {
+      "source": "C:\\Users\\EQZITARA\\Documents\\ChatGPT\\FF7 Rebirth mod\\artifacts\\checkpoints\\rebirth-contact-first-working-20260831-v1\\evidence\\rebirth-contact-shared-single-interface-20260831-v3-manifest.json",
+      "relativePath": "working-remake-port/evidence/rebirth-contact-shared-single-interface-20260831-v3-manifest.json",
+      "sha256": "6E04E070F66399E4FBF0F14B0151018FCB2DE60376A465F6257385064DA2E4A9"
+    },
+    {
+      "source": "C:\\Users\\EQZITARA\\Documents\\ChatGPT\\FF7 Rebirth mod\\artifacts\\checkpoints\\rebirth-contact-first-working-20260831-v1\\evidence\\rebirth-contact-shared-repeat-interface-20260831-v2-manifest.json",
+      "relativePath": "working-remake-port/evidence/rebirth-contact-shared-repeat-interface-20260831-v2-manifest.json",
+      "sha256": "8050502E7A9AA396EABCF999416E8A1ACC285841CB2D0EDC641D52869CD39EE7"
+    },
+    {
+      "source": "C:\\Users\\EQZITARA\\Documents\\ChatGPT\\FF7 Rebirth mod\\artifacts\\checkpoints\\rebirth-contact-first-working-20260831-v1\\evidence\\rebirth-contact-capture-shared-comparison-20260831-v2-comparison.json",
+      "relativePath": "working-remake-port/evidence/rebirth-contact-capture-shared-comparison-20260831-v2-comparison.json",
+      "sha256": "5575AD326361BAAF3D5A46B8FCA7DACA14BA4EC8CB51D8337931F6BEB24AD0FA"
+    },
+    {
+      "source": "C:\\Users\\EQZITARA\\Documents\\ChatGPT\\FF7 Rebirth mod\\artifacts\\checkpoints\\rebirth-contact-first-working-20260831-v1\\evidence\\rebirth-contact-experiment-motion16-20260831-v1-manifest.json",
+      "relativePath": "working-remake-port/evidence/rebirth-contact-experiment-motion16-20260831-v1-manifest.json",
+      "sha256": "F563AC6DA411C53A6F226888DDED558A392F678E00C66ECC6C84984D785CD4F0"
+    },
+    {
+      "source": "C:\\Users\\EQZITARA\\Documents\\ChatGPT\\FF7 Rebirth mod\\artifacts\\rebirth-contact-shared-repeat-candidate-20260831-v1\\validation\\c30cdc8365df9840-original.bin",
+      "relativePath": "original-remake/c30cdc8365df9840-cs.bin",
+      "sha256": "0FF0D61014A447B4B9E133CDAD1C927F8A5ABFE8396151BED3E4A5D537483216"
+    },
+    {
+      "source": "C:\\Users\\EQZITARA\\Documents\\ChatGPT\\FF7 Rebirth mod\\artifacts\\rebirth-contact-shared-repeat-candidate-20260831-v1\\validation\\c30cdc8365df9840-original.asm",
+      "relativePath": "original-remake/c30cdc8365df9840-cs.asm",
+      "sha256": "7D642A3A3B8DD184B23171D337A80667511DAC6C570C038074B2CCA559A9A03E"
+    },
+    {
+      "source": "C:\\Users\\EQZITARA\\Documents\\ChatGPT\\FF7 Rebirth mod\\artifacts\\rebirth-contact-shared-repeat-candidate-20260831-v1\\validation\\62b33a2d1e505241-original.bin",
+      "relativePath": "original-remake/62b33a2d1e505241-cs.bin",
+      "sha256": "1E290F68B5A07E8987A674384B955C0D6A8246A96B47506CD2E4CC6E6EED9551"
+    },
+    {
+      "source": "C:\\Users\\EQZITARA\\Documents\\ChatGPT\\FF7 Rebirth mod\\artifacts\\rebirth-contact-shared-repeat-candidate-20260831-v1\\validation\\62b33a2d1e505241-original.asm",
+      "relativePath": "original-remake/62b33a2d1e505241-cs.asm",
+      "sha256": "8A7D1C4F804A8FADE9D0ADDC317EF637B907A8B14C011461D11AD87E8565F651"
+    },
+    {
+      "source": "C:\\Users\\EQZITARA\\Documents\\ChatGPT\\FF7 Rebirth mod\\artifacts\\rebirth-contact-shared-repeat-candidate-20260831-v1\\validation\\5a9fbefe0ab6f815-original.bin",
+      "relativePath": "original-remake/5a9fbefe0ab6f815-cs.bin",
+      "sha256": "45D1C022E89B58C9524E86F54901FCCB98D93448940B1E925CE53D133D36BA16"
+    },
+    {
+      "source": "C:\\Users\\EQZITARA\\Documents\\ChatGPT\\FF7 Rebirth mod\\artifacts\\rebirth-contact-shared-repeat-candidate-20260831-v1\\validation\\5a9fbefe0ab6f815-original.asm",
+      "relativePath": "original-remake/5a9fbefe0ab6f815-cs.asm",
+      "sha256": "33A9A5B503AF77A8B0E1A2CB8F2891F411FDCD3DF40032CEDF5C7238BD2DEC72"
+    },
+    {
+      "source": "C:\\Users\\EQZITARA\\Documents\\ChatGPT\\FF7 Rebirth mod\\artifacts\\rebirth-contact-shared-repeat-candidate-20260831-v1\\validation\\0e97888f9a8767da-original.bin",
+      "relativePath": "original-remake/0e97888f9a8767da-cs.bin",
+      "sha256": "B6D1E0A7EA8032F55EAA6017D39BF70B097669335951DBF437782C5804BCF283"
+    },
+    {
+      "source": "C:\\Users\\EQZITARA\\Documents\\ChatGPT\\FF7 Rebirth mod\\artifacts\\rebirth-contact-shared-repeat-candidate-20260831-v1\\validation\\0e97888f9a8767da-original.asm",
+      "relativePath": "original-remake/0e97888f9a8767da-cs.asm",
+      "sha256": "BC3F0B0C45CEBC0FD29373B76A22BED7FC3285FCD642BBE79587B58F386446EA"
+    },
+    {
+      "source": "C:\\Users\\EQZITARA\\Documents\\ChatGPT\\FF7 Rebirth mod\\artifacts\\rebirth-contact-shared-repeat-candidate-20260831-v1\\validation\\08bb8764f1840179-original.bin",
+      "relativePath": "original-remake/08bb8764f1840179-cs.bin",
+      "sha256": "CB9A9EE79FF8DB0B63B8DD6F239AF69FF23A83D786A46E51EB07D352DD7659EE"
+    },
+    {
+      "source": "C:\\Users\\EQZITARA\\Documents\\ChatGPT\\FF7 Rebirth mod\\artifacts\\rebirth-contact-shared-repeat-candidate-20260831-v1\\validation\\08bb8764f1840179-original.asm",
+      "relativePath": "original-remake/08bb8764f1840179-cs.asm",
+      "sha256": "18B24D13EAA6E23690BD078CEE2F5AEE36F8B21E6FC52AD8E06C4365C9D5FD06"
+    },
+    {
+      "source": "C:\\Users\\EQZITARA\\Documents\\ChatGPT\\FF7 Rebirth mod\\reference\\ShaderInjector\\ModifiedShaders\\Includes\\PixelShaderPass_LocalLight.hlsl",
+      "relativePath": "original-donor/PixelShaderPass_LocalLight.hlsl",
+      "sha256": "DC0C6912B6B22462362EFB2093A4C307C8D32C4C60A5F498AF363BCFA956B569"
+    },
+    {
+      "source": "C:\\Users\\EQZITARA\\Documents\\ChatGPT\\FF7 Rebirth mod\\reference\\ShaderInjector\\ModifiedShaders\\Includes\\LibraryRandom.hlsl",
+      "relativePath": "original-donor/LibraryRandom.hlsl",
+      "sha256": "115462DA04A9988F37099EB6D6A7AFEAF19FFC4F2D1CF00CE24B7AF3A1967F65"
+    },
+    {
+      "source": "C:\\Users\\EQZITARA\\Documents\\ChatGPT\\FF7 Rebirth mod\\src\\ThirdParty\\ShaderInjector\\LICENSE.txt",
+      "relativePath": "original-donor/LICENSE.txt",
+      "sha256": "B7186E035838D23446405B6ADEFA0E1204E154ACD6E56C3FA2AAF6501AE71CEA"
+    },
+    {
+      "source": "C:\\Users\\EQZITARA\\Documents\\ChatGPT\\FF7 Rebirth mod\\src\\ThirdParty\\ShaderInjector\\provenance.json",
+      "relativePath": "original-donor/provenance.json",
+      "sha256": "527615E23B30055E887DB621C6B434B05E99CB2EB491E4115ECD2D32B688CD90"
+    }
+  ]
+}

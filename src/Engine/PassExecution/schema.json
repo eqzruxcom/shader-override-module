@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.universal-shader-changer.invalid/pass-execution.schema.json",
+  "title": "Backend-neutral injected effect-pass execution contract",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "id",
+    "displayName",
+    "trigger",
+    "execution",
+    "controls",
+    "safety"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]+$" },
+    "displayName": { "type": "string", "minLength": 1 },
+    "description": { "type": "string" },
+    "trigger": {
+      "type": "object",
+      "required": ["kind", "stage", "family", "timing"],
+      "properties": {
+        "kind": { "enum": ["shader-family", "adapter-hash", "render-event"] },
+        "stage": { "enum": ["vs", "ps", "cs", "hs", "ds", "gs"] },
+        "family": { "type": "string", "minLength": 1 },
+        "timing": { "enum": ["before", "replace", "after"] },
+        "adapterFastPaths": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["adapter", "identity"],
+            "properties": {
+              "adapter": { "type": "string", "minLength": 1 },
+              "identity": { "type": "string", "pattern": "^[0-9a-f]{16}-(vs|ps|cs|hs|ds|gs)$" },
+              "evidence": { "type": "string" }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "execution": {
+      "type": "object",
+      "required": ["ownership", "kind", "shaders", "geometry", "fixedState", "resources", "stateRestore"],
+      "properties": {
+        "ownership": { "enum": ["caller-draw", "injector-owned"] },
+        "kind": { "enum": ["render", "compute", "copy"] },
+        "shaders": { "type": "object" },
+        "geometry": {
+          "type": "object",
+          "required": ["source"],
+          "properties": {
+            "source": { "enum": ["caller", "fullscreen-triangle", "explicit"] },
+            "topology": { "type": "string" },
+            "vertexCount": { "type": "integer", "minimum": 0 },
+            "startVertex": { "type": "integer", "minimum": 0 }
+          },
+          "additionalProperties": false
+        },
+        "fixedState": { "type": "object" },
+        "resources": { "type": "object" },
+        "stateRestore": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      },
+      "additionalProperties": false
+    },
+    "controls": {
+      "type": "object",
+      "required": ["bound", "reserved"],
+      "properties": {
+        "bound": { "type": "array", "items": { "$ref": "#/$defs/keyRole" } },
+        "reserved": { "type": "array", "items": { "$ref": "#/$defs/keyRole" } }
+      },
+      "additionalProperties": false
+    },
+    "backendMappings": { "type": "object" },
+    "evidence": { "type": "array", "items": { "type": "string" } },
+    "safety": {
+      "type": "object",
+      "required": ["runtimeEligible", "installed", "prerequisites"],
+      "properties": {
+        "runtimeEligible": { "type": "boolean" },
+        "installed": { "type": "boolean" },
+        "prerequisites": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$defs": {
+    "keyRole": {
+      "type": "object",
+      "required": ["key", "role"],
+      "properties": {
+        "key": { "type": "string", "minLength": 1 },
+        "role": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

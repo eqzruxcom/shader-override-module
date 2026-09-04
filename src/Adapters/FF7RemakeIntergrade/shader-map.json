@@ -1,0 +1,897 @@
+{
+  "schemaVersion": 3,
+  "game": "Final Fantasy VII Remake Intergrade",
+  "engineFamily": "UE4-custom",
+  "renderer": "D3D11",
+  "executable": {
+    "name": "ff7remake_.exe",
+    "sha256": "25B54C345C94EE9F6C6876B9C7537A69E6B0EEF25F322207C32A8DDCEE816635",
+    "fileVersion": null
+  },
+  "captureEnvironment": {
+    "launchArgument": "-dx11",
+    "dynamicResolution": "disable-during-capture",
+    "resolution": null,
+    "graphicsSettings": null
+  },
+  "passes": [
+    {
+      "id": "final_presentation",
+      "stage": "ps",
+      "status": "verified-presentation-only",
+      "hashes": [
+        "41f1bf8b79d01319"
+      ],
+      "partnerShaders": [
+        "vs:6535922fb9c9160a"
+      ],
+      "resources": [
+        {
+          "slot": "t0",
+          "resourceHash": "32e04b7c",
+          "role": "observed shader resource"
+        },
+        {
+          "slot": "t1",
+          "resourceHash": "f3d023b3",
+          "role": "upstream final-scene composite output"
+        },
+        {
+          "slot": "t2",
+          "resourceHash": "a4784282",
+          "role": "observed shader resource"
+        },
+        {
+          "slot": "t3",
+          "resourceHash": "6c1d6cae",
+          "role": "observed shader resource"
+        },
+        {
+          "slot": "t4",
+          "resourceHash": "2d6d9e98",
+          "role": "observed shader resource"
+        },
+        {
+          "slot": "t5",
+          "resourceHash": "6743858b",
+          "role": "observed shader resource"
+        },
+        {
+          "slot": "t6",
+          "resourceHash": "6743858b",
+          "role": "observed shader resource"
+        },
+        {
+          "slot": "t7",
+          "resourceHash": "bac64fd0",
+          "role": "observed shader resource"
+        },
+        {
+          "slot": "t8",
+          "resourceHash": "fae666c0",
+          "role": "observed shader resource"
+        },
+        {
+          "slot": "t9",
+          "resourceHash": "75f5a8cc",
+          "role": "observed shader resource; hash contaminated"
+        },
+        {
+          "slot": "t10",
+          "resourceHash": "bc36c270",
+          "role": "observed shader resource"
+        },
+        {
+          "slot": "t11",
+          "resourceHash": "75f5a8cc",
+          "role": "observed shader resource; hash contaminated"
+        },
+        {
+          "slot": "t12",
+          "resourceHash": "bc36c270",
+          "role": "observed shader resource"
+        },
+        {
+          "slot": "t13",
+          "resourceHash": "5b3a8545",
+          "role": "observed shader resource; hash contaminated"
+        }
+      ],
+      "constantBuffers": [
+        {
+          "slot": "cb0",
+          "resourceHash": "905cf614"
+        },
+        {
+          "slot": "cb1",
+          "resourceHash": "a394978d"
+        },
+        {
+          "slot": "cb2",
+          "resourceHash": "0c8934aa"
+        },
+        {
+          "slot": "cb3",
+          "resourceHash": "0c8934aa"
+        },
+        {
+          "slot": "cb4",
+          "resourceHash": "358d62cb"
+        }
+      ],
+      "renderTargets": [
+        {
+          "slot": "o0",
+          "resourceHash": null,
+          "role": "swap-chain/backbuffer"
+        }
+      ],
+      "discoveryHints": {
+        "method": "full gameplay resource-flow trace and controlled skip test",
+        "capture": "intergrade-gameplay-2026-08-29-123153"
+      },
+      "notes": "Draw 1174, immediately before Present. Controlled skip removed/froze the world image and caused UI flashing. This verifies the presentation boundary but also proves it is too late for UI-safe image adjustments."
+    },
+    {
+      "id": "post_process_final",
+      "stage": "ps",
+      "status": "verified-ui-safe-scene-color-target",
+      "hashes": [
+        "af6cd28a0108a18a"
+      ],
+      "partnerShaders": [
+        "vs:1bf99472af1427ba"
+      ],
+      "resources": [
+        {
+          "slot": "t0",
+          "role": "scene color"
+        },
+        {
+          "slot": "t1",
+          "role": "velocity/depth or motion-blur sample metadata"
+        },
+        {
+          "slot": "t2",
+          "role": "motion-blur tile/neighbor data"
+        }
+      ],
+      "constantBuffers": [
+        {
+          "slot": "b0",
+          "float4Count": 19
+        },
+        {
+          "slot": "b1",
+          "float4Count": 123
+        }
+      ],
+      "renderTargets": [
+        {
+          "slot": "o0",
+          "resourceHash": "3315d2b5",
+          "role": "scene-only post-process target consumed by draw 1142"
+        }
+      ],
+      "discoveryHints": {
+        "method": "resource-flow capture, solid-color coverage test, and original binary/HLSL export",
+        "exportedArtifacts": "artifacts/captured-shaders/af6cd28a0108a18a-ps",
+        "universalRegexCandidates": [],
+        "rankedCaptureCandidates": [
+          {
+            "hash": "18305e60b4378edb",
+            "draw": 1173,
+            "partner": "vs:cc5e089c4492d218",
+            "status": "controlled-skip-pending-classification"
+          },
+          {
+            "hash": "af6cd28a0108a18a",
+            "draw": 1141,
+            "partner": "vs:1bf99472af1427ba",
+            "status": "verified-ui-safe-scene-color-target",
+            "skipTest": "Controlled skip froze the scene target because its previous contents were reused; this is not a coverage test.",
+            "colorTest": "Solid-magenta replacement affected the 3D scene while the UI remained visible and unchanged; screenshots: artifacts/probe-screenshots/af6-color-20260829-140004*."
+          },
+          {
+            "hash": "eda405f2d455d5c7",
+            "draw": 1142,
+            "partner": "vs:1bf99472af1427ba",
+            "status": "rejected-frame-freeze",
+            "skipTest": "Controlled skip froze the rendered frame while the game process remained responsive."
+          },
+          {
+            "hash": "4170b0f1040d507f",
+            "draw": 1143,
+            "partner": "vs:56528003870d00b3",
+            "status": "verified-fullscreen-color-target",
+            "colorTest": "Solid-magenta replacement made the whole screen pink; clean before/after screenshots were saved under artifacts/probe-screenshots/4170-color-20260829-135716*."
+          }
+        ]
+      },
+      "controlIntegration": {
+        "strategy": "discrete-full-replacement",
+        "status": "live-verified-adjustable-saturation",
+        "runtimeSelection": "3Dmigoto rolling command-list A/B on F3",
+        "formula": "output = lerp(luminance.xxx, sceneColor, saturation)",
+        "luminanceWeights": [
+          0.2126,
+          0.7152,
+          0.0722
+        ],
+        "levels": [
+          {
+            "saturation": 0.0,
+            "verification": "live-verified",
+            "liveEvidence": "artifacts/probe-screenshots/af6cd28a0108a18a-grayscale-live-validation.json"
+          },
+          {
+            "saturation": 0.25,
+            "verification": "compile-verified"
+          },
+          {
+            "saturation": 0.5,
+            "verification": "live-verified-linear-with-perceptual-caveat",
+            "liveEvidence": "artifacts/probe-screenshots/af6cd28a0108a18a-saturation050-live-validation.json"
+          },
+          {
+            "saturation": 0.75,
+            "verification": "live-verified-linear",
+            "liveEvidence": "artifacts/probe-screenshots/af6cd28a0108a18a-saturation075-live-validation.json"
+          },
+          {
+            "saturation": 1.0,
+            "verification": "game-original"
+          }
+        ],
+        "controlPack": "artifacts/replacement-shaders/af6cd28a0108a18a-scene-saturation-control-pack.json",
+        "generator": "tools/New-IntergradeSceneSaturationVariant.ps1",
+        "testReport": "artifacts/scene-saturation-generator-test/report.json"
+      },
+      "notes": "UI-safe scene-color target verified: af6cd28a0108a18a affects the 3D scene while the HUD remains colored. Grayscale, 0.5, and 0.75 linear RGB interpolation levels are live-verified and monotonic; 0.5 appeared mostly gray, so levels are not described as perceptually uniform. The 0.25 variant remains compile-verified."
+    },
+    {
+      "id": "directional_light",
+      "stage": "ps",
+      "status": "capture-required",
+      "hashes": [],
+      "partnerShaders": [],
+      "resources": [],
+      "constantBuffers": [],
+      "renderTargets": [],
+      "discoveryHints": {
+        "method": "UE4 instruction regex followed by live marking",
+        "universalRegexCandidates": [
+          "ShaderRegex_72_SunLightPS1",
+          "ShaderRegex_72_SunLightPS2",
+          "ShaderRegex_72_SunLightPS3",
+          "ShaderRegex_72_SunLightPS4"
+        ]
+      },
+      "notes": "Target for directional contact shadows after final-pass validation."
+    },
+    {
+      "id": "local_light",
+      "stage": "ps",
+      "status": "capture-required",
+      "hashes": [],
+      "partnerShaders": [],
+      "resources": [],
+      "constantBuffers": [],
+      "renderTargets": [],
+      "discoveryHints": {
+        "method": "UE4 instruction regex followed by live marking",
+        "universalRegexCandidates": [
+          "ShaderRegex_01_DynamicLights1",
+          "ShaderRegex_01_DynamicLights2",
+          "ShaderRegex_01_DynamicLights3",
+          "ShaderRegex_01_DynamicLights4",
+          "ShaderRegex_01_DynamicLights5",
+          "ShaderRegex_01_DynamicLights6",
+          "ShaderRegex_07_Lights1",
+          "ShaderRegex_07_Lights1SSR",
+          "ShaderRegex_07_Lights2SSR"
+        ]
+      },
+      "notes": "Track ordinary and IES permutations separately."
+    },
+    {
+      "id": "ambient_occlusion",
+      "stage": "ps",
+      "status": "verified-full-resolution-temporal-ssao",
+      "hashes": [
+        "a77b589dce5822d6"
+      ],
+      "partnerShaders": [
+        "vs:1bf99472af1427ba"
+      ],
+      "resources": [
+        {
+          "slot": "t0",
+          "resourceHash": "32e04b7c",
+          "dimension": "Texture3D",
+          "role": "3D frame-varying noise sequence used to rotate or jitter AO horizon samples"
+        },
+        {
+          "slot": "t1",
+          "resourceHash": "b7f4aa00",
+          "dimension": "Texture2D",
+          "role": "G-buffer world normal"
+        },
+        {
+          "slot": "t2",
+          "resourceHash": "00236552",
+          "dimension": "Texture2D",
+          "role": "scene depth"
+        },
+        {
+          "slot": "t3",
+          "resourceHash": "36f63b9f",
+          "dimension": "Texture2D",
+          "role": "packed temporal AO feedback/history sampled at reprojected coordinates"
+        },
+        {
+          "slot": "t4",
+          "resourceHash": "58f38e46",
+          "dimension": "Texture2D",
+          "role": "motion vectors used for AO history reprojection and dynamic-geometry handling"
+        },
+        {
+          "slot": "t5",
+          "resourceHash": "56d237fa",
+          "dimension": "Texture2D",
+          "role": "hierarchical scene depth sampled at variable LOD for AO horizon integration"
+        }
+      ],
+      "constantBuffers": [
+        {
+          "slot": "b0",
+          "float4Count": 21
+        },
+        {
+          "slot": "b1",
+          "float4Count": 140
+        }
+      ],
+      "renderTargets": [
+        {
+          "slot": "o0",
+          "resourceHash": "36f63b9f",
+          "role": "packed temporal SSAO intermediate: current AO/horizon scalar, current-or-reprojected AO, temporal weight/metric, and signed linearized depth"
+        }
+      ],
+      "discoveryHints": {
+        "method": "runtime packed-channel A/B, exported HLSL/bytecode dataflow, resource-flow trace, user motion observation, and Square Enix rendering documentation",
+        "universalRegexCandidates": [
+          "ShaderRegex_79_AO1",
+          "ShaderRegex_79_AO2",
+          "ShaderRegex_79_AO3",
+          "ShaderRegex_79_AO4",
+          "ShaderRegex_79_AO5"
+        ],
+        "exportedArtifacts": "artifacts/captured-shaders/a77b589dce5822d6-ps",
+        "verifiedScreenshot": "artifacts/probe-screenshots/a77b-zero-lights-out-user-verified.png",
+        "officialImplementationSource": "https://www.unrealengine.com/developer-interviews/how-square-enix-leveraged-unreal-engine-to-modernize-final-fantasy-vii-remake?lang=en-US"
+      },
+      "notes": "Draw 1015. This is FF7 Remake custom full-resolution temporal SSAO, not SSR. It reconstructs geometry from normal/depth, integrates occluding horizons from variable-LOD HZB samples with 3D noise, reprojects AO history using velocity, and writes packed AO temporal data. Square Enix documents multi-frame feedback, aggressive denoising, and nonlinear combination with baked AO or capsule shadows in indirect and direct lighting. Live zero-X caused a major loss of AO/main shading; live zero-Y changed the AO-like outline around moving Cloud. Live zero-Z and zero-W produced no observable change; both metadata channels are preserved. A compile-verified AO-strength control now attenuates only X/Y toward neutral visibility 1.0. Live 50% testing shows the intended smaller AO contribution primarily on nearby Cloud, confirming the game's view-depth-dependent AO falloff rather than uniform screen darkening.",
+      "controlIntegration": {
+        "strategy": "packed-temporal-ssao-xy-visibility-attenuation",
+        "status": "live-verified-adjustable-distance-weighted-ao",
+        "probePack": "artifacts/replacement-shaders/a77b589dce5822d6-ao-channel-probe-pack.json",
+        "channels": [
+          "x",
+          "y",
+          "z",
+          "w"
+        ],
+        "liveResults": [
+          {
+            "zeroChannel": "x",
+            "verification": "live-verified-functional-impact",
+            "classification": "major-environment-main-lighting-reduction",
+            "retained": [
+              "emissive light sprites",
+              "HUD"
+            ],
+            "evidence": "artifacts/probe-screenshots/a77b589dce5822d6-zero-channel-x-live-validation.json",
+            "semanticConclusion": "Current-frame AO/horizon component; zeroing it causes a major loss of AO/main shading."
+          },
+          {
+            "zeroChannel": "y",
+            "verification": "live-verified-motion-dependent-functional-impact",
+            "classification": "motion-dependent-character-outline-ambient-occlusion-like-shading",
+            "evidence": "artifacts/probe-screenshots/a77b589dce5822d6-zero-channel-y-live-validation.json",
+            "semanticConclusion": "Current-or-reprojected AO component; zeroing it changes the AO outline around moving character geometry."
+          },
+          {
+            "zeroChannel": "z",
+            "verification": "live-negative-result",
+            "classification": "no-observable-functional-impact-in-tested-scene",
+            "evidence": "artifacts/probe-screenshots/a77b589dce5822d6-zero-channel-z-live-validation.json",
+            "semanticConclusion": "Temporal/reprojection metric; preserve unchanged in user-facing AO controls."
+          },
+          {
+            "zeroChannel": "w",
+            "verification": "live-negative-result",
+            "classification": "no-observable-functional-impact-in-tested-scene",
+            "evidence": "artifacts/probe-screenshots/a77b589dce5822d6-zero-channel-w-live-validation.json",
+            "semanticConclusion": "Signed depth/history metadata; preserve unchanged in user-facing AO controls."
+          }
+        ],
+        "liveGate": "Passed: 0% removes AO; 50% restores a smaller near-field contribution; 100% is game original.",
+        "runtimeAdapterEligible": true,
+        "strengthFormula": "xy = lerp(1.0, original.xy, strength); zw = original.zw",
+        "controlledChannels": [
+          "x",
+          "y"
+        ],
+        "preservedChannels": [
+          "z",
+          "w"
+        ],
+        "controlPack": "artifacts/replacement-shaders/a77b589dce5822d6-ao-strength-control-pack.json",
+        "generator": "tools/New-IntergradeAOStrengthVariant.ps1",
+        "testReport": "artifacts/ao-strength-generator-test/report.json",
+        "levels": [
+          {
+            "strength": 0.0,
+            "verification": "live-verified",
+            "liveEvidence": "artifacts/probe-screenshots/a77b589dce5822d6-ao-strength000-live-validation.json"
+          },
+          {
+            "strength": 0.25,
+            "verification": "strict-compile"
+          },
+          {
+            "strength": 0.5,
+            "verification": "live-verified-distance-weighted",
+            "liveEvidence": "artifacts/probe-screenshots/a77b589dce5822d6-ao-strength050-live-validation.json"
+          },
+          {
+            "strength": 0.75,
+            "verification": "strict-compile"
+          },
+          {
+            "strength": 1.0,
+            "verification": "game-original"
+          }
+        ]
+      }
+    },
+    {
+      "id": "screen_space_reflections",
+      "stage": "ps",
+      "status": "live-verified-reflection-specular-pass-strength-unconfirmed",
+      "hashes": [
+        "b2bc6059f9a39c7f"
+      ],
+      "partnerShaders": [
+        "vs:1bf99472af1427ba"
+      ],
+      "resources": [
+        {
+          "slot": "t0",
+          "resourceHash": "32e04b7c",
+          "dimension": "Texture3D",
+          "role": "frame-varying noise used to jitter reflection rays"
+        },
+        {
+          "slot": "t1",
+          "resourceHash": "b7f4aa00",
+          "dimension": "Texture2D",
+          "role": "G-buffer normal"
+        },
+        {
+          "slot": "t2/t3",
+          "resourceHash": "e1bc6e31",
+          "dimension": "Texture2D",
+          "role": "G-buffer material data permutations"
+        },
+        {
+          "slot": "t4",
+          "resourceHash": "00236552",
+          "dimension": "Texture2D",
+          "role": "scene depth"
+        },
+        {
+          "slot": "t5",
+          "resourceHash": "56d237fa",
+          "dimension": "Texture2D",
+          "role": "hierarchical scene depth used by the ray-march loop"
+        },
+        {
+          "slot": "t6",
+          "resourceHash": "58f38e46",
+          "dimension": "Texture2D",
+          "role": "motion vectors used for reflection-history reprojection"
+        },
+        {
+          "slot": "t7/t8",
+          "resourceHash": "f3d023b3",
+          "dimension": "Texture2D",
+          "role": "scene-color or reflection-history inputs"
+        }
+      ],
+      "constantBuffers": [],
+      "renderTargets": [
+        {
+          "slot": "o0",
+          "resourceHash": "36f63b9f",
+          "role": "verified screen-space reflection radiance RGB with hit or confidence mask alpha, consumed by the next deferred reflection composite"
+        }
+      ],
+      "discoveryHints": {
+        "method": "UE4 universal SSR regex match, verified full-frame usage, resource-flow trace, exported HLSL and bytecode inspection",
+        "universalRegexCandidates": [
+          "ShaderRegex_05_SSR_FF_Exclusive1"
+        ],
+        "exportedArtifacts": "artifacts/captured-shaders/b2bc6059f9a39c7f-ps",
+        "familyMatchReport": "artifacts/intergrade-reflection-family-matches.json"
+      },
+      "notes": "Draw 1095 is a full-screen triangle. Static dataflow reconstructs geometry from depth and normal, ray-marches hierarchical depth with 3D jitter, reprojects temporal history through velocity, samples scene color/history, and writes zero on a miss. Live magenta A/B selectively isolated reflective and specular materials, including strong metal and wet-ground coverage plus weak hair participation, while leaving the HUD intact. Draw 1096 consumes the exact output handle at t11 and adds SSR RGB to reflection-environment radiance weighted by one minus SSR alpha. Total-zero RGBA therefore caused fallback. Safe RGB-only zero with original alpha preserved also produced no visible difference while reflections were enabled, so this scene does not provide an observable SSR-strength signal and the control remains ineligible for runtime promotion.",
+      "controlIntegration": {
+        "status": "live-identity-verified-strength-unconfirmed",
+        "captureManifest": "artifacts/captured-shaders/b2bc6059f9a39c7f-ps/capture-manifest.json",
+        "resourceContract": "artifacts/captured-shaders/b2bc6059f9a39c7f-ps/resource-contract.json",
+        "semanticDescriptor": "ue4-screen-space-reflection-trace-resolve-ps-sm5",
+        "liveCoverageEvidence": "artifacts/probe-screenshots/b2bc6059f9a39c7f-magenta-coverage-live-validation.json",
+        "controlPack": "artifacts/replacement-shaders/b2bc6059f9a39c7f-ssr-strength-control-pack.json",
+        "generator": "tools/New-IntergradeSSRStrengthVariant.ps1",
+        "testReport": "artifacts/ssr-strength-generator-test/report.json",
+        "formula": "rgb = original.rgb * strength; a = original.a",
+        "controlledChannels": [
+          "x",
+          "y",
+          "z"
+        ],
+        "preservedChannels": [
+          "w"
+        ],
+        "runtimeAdapterEligible": false,
+        "liveGate": "Identity and downstream composition passed. Strength promotion is blocked because safe RGB-only 0% produced no observable difference in this scene; locate an unambiguous screen-space-only reflection view before testing 50%.",
+        "totalZeroEvidence": "artifacts/probe-screenshots/b2bc6059f9a39c7f-total-zero-live-validation.json",
+        "semanticSpecificityReport": "artifacts/intergrade-ssr-semantic-shadercache.json",
+        "safeZeroEvidence": "artifacts/probe-screenshots/b2bc6059f9a39c7f-rgb-zero-alpha-preserved-live-validation.json",
+        "downstreamCompositeEvidence": "artifacts/captured-shaders/e2aa1c8cb39e0a55-ps/resource-flow-evidence.json"
+      }
+    },
+    {
+      "id": "volumetric_local_light",
+      "stage": "ps",
+      "status": "verified-volumetric-local-light-injection",
+      "hashes": [
+        "c25d7f5229662b97"
+      ],
+      "partnerShaders": [
+        "vs:014f57ac9e42fe1e",
+        "gs:a6865cf1ce28e9bf"
+      ],
+      "resources": [
+        {
+          "slot": "t0",
+          "dimension": "Texture3D",
+          "role": "volumetric lighting source volume permutation A"
+        },
+        {
+          "slot": "t1",
+          "dimension": "Texture3D",
+          "role": "volumetric lighting source volume permutation B"
+        },
+        {
+          "slot": "t2",
+          "dimension": "Texture3D",
+          "role": "volumetric lighting source volume permutation C"
+        }
+      ],
+      "constantBuffers": [
+        {
+          "slot": "b0",
+          "float4Count": 80
+        },
+        {
+          "slot": "b1",
+          "float4Count": 186
+        },
+        {
+          "slot": "b2",
+          "float4Count": 4
+        }
+      ],
+      "renderTargets": [
+        {
+          "slot": "o0",
+          "resourceHash": "bc36c270",
+          "dimension": "Texture3D",
+          "derivedGridResolution": "120x68x96",
+          "role": "local-light contribution accumulated into the volumetric-fog grid"
+        }
+      ],
+      "discoveryHints": {
+        "method": "UE4 volumetric regex match, frame-event/resource-flow trace, strict SM5 recompilation, then live solid-color and zero-output rolling A/B",
+        "universalRegexCandidates": [
+          "ShaderRegex_01_Volumetric_CS1_PS1",
+          "ShaderRegex_01_Volumetric_CS1_PS2"
+        ],
+        "adjacentCandidate": "ps:cbc771ff8a37a0b3",
+        "exportedArtifacts": "artifacts/captured-shaders/c25d7f5229662b97-ps"
+      },
+      "notes": "Events 808-810 issue DrawIndexedInstanced with 35, 95, and 95 instances into 3D target bc36c270; event 811 consumes that target in a 4x4x4 compute integration dispatch over a derived 120x68x96 grid. Solid magenta produced purple lighting localized to volumetric light regions. Zero output removed that lighting, and F3 restored it instantly. This is a verified local-light contribution within volumetric fog, not a general full-scene lighting pass."
+    },
+    {
+      "id": "volumetric_temporal_injection",
+      "stage": "ps",
+      "status": "verified-temporal-volumetric-injection",
+      "hashes": [
+        "cbc771ff8a37a0b3"
+      ],
+      "partnerShaders": [
+        "vs:014f57ac9e42fe1e",
+        "gs:a6865cf1ce28e9bf"
+      ],
+      "resources": [
+        {
+          "slot": "t0",
+          "dimension": "Texture3D",
+          "role": "periodic noise volume sampled twice"
+        },
+        {
+          "slot": "t1",
+          "dimension": "Texture3D",
+          "role": "secondary noise modulation volume"
+        },
+        {
+          "slot": "t2",
+          "dimension": "Texture3D",
+          "role": "primary density/light modulation volume"
+        }
+      ],
+      "constantBuffers": [
+        {
+          "slot": "b0",
+          "float4Count": 91
+        },
+        {
+          "slot": "b1",
+          "float4Count": 186
+        },
+        {
+          "slot": "b2",
+          "float4Count": 7
+        }
+      ],
+      "renderTargets": [
+        {
+          "slot": "o0",
+          "resourceHash": "bc36c270",
+          "dimension": "Texture3D",
+          "derivedGridResolution": "120x68x96",
+          "role": "noise-modulated contribution injected into the volumetric-fog grid"
+        }
+      ],
+      "discoveryHints": {
+        "method": "UE4 volumetric regex match, event/resource-flow trace, strict SM5 recompilation, user screenshot, and live solid/zero rolling A/B",
+        "universalRegexCandidates": [
+          "ShaderRegex_01_Volumetric_CS1_PS1",
+          "ShaderRegex_01_Volumetric_CS1_PS2"
+        ],
+        "exportedArtifacts": "artifacts/captured-shaders/cbc771ff8a37a0b3-ps",
+        "verifiedScreenshot": "artifacts/probe-screenshots/cbc771-solid-broad-volumetric-region-user-verified.png"
+      },
+      "notes": "Event 807 issues DrawIndexedInstanced with 35 instances into 3D target bc36c270 before the local-light draws at events 808-810 and downstream compute integration at events 811-812. Solid magenta filled a broad right-side frustum/volume region with a hard vertical boundary while UI remained normal. Moving scene content remained perceptible through the purple, confirming volumetric scattering/transmittance over an intact moving scene. Zero removed it. F3 restored purple quickly, while switching back to zero decayed slowly; this asymmetric response verifies downstream temporal fog-history retention rather than a direct full-screen post-process."
+    },
+    {
+      "id": "volumetric_scattering_history",
+      "stage": "cs",
+      "status": "verified-volumetric-scattering-history",
+      "hashes": [
+        "ef7fe8d9c4e9ad15"
+      ],
+      "partnerShaders": [],
+      "resources": [
+        {
+          "slot": "t6",
+          "resourceHash": "bc36c270",
+          "dimension": "Texture3D",
+          "role": "current broad/noise-modulated volumetric injection from cbc771 pipeline target"
+        },
+        {
+          "slot": "t7",
+          "resourceHash": "bc36c270",
+          "dimension": "Texture3D",
+          "role": "reprojected volumetric history sampled with 85 percent weight"
+        },
+        {
+          "slot": "t8",
+          "resourceHash": "bc36c270",
+          "dimension": "Texture3D",
+          "role": "current local-light volumetric injection from c25d7 pipeline target"
+        }
+      ],
+      "constantBuffers": [
+        {
+          "slot": "b0",
+          "float4Count": 107
+        },
+        {
+          "slot": "b1",
+          "float4Count": 188
+        },
+        {
+          "slot": "b2",
+          "float4Count": 5
+        },
+        {
+          "slot": "b3",
+          "float4Count": 41
+        }
+      ],
+      "renderTargets": [
+        {
+          "slot": "u0",
+          "resourceHash": "bc36c270",
+          "dimension": "RWTexture3D",
+          "derivedGridResolution": "120x68x96",
+          "role": "temporally blended volumetric scattering/extinction grid consumed by cs:f3b5ea2c7c714161"
+        }
+      ],
+      "temporalBlend": {
+        "currentWeight": 0.15,
+        "historyWeight": 0.85,
+        "historySlot": "t7",
+        "downstreamIntegrationShader": "cs:f3b5ea2c7c714161"
+      },
+      "controlIntegration": {
+        "strategy": "original-first-uav-snapshot-discrete-post",
+        "status": "live-verified-adjustable-scattering",
+        "snapshot": "cs-u0 copied to a custom resource and bound as cs-t113 after replaying the original dispatch",
+        "output": "cs-u0",
+        "controlledChannels": "scattering RGB; extinction alpha is preserved",
+        "runtimeSelection": "3Dmigoto command-list branches select independently compiled post variants; nested HLSL IniParams bindings were tested and rejected as unreliable",
+        "temporalCompensation": {
+          "formula": "perFrameScale = target / (currentWeight + historyWeight * target)",
+          "currentWeight": 0.15,
+          "historyWeight": 0.85
+        },
+        "verifiedLevels": [
+          {
+            "target": 0.0,
+            "sourceSha256": "144096A456138257EE693F6A14D7EAC41B60DD861FA528946F6471F1CC6D8658",
+            "verification": "live-verified"
+          },
+          {
+            "target": 0.25,
+            "sourceSha256": "1D924D07E4D97DDEC66952F9C60CB7BBC292230D816C57F53B60DD998AA48993",
+            "verification": "compile-verified"
+          },
+          {
+            "target": 0.5,
+            "sourceSha256": "AF738DDB9B44D206E081F1785E436587A2D3E2445B7EE159B656489147FD3C57",
+            "verification": "live-verified"
+          },
+          {
+            "target": 0.75,
+            "sourceSha256": "A4EBDA2219686EC5F52364630E3EDA6AAEB4677E5B07A747FEA02EF47DB1D82A",
+            "verification": "compile-verified"
+          },
+          {
+            "target": 1.0,
+            "sourceSha256": null,
+            "verification": "game-original"
+          }
+        ],
+        "controlPack": "artifacts/replacement-shaders/ef7fe8d9c4e9ad15-scattering-control-pack.json",
+        "liveEvidence": "artifacts/probe-screenshots/ef7fe8d9c4e9ad15-half-scattering-live-validation.json",
+        "rejectedFullReplacement": {
+          "source": "artifacts/rejected-shaders/ef7fe8d9c4e9ad15-full-replacement/ef7fe8d9c4e9ad15-cs_replace.txt",
+          "sourceSha256": "6FE3062A19AEC3C4EB8255CA815144F0223850A7709F030020E71E540C033401",
+          "reason": "native 3840x2160 neutral A/B exposed a localized lamp-shaft mismatch",
+          "evidence": [
+            "artifacts/probe-screenshots/ef7-neutral-ab-01-native.png",
+            "artifacts/probe-screenshots/ef7-neutral-ab-02-native.png"
+          ],
+          "packagingEligible": false
+        }
+      },
+      "discoveryHints": {
+        "method": "frame-event resource flow, repaired decompiled HLSL, strict SM5 recompilation, and live compute zero probe",
+        "universalRegexCandidates": [
+          "ShaderRegex_01_Volumetric_CS1_PS1",
+          "ShaderRegex_01_Volumetric_CS1_PS2"
+        ],
+        "exportedArtifacts": "artifacts/captured-shaders/ef7fe8d9c4e9ad15-cs"
+      },
+      "notes": "Event 811 dispatches 30x17x24 groups of 4x4x4 threads over a 120x68x96 grid. The repaired source computes current scattering/extinction, samples reprojected history from t7, then writes 15 percent current plus 85 percent history to u0. Event 812 consumes u0 in cs:f3b5ea2c7c714161 for depth integration. A live zero compute probe removed fog lighting quickly; F3 restoration faded the fog lighting back slowly. This verifies the integrated volumetric scattering/history pass rather than ordinary surface lighting. A decompiled full replacement was rejected after native 4K A/B showed one lamp shaft darker; the current candidate instead replays the original dispatch, snapshots u0 for SRV reads, and applies an independent post control."
+    },
+    {
+      "id": "reflection_environment",
+      "stage": "ps",
+      "status": "resource-flow-and-amplified-response-verified-normal-range-current-scene-inconclusive",
+      "hashes": [
+        "e2aa1c8cb39e0a55"
+      ],
+      "partnerShaders": [
+        "vs:1bf99472af1427ba"
+      ],
+      "resources": [
+        {
+          "slot": "t5",
+          "resourceHash": "00236552",
+          "dimension": "Texture2D",
+          "role": "scene depth used for world-position reconstruction"
+        },
+        {
+          "slot": "t8/t9",
+          "resourceHash": null,
+          "dimension": "Buffer<uint4>",
+          "role": "reflection-capture influence index buffers"
+        },
+        {
+          "slot": "t10",
+          "resourceHash": "5b3a8545",
+          "dimension": "TextureCubeArray",
+          "role": "reflection-environment capture array sampled at roughness-dependent and fallback mip levels",
+          "hashStatus": "capture hash contaminated"
+        },
+        {
+          "slot": "t11",
+          "resourceHash": "36f63b9f",
+          "dimension": "Texture2D",
+          "role": "SSR radiance RGB plus hit/confidence alpha from immediately preceding ps:b2bc6059f9a39c7f draw"
+        }
+      ],
+      "constantBuffers": [
+        {
+          "slot": "b0",
+          "float4Count": 154
+        },
+        {
+          "slot": "b1",
+          "float4Count": 4
+        },
+        {
+          "slot": "b2",
+          "float4Count": 2728,
+          "indexing": "dynamic",
+          "role": "reflection-capture transforms and influence data"
+        }
+      ],
+      "renderTargets": [
+        {
+          "slot": "o0",
+          "resourceHash": "3a9ee32b",
+          "role": "deferred reflection/specular composite target"
+        }
+      ],
+      "discoveryHints": {
+        "method": "consecutive-draw resource-handle proof, original bytecode disassembly, semantic dataflow matching, and compile-verified downstream diagnostics",
+        "universalRegexCandidates": [
+          "ShaderRegex_08_Reflections_4_26_1",
+          "ShaderRegex_08_Reflections_4_26_2",
+          "ShaderRegex_55_Reflection1",
+          "ShaderRegex_55_Reflection2"
+        ],
+        "semanticDescriptor": "ue4-reflection-environment-ssr-composite-ps-sm5",
+        "semanticSpecificityReport": "artifacts/intergrade-reflection-composite-semantic-shadercache.json",
+        "exportedArtifacts": "artifacts/captured-shaders/e2aa1c8cb39e0a55-ps",
+        "diagnosticGenerator": "tools/New-IntergradeSSRCompositeProbe.ps1",
+        "diagnosticTestReport": "artifacts/ssr-composite-probe-test/report.json",
+        "strengthControlPack": "artifacts/replacement-shaders/e2aa1c8cb39e0a55-ssr-composite-strength-control-pack.json",
+        "strengthGenerator": "tools/New-IntergradeSSRCompositeStrengthVariant.ps1",
+        "strengthTestReport": "artifacts/ssr-composite-strength-test/report.json"
+      },
+      "notes": "Draw 1096 immediately follows SSR producer draw 1095. ShaderUsage proves b2 o0 and e2 t11 share the exact handle 00000278082FF6E0 and resource hash 36f63b9f. Static dataflow samples t11, computes one minus SSR alpha for reflection-environment fallback, samples a TextureCubeArray, and adds SSR RGB after material weighting. The semantic descriptor matches only e2 among 184 cached shaders with 11 checks and zero regex timeouts. The live hit-mask probe produced no distinct visual change, while the radiance-presence probe showed cyan on nonzero SSR radiance and black where no SSR RGB contribution was present. The strict-compiled 100% replacement passed native-resolution parity against F9/original. The normal 0%-to-100% comparison produced no observable difference in the tested view. A diagnostic-only 0%-to-1600% A/B produced angle-dependent blown-white screen-edge glow plus sparse reflective/specular response on scene and character-model surfaces; F3's 0% side removed both effects. This proves the additive SSR-radiance control point, but normal-range 0/100 and 50% validation require a view with a stronger visible screen-space contribution. Runtime promotion remains blocked, and the combined output must not be scaled as an SSR-only control."
+    }
+  ],
+  "captures": [
+    {
+      "id": "intergrade-gameplay-2026-08-29-123153",
+      "kind": "3dmigoto-frame-analysis-log",
+      "directoryName": "FrameAnalysis-2026-08-29-123153",
+      "drawRecords": 1175,
+      "operationDraws": 1169,
+      "outputDumps": 0,
+      "shaderUsagePresent": true,
+      "resolution": "3840x2160",
+      "notes": "Full gameplay frame. Log and ShaderUsage captured; no render-target image dumps."
+    }
+  ]
+}

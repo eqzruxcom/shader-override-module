@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.rebirth-effects.invalid/ue4-runtime-health.schema.json",
+  "title": "UE4 generated-runtime health snapshot",
+  "type": "object",
+  "required": ["schemaVersion", "capturedAtUtc", "classification", "gameRoot", "process", "log", "runtime", "result"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "capturedAtUtc": { "type": "string", "format": "date-time" },
+    "classification": {
+      "enum": ["healthy-generated-runtime", "process-exited", "awaiting-log", "failed-parser", "failed-legacy-conflict", "capturing-incomplete"]
+    },
+    "gameRoot": { "type": "string", "minLength": 1 },
+    "process": {
+      "type": "object",
+      "required": ["running", "id", "responding", "startTimeUtc", "workingSetBytes", "cpuSeconds"],
+      "properties": {
+        "running": { "type": "boolean" },
+        "id": { "type": ["integer", "null"], "minimum": 1 },
+        "responding": { "type": ["boolean", "null"] },
+        "startTimeUtc": { "type": ["string", "null"], "format": "date-time" },
+        "workingSetBytes": { "type": ["integer", "null"], "minimum": 0 },
+        "cpuSeconds": { "type": ["number", "null"], "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "log": {
+      "type": "object",
+      "required": ["present", "path", "size", "sha256", "lastWriteUtc", "deviceCreated", "swapChainWrapped", "parserWarningCount", "tail"],
+      "properties": {
+        "present": { "type": "boolean" },
+        "path": { "type": "string", "minLength": 1 },
+        "size": { "type": "integer", "minimum": 0 },
+        "sha256": { "type": ["string", "null"], "pattern": "^[0-9A-F]{64}$" },
+        "lastWriteUtc": { "type": ["string", "null"], "format": "date-time" },
+        "deviceCreated": { "type": "boolean" },
+        "swapChainWrapped": { "type": "boolean" },
+        "parserWarningCount": { "type": "integer", "minimum": 0 },
+        "tail": { "type": "array", "maxItems": 80, "items": { "type": "string" } }
+      },
+      "additionalProperties": false
+    },
+    "runtime": {
+      "type": "object",
+      "required": ["generatedIniPresent", "generatedRuntimeLoaded", "generatedIniSha256", "d3dxIniSha256", "activeLegacyDiagnostics"],
+      "properties": {
+        "generatedIniPresent": { "type": "boolean" },
+        "generatedRuntimeLoaded": { "type": "boolean" },
+        "generatedIniSha256": { "type": ["string", "null"], "pattern": "^[0-9A-F]{64}$" },
+        "d3dxIniSha256": { "type": ["string", "null"], "pattern": "^[0-9A-F]{64}$" },
+        "activeLegacyDiagnostics": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "enum": ["RebirthEffectsDX11.ini", "RebirthFogGlobalDX11.ini"] }
+        }
+      },
+      "additionalProperties": false
+    },
+    "result": { "enum": ["pass", "fail", "pending"] }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.rebirth-effects.invalid/ue4-validation-capture-manifest.schema.json",
+  "title": "Imported UE4 validation capture manifest",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "captureId",
+    "importedAtUtc",
+    "source",
+    "localResearchOnly",
+    "redistributionAllowed",
+    "fxc",
+    "capturedShaderCount",
+    "semanticMatchCount",
+    "nearMatchCount",
+    "semanticReport",
+    "semanticReportSha256",
+    "shaders"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "captureId": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]+$" },
+    "importedAtUtc": { "type": "string", "format": "date-time" },
+    "source": { "type": "string", "minLength": 1 },
+    "localResearchOnly": { "const": true },
+    "redistributionAllowed": { "const": false },
+    "fxc": {
+      "type": "object",
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "sha256": { "type": "string", "pattern": "^[0-9A-F]{64}$" }
+      },
+      "additionalProperties": false
+    },
+    "capturedShaderCount": { "type": "integer", "minimum": 1 },
+    "semanticMatchCount": { "type": "integer", "minimum": 0 },
+    "nearMatchCount": { "type": "integer", "minimum": 0 },
+    "semanticReport": { "const": "semantic-matches.json" },
+    "semanticReportSha256": { "type": "string", "pattern": "^[0-9A-F]{64}$" },
+    "shaders": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "required": ["shader", "sourceSha256", "binary", "assembly", "assemblySha256"],
+        "properties": {
+          "shader": { "type": "string", "pattern": "^[0-9a-f]{16}-(ps|vs|cs|gs|hs|ds)$" },
+          "sourceSha256": { "type": "string", "pattern": "^[0-9A-F]{64}$" },
+          "binary": { "type": "string", "pattern": "^dxbc/[0-9a-f]{16}-(ps|vs|cs|gs|hs|ds)\\.bin$" },
+          "assembly": { "type": "string", "pattern": "^assembly/[0-9a-f]{16}-(ps|vs|cs|gs|hs|ds)\\.asm$" },
+          "assemblySha256": { "type": "string", "pattern": "^[0-9A-F]{64}$" }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

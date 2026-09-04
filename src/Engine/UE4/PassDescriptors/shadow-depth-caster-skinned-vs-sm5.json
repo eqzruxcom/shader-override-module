@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "id": "ue4-shadow-depth-caster-skinned-vs-sm5",
+  "family": "shadow-depth-casters",
+  "displayName": "UE4 skinned shadow-depth caster vertex family",
+  "description": "Vertex family that loads buffered bone transforms, blends four or eight influences, transforms the skinned position, and emits ShadowDepth plus SV_POSITION for shadow-map rasterization.",
+  "stages": ["vs"],
+  "shaderModels": ["vs_5_0"],
+  "hashFastPaths": [
+    { "adapter": "FF7RemakeIntergrade", "hash": "40b611d369bc7b68", "evidence": "Verified four-weight skinned ShadowDepth caster variant." },
+    { "adapter": "FF7RemakeIntergrade", "hash": "40e368977f88f118", "evidence": "Verified eight-weight skinned ShadowDepth caster variant." },
+    { "adapter": "FF7RemakeIntergrade", "hash": "54bb7b01b6bd5196", "evidence": "Verified eight-weight skinned ShadowDepth caster variant." },
+    { "adapter": "FF7RemakeIntergrade", "hash": "741aee753c201ee6", "evidence": "Verified four-weight skinned ShadowDepth caster variant." },
+    { "adapter": "FF7RemakeIntergrade", "hash": "7d8b4ec350c811b6", "evidence": "Verified eight-weight skinned ShadowDepth caster variant." },
+    { "adapter": "FF7RemakeIntergrade", "hash": "804f4caa626c8a94", "evidence": "Verified four-weight skinned ShadowDepth caster variant." },
+    { "adapter": "FF7RemakeIntergrade", "hash": "8942481559f2a938", "evidence": "Verified four-weight skinned ShadowDepth caster variant." },
+    { "adapter": "FF7RemakeIntergrade", "hash": "8c6447577e2664d5", "evidence": "Verified eight-weight skinned ShadowDepth caster variant." },
+    { "adapter": "FF7RemakeIntergrade", "hash": "9b662afec48956ab", "evidence": "Expanded-census four-weight skinned ShadowDepth caster with additional deformation buffers; exact object ownership remains unresolved." },
+    { "adapter": "FF7RemakeIntergrade", "hash": "d1ed7bc50ba9122d", "evidence": "Expanded-census four-weight skinned ShadowDepth caster; exact object ownership remains unresolved." },
+    { "adapter": "FF7RemakeIntergrade", "hash": "fe4c1e062a2a682f", "evidence": "Verified four-weight skinned ShadowDepth caster variant." }
+  ],
+  "semanticSignature": {
+    "checks": [
+      { "id": "shadow-depth-output-semantic", "pattern": "^//\\s*ShadowDepth\\s+0\\s+[^\\r\\n]+$", "minCount": 1, "maxCount": 1, "meaning": "The DXBC output signature explicitly contains the ShadowDepth semantic." },
+      { "id": "single-bone-transform-buffer", "pattern": "^dcl_resource_buffer\\s+\\(float,float,float,float\\)\\s+t\\d+\\s*$", "minCount": 1, "maxCount": 1, "meaning": "One float4 buffer supplies packed bone transform rows." },
+      { "id": "packed-four-lane-bone-index-scale", "pattern": "^\\s*ishl\\s+r\\d+\\.xyzw,\\s*v\\d+\\.xyzw,\\s*l\\(2,\\s*2,\\s*2,\\s*2\\)\\s*$", "minCount": 1, "maxCount": 2, "meaning": "Four packed bone indices are scaled to float4 transform-row offsets; eight-weight variants repeat the operation." },
+      { "id": "twelve-or-more-bone-row-loads", "pattern": "^\\s*ld_indexable\\(buffer\\)\\(float,float,float,float\\)\\s+[^\\r\\n]+$", "minCount": 12, "maxCount": 24, "meaning": "At least four influences load three transform rows each; eight-weight variants load twenty-four rows." },
+      { "id": "weighted-bone-row-multiply", "pattern": "^\\s*mul\\s+r\\d+\\.xyzw,\\s*r\\d+\\.xyzw,\\s*v\\d+\\.[xyzw]{4}\\s*$", "minCount": 3, "maxCount": null, "meaning": "Loaded bone rows are weighted by vertex influence components." },
+      { "id": "weighted-bone-row-accumulation", "pattern": "^\\s*mad\\s+r\\d+\\.xyzw,\\s*v\\d+\\.[xyzw]{4},\\s*r\\d+\\.xyzw,\\s*r\\d+\\.xyzw\\s*$", "minCount": 3, "maxCount": null, "meaning": "Weighted transform rows are accumulated across the influence set." },
+      { "id": "single-position-output", "pattern": "^dcl_output_siv\\s+o\\d+\\.xyzw,\\s*position\\s*$", "minCount": 1, "maxCount": 1, "meaning": "The rasterizer position is emitted once." },
+      { "id": "no-depth-pixel-output", "pattern": "^dcl_output\\s+oDepth\\s*$", "minCount": 0, "maxCount": 0, "meaning": "This is the vertex caster stage, not the later pixel depth writer." }
+    ]
+  },
+  "runtimeContract": {
+    "output": "skinned shadow-map caster position and ShadowDepth interpolant",
+    "verifiedStage": "vs_5_0",
+    "adapterMustConfirm": ["bone transform buffer binding", "four-weight versus eight-weight input layout", "object/world transform constants", "ShadowDepth interpolation channel", "paired material-coverage pixel shader when present"],
+    "controlSafety": "Caster transforms are structurally distinct from receiver-side shadow evaluation. Never inject screen-space contact-ray code into this family."
+  },
+  "sourceEvidence": ["docs/shader-coverage-audit-2026-08-31.md", "docs/helix-ue3-shader-transformer-evidence.md", "src/Adapters/FF7RemakeIntergrade/verified-shader-classifications.json"]
+}

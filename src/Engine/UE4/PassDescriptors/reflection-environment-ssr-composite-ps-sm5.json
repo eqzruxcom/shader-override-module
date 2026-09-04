@@ -1,0 +1,133 @@
+{
+  "schemaVersion": 1,
+  "id": "ue4-reflection-environment-ssr-composite-ps-sm5",
+  "family": "reflection-composite",
+  "displayName": "UE4 reflection environment and SSR deferred composite",
+  "description": "Deferred pixel pass that evaluates material/specular response, samples reflection-capture cubemaps, consumes a screen-space reflection buffer, suppresses the environment fallback with the SSR hit mask, and adds SSR radiance.",
+  "stages": [
+    "ps"
+  ],
+  "shaderModels": [
+    "ps_5_0"
+  ],
+  "hashFastPaths": [
+    {
+      "adapter": "FF7RemakeIntergrade",
+      "hash": "e2aa1c8cb39e0a55",
+      "evidence": "Frame draw 1096 consumes at t11 the exact render-target handle written by SSR producer ps:b2bc6059f9a39c7f on draw 1095. Static dataflow adds SSR RGB and weights reflection-environment radiance by one minus SSR alpha."
+    }
+  ],
+  "semanticSignature": {
+    "checks": [
+      {
+        "id": "nine-deferred-screen-inputs",
+        "pattern": "^dcl_resource_texture2d\\s+\\(float,float,float,float\\)\\s+t\\d+\\s*$",
+        "minCount": 9,
+        "maxCount": 9,
+        "meaning": "The pass consumes material, depth, auxiliary lighting, and the full-screen SSR result."
+      },
+      {
+        "id": "two-reflection-capture-index-buffers",
+        "pattern": "^dcl_resource_buffer\\s+\\(uint,uint,uint,uint\\)\\s+t\\d+\\s*$",
+        "minCount": 2,
+        "maxCount": 2,
+        "meaning": "Two uint buffers index reflection-capture influence lists."
+      },
+      {
+        "id": "single-reflection-cube-array",
+        "pattern": "^dcl_resource_texturecubearray\\s+\\(float,float,float,float\\)\\s+t\\d+\\s*$",
+        "minCount": 1,
+        "maxCount": 1,
+        "meaning": "A cube-array resource stores reflection-environment captures."
+      },
+      {
+        "id": "ten-samplers",
+        "pattern": "^dcl_sampler\\s+s\\d+,\\s+mode_default\\s*$",
+        "minCount": 10,
+        "maxCount": 10,
+        "meaning": "The material, depth, SSR, and reflection-capture inputs use the deferred pass sampler set."
+      },
+      {
+        "id": "dynamic-reflection-capture-data",
+        "pattern": "^dcl_constantbuffer\\s+CB\\d+\\[\\d+\\],\\s+dynamicIndexed\\s*$",
+        "minCount": 1,
+        "maxCount": 1,
+        "meaning": "Dynamically indexed capture transforms and influence parameters drive reflection-environment lookup."
+      },
+      {
+        "id": "two-capture-influence-loops",
+        "pattern": "^\\s*loop\\s*$",
+        "minCount": 2,
+        "maxCount": 2,
+        "meaning": "The pass iterates reflection-capture influences for related material/reflection paths."
+      },
+      {
+        "id": "four-reflection-cube-samples",
+        "pattern": "^\\s*sample_l_indexable\\(texturecubearray\\)\\(float,float,float,float\\)\\s+[^\\r\\n]+$",
+        "minCount": 4,
+        "maxCount": 4,
+        "meaning": "Reflection captures are sampled at roughness-dependent and fallback mip levels."
+      },
+      {
+        "id": "ssr-buffer-sample",
+        "pattern": "^\\s*sample_l_indexable\\(texture2d\\)\\(float,float,float,float\\)\\s+r11\\.xyzw,\\s*[^\\r\\n]+,\\s*t11\\.xyzw,\\s*s9,\\s*l\\(0\\.000000\\)\\s*$",
+        "minCount": 1,
+        "maxCount": 1,
+        "meaning": "The immediately preceding full-screen SSR result is sampled as RGB radiance plus alpha hit confidence."
+      },
+      {
+        "id": "invert-ssr-hit-mask",
+        "pattern": "^\\s*add\\s+r11\\.w,\\s*-r11\\.w,\\s*l\\(1\\.000000\\)\\s*$",
+        "minCount": 1,
+        "maxCount": 1,
+        "meaning": "One minus SSR alpha becomes the reflection-environment fallback weight."
+      },
+      {
+        "id": "environment-weighted-by-ssr-miss",
+        "pattern": "^\\s*mul\\s+r2\\.xyz,\\s*r11\\.wwww,\\s*r2\\.xyzx\\s*$",
+        "minCount": 1,
+        "maxCount": 1,
+        "meaning": "Reflection-environment radiance is suppressed where the SSR buffer reports a hit."
+      },
+      {
+        "id": "additive-ssr-radiance-composite",
+        "pattern": "^\\s*mad\\s+r2\\.xyz,\\s*r2\\.xyzx,\\s*r0\\.wwww,\\s*r11\\.xyzx\\s*$",
+        "minCount": 1,
+        "maxCount": 1,
+        "meaning": "Material-weighted reflection-environment radiance is added to SSR radiance."
+      }
+    ]
+  },
+  "runtimeContract": {
+    "verifiedStage": "ps_5_0",
+    "producer": "screen-space reflection trace/resolve output",
+    "consumerInput": "SSR radiance RGB plus hit/confidence alpha",
+    "verifiedEquation": "finalReflection = SSR.rgb + materialWeight * reflectionEnvironment.rgb * (1 - SSR.alpha)",
+    "adapterMustConfirm": [
+      "consecutive producer-to-consumer resource handle",
+      "reflection cube-array binding",
+      "SSR RGB and alpha dataflow",
+      "full-screen or deferred-lighting coverage",
+      "live hit-mask visualization",
+      "live radiance visualization"
+    ],
+    "controlSafety": "Do not scale the combined output as an SSR-only control. A safe control must preserve the hit mask and alter only the intended SSR radiance before or at the verified additive composition point.",
+    "strengthControlFormula": "combinedReflection = materialWeightedEnvironment * (1 - originalSSR.a) + originalSSR.rgb * strength",
+    "strengthControl": {
+      "controlledTerm": "additive SSR radiance RGB",
+      "requiredPreservedTerms": [
+        "SSR hit/confidence alpha",
+        "reflection-environment radiance",
+        "material and BRDF weighting",
+        "composite output alpha"
+      ]
+    }
+  },
+  "sourceEvidence": [
+    "artifacts/captured-shaders/e2aa1c8cb39e0a55-ps/e2aa1c8cb39e0a55-ps_decompiled.txt",
+    "artifacts/captured-shaders/e2aa1c8cb39e0a55-ps/resource-flow-evidence.json",
+    "artifacts/probe-screenshots/b2bc6059f9a39c7f-rgb-zero-alpha-preserved-live-validation.json",
+    "artifacts/probe-screenshots/e2aa1c8cb39e0a55-radiance-mask-live-validation.json",
+    "artifacts/probe-screenshots/e2aa1c8cb39e0a55-strength-100-neutral-live-validation.json"
+  ]
+}

@@ -1,0 +1,187 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.rebirth-effects.invalid/shader-family-catalog.schema.json",
+  "title": "Portable shader-family catalog",
+  "type": "object",
+  "required": ["schemaVersion", "kind", "id", "displayName", "provenance", "families"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "kind": { "const": "shader-family-catalog" },
+    "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]+$" },
+    "displayName": { "type": "string", "minLength": 1 },
+    "provenance": {
+      "type": "object",
+      "required": ["evidence"],
+      "properties": {
+        "evidence": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["kind", "label"],
+            "properties": {
+              "kind": { "type": "string", "minLength": 1 },
+              "label": { "type": "string", "minLength": 1 },
+              "path": { "type": "string", "minLength": 1 },
+              "sha256": { "type": "string", "pattern": "^[0-9A-F]{64}$" }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "families": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "logicalName", "implementations"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]+$" },
+          "logicalName": { "type": "string", "minLength": 1 },
+          "description": { "type": "string", "minLength": 1 },
+          "implementations": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["id", "adapter", "api", "bytecodeFormat", "stage", "shaderModels", "identityModel", "variants"],
+              "properties": {
+                "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]+$" },
+                "adapter": { "type": "string", "minLength": 1 },
+                "api": { "type": "string", "minLength": 1 },
+                "bytecodeFormat": { "type": "string", "minLength": 1 },
+                "stage": { "enum": ["vs", "ps", "cs", "hs", "ds", "gs"] },
+                "shaderModels": {
+                  "type": "array",
+                  "minItems": 1,
+                  "uniqueItems": true,
+                  "items": { "type": "string", "minLength": 1 }
+                },
+                "identityModel": { "type": "string", "minLength": 1 },
+                "role": { "type": "string", "minLength": 1 },
+                "status": { "type": "string", "minLength": 1 },
+                "insertionEligibility": { "type": "string", "minLength": 1 },
+                "evidence": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+                "constraints": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+                "runtimeContract": { "type": "object" },
+                "variants": {
+                  "type": "array",
+                  "minItems": 1,
+                  "items": {
+                    "type": "object",
+                    "required": ["id", "identity", "targets"],
+                    "properties": {
+                      "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]+$" },
+                      "identity": {
+                        "oneOf": [
+                          {
+                            "type": "object",
+                            "required": [
+                              "crossVersionIdentityHash",
+                              "interfaceSignatureHashes",
+                              "resourceSignatureHashes",
+                              "constantBufferSignatureHashes",
+                              "executionSignatureHashes",
+                              "portableReflectionIdentityHashes",
+                              "semanticInstructionSetHashes"
+                            ],
+                            "properties": {
+                              "crossVersionIdentityHash": { "type": "string", "pattern": "^[0-9A-F]{16}$" },
+                              "interfaceSignatureHashes": { "$ref": "#/$defs/hashSet" },
+                              "resourceSignatureHashes": { "$ref": "#/$defs/hashSet" },
+                              "constantBufferSignatureHashes": { "$ref": "#/$defs/hashSet" },
+                              "executionSignatureHashes": { "$ref": "#/$defs/hashSet" },
+                              "portableReflectionIdentityHashes": { "$ref": "#/$defs/hashSet" },
+                              "semanticInstructionSetHashes": { "$ref": "#/$defs/hashSet" }
+                            },
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "required": ["canonicalShaderHash"],
+                            "properties": {
+                              "canonicalShaderHash": { "type": "string", "pattern": "^[0-9A-F]{16}$" }
+                            },
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "required": ["descriptorId", "checks", "hashFastPaths"],
+                            "properties": {
+                              "descriptorId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]+$" },
+                              "checks": {
+                                "type": "array",
+                                "minItems": 1,
+                                "items": {
+                                  "type": "object",
+                                  "required": ["id", "pattern", "minCount", "meaning"],
+                                  "properties": {
+                                    "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]+$" },
+                                    "pattern": { "type": "string", "minLength": 1 },
+                                    "minCount": { "type": "integer", "minimum": 0 },
+                                    "maxCount": { "type": ["integer", "null"], "minimum": 0 },
+                                    "meaning": { "type": "string", "minLength": 1 }
+                                  },
+                                  "additionalProperties": false
+                                }
+                              },
+                              "hashFastPaths": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "required": ["adapter", "hash"],
+                                  "properties": {
+                                    "adapter": { "type": "string", "minLength": 1 },
+                                    "hash": { "type": "string", "pattern": "^[0-9A-F]{16}$" },
+                                    "evidence": { "type": "string" }
+                                  },
+                                  "additionalProperties": false
+                                }
+                              }
+                            },
+                            "additionalProperties": false
+                          }
+                        ]
+                      },
+                      "targets": {
+                        "type": "array",
+                        "minItems": 0,
+                        "items": {
+                          "type": "object",
+                          "required": ["versionGroup", "shaderHash"],
+                          "properties": {
+                            "versionGroup": { "type": "string", "minLength": 1 },
+                            "shaderHash": { "type": "string", "pattern": "^[0-9A-F]{16}$" },
+                            "bytecodeLength": { "type": "integer", "minimum": 1 },
+                            "entryFunction": { "type": "string", "minLength": 1 },
+                            "sourceFile": { "type": "string", "minLength": 1 },
+                            "compiledBlobFile": { "type": "string", "minLength": 1 }
+                          },
+                          "additionalProperties": false
+                        }
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                }
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "$defs": {
+    "hashSet": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^[0-9A-F]{16}$" }
+    }
+  },
+  "additionalProperties": false
+}

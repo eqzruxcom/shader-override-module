@@ -1,0 +1,33 @@
+diff --git a/tests/ShaderFamilyHost/Test-ContactShadowFamilyAutomaticProbe.ps1 b/tests/ShaderFamilyHost/Test-ContactShadowFamilyAutomaticProbe.ps1
+--- a/tests/ShaderFamilyHost/Test-ContactShadowFamilyAutomaticProbe.ps1
++++ b/tests/ShaderFamilyHost/Test-ContactShadowFamilyAutomaticProbe.ps1
+@@ -25,21 +25,24 @@ if (-not (Test-Path -LiteralPath $auditScript -PathType Leaf)) {
+     throw "Runtime audit script is missing: $auditScript"
+ }
+ 
++$auditStarted = Get-Date
+ $auditArgs = @{}
+ if ($SkipProxyBuild) {
+     $auditArgs.SkipProxyBuild = $true
+ }
+ $auditOutput = (& $auditScript @auditArgs 2>&1 | Out-String).Trim()
+ if ($LASTEXITCODE -ne 0) {
+     throw "Prerequisite contact-family audit failed.`n$auditOutput"
+ }
+ 
+-$summaryMatch = [regex]::Match($auditOutput, '(?m)^SUMMARY=(.+)$')
+-$auditSummaryPath = $summaryMatch.Groups[1].Value.Trim()
+-$auditSummary = Get-Content -Raw -LiteralPath $auditSummaryPath | ConvertFrom-Json
++$auditSummaryFile = Get-ChildItem -LiteralPath (Join-Path $repositoryRoot 'artifacts\shader-family-tests') \
++    -Filter 'summary.json' -File -Recurse |
++    Where-Object { $_.Directory.Name -like 'contact-runtime-*' -and $_.LastWriteTime -ge $auditStarted.AddSeconds(-2) } |
++    Sort-Object LastWriteTime -Descending |
++    Select-Object -First 1
++if ($null -eq $auditSummaryFile) {
++    throw "Prerequisite audit did not create a new summary file.`n$auditOutput"
++}
++$auditSummaryPath = $auditSummaryFile.FullName
++$auditSummary = Get-Content -Raw -LiteralPath $auditSummaryPath | ConvertFrom-Json
+ if (-not $auditSummary.passed) {
+     throw "Prerequisite audit summary reports failure: $auditSummaryPath"
+ }

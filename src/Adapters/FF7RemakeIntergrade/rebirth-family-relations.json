@@ -1,0 +1,159 @@
+{
+  "schemaVersion": 1,
+  "catalogs": [
+    {
+      "id": "ff7-rebirth-shader-injector-v2-2-1",
+      "path": "artifacts/analysis/rebirth-shader-injector-v2.2.1-family-catalog.json",
+      "sha256": "DF8B87EBFDA491CB2B97DDB76266E25C0FBFDE4D7FDABFDC18B8E5A8470AFC65"
+    },
+    {
+      "id": "ff7-remake-intergrade-verified-area-20260831",
+      "path": "artifacts/analysis/ff7-remake-intergrade-verified-family-catalog.json",
+      "sha256": "E2961758208DB457A513B02C6AA0EDFFCB30BD757A85EBA6BA6E7065747BAB5F"
+    }
+  ],
+  "relations": [
+    {
+      "from": {
+        "catalog": "ff7-rebirth-shader-injector-v2-2-1",
+        "family": "local-light"
+      },
+      "to": {
+        "catalog": "ff7-remake-intergrade-verified-area-20260831",
+        "family": "tiled-surface-light-evaluation"
+      },
+      "relationType": "semantic-role-adapter",
+      "status": "verified-working-contact-shadow-port-in-current-area",
+      "evidence": [
+        "docs/rebirth-contact-source-reuse.md",
+        "docs/surface-lighting-occlusion-study.md",
+        "docs/contact-output-isolation-results.md",
+        "artifacts/checkpoints/rebirth-contact-first-working-20260831-v1/receipts/contact-live-status.json"
+      ],
+      "constraints": [
+        "Rebirth evaluates this logical role in a D3D12 pixel shader; Remake evaluates the relevant role in five D3D11 compute specializations.",
+        "This relation permits shared effect intent and adapter generation; it does not permit bytecode, stage, interface, or binding substitution.",
+        "All five verified Remake compute variants are required in the current area.",
+        "Additional regional variants remain possible and must be captured and classified before universal promotion."
+      ]
+    },
+    {
+      "from": {
+        "catalog": "ff7-rebirth-shader-injector-v2-2-1",
+        "family": "ssr"
+      },
+      "to": {
+        "catalog": "ff7-remake-intergrade-verified-area-20260831",
+        "family": "screen-space-reflection-trace-resolve"
+      },
+      "relationType": "semantic-role-adapter",
+      "status": "verified-role-boundary-pending-effect-port-and-live-visual-acceptance",
+      "evidence": [
+        "docs/shader-coverage-audit-2026-08-31.md",
+        "artifacts/validation-captures/ff7r-contact-area-baseline-20260831/assembly/b2bc6059f9a39c7f-ps.asm",
+        "reference/HelixMod-FF7R/FixFiles/ShaderFixesDM/8c9e92a0895efcdc-ps.txt"
+      ],
+      "constraints": [
+        "The semantic role maps, but Rebirth and Remake hashes, constants, resources, and output contracts are not portable.",
+        "Both known Remake SSR variants must remain represented; the unexecuted variant is retained from exact Helix header evidence.",
+        "The downstream Remake reflection/indirect composite is a separate family and must be preserved."
+      ]
+    },
+    {
+      "from": {
+        "catalog": "ff7-rebirth-shader-injector-v2-2-1",
+        "family": "reflection-environment"
+      },
+      "to": {
+        "catalog": "ff7-remake-intergrade-verified-area-20260831",
+        "family": "reflection-indirect-composite"
+      },
+      "relationType": "partial-semantic-role-adapter",
+      "status": "verified-remake-consumer-boundary-pending-producer-adapter-and-live-visual-acceptance",
+      "evidence": [
+        "docs/shader-coverage-audit-2026-08-31.md",
+        "docs/intergrade-ssgi-character-material-compatibility.md",
+        "artifacts/validation-captures/ff7r-contact-area-baseline-20260831/assembly/e2aa1c8cb39e0a55-ps.asm"
+      ],
+      "constraints": [
+        "Rebirth performs this family in D3D12 compute shaders; Remake exposes the verified downstream boundary in D3D11 pixel shaders.",
+        "This relation covers reflection/indirect composition only; it does not claim that Rebirth SSGI/AO and Remake temporal SSAO are equivalent.",
+        "A Remake indirect-light producer still requires separate proof before an SSGI port can be promoted."
+      ]
+    }
+  ],
+  "unresolved": [
+    {
+      "from": {
+        "catalog": "ff7-rebirth-shader-injector-v2-2-1",
+        "family": "directional-light"
+      },
+      "expectedRole": "directional-light evaluator",
+      "reason": "The current indoor Remake capture proves a cascade projection/filter pass, not the donor-equivalent light evaluator.",
+      "requiredEvidence": "Outdoor capture with dominant directional lighting and confirmed evaluator resource/output flow."
+    },
+    {
+      "from": {
+        "catalog": "ff7-rebirth-shader-injector-v2-2-1",
+        "family": "local-light-ies"
+      },
+      "expectedRole": "IES local-light evaluator",
+      "reason": "No IES-specific identity is proven among the five current Remake compute variants.",
+      "requiredEvidence": "Capture a clearly patterned IES light and correlate every active specialization."
+    },
+    {
+      "from": {
+        "catalog": "ff7-rebirth-shader-injector-v2-2-1",
+        "family": "sample-gi"
+      },
+      "expectedRole": "sampled GI and character directional shaping",
+      "reason": "No Remake GI producer/evaluator has been proven in the current area.",
+      "requiredEvidence": "Capture and classify the GI producer and consumers in a scene where the term is visibly active."
+    },
+    {
+      "from": {
+        "catalog": "ff7-rebirth-shader-injector-v2-2-1",
+        "family": "post-process-fog"
+      },
+      "expectedRole": "fog evaluation/composition",
+      "reason": "Remake uses volumetric grid injection plus scattering/history passes rather than the donor's single analytic post pass.",
+      "requiredEvidence": "Separate analytic and volumetric families and verify each resource boundary before mapping."
+    },
+    {
+      "from": {
+        "catalog": "ff7-rebirth-shader-injector-v2-2-1",
+        "family": "post-process-final"
+      },
+      "expectedRole": "final image processing",
+      "reason": "Remake final-stage responsibilities appear split and are not yet proven from frame/resource flow.",
+      "requiredEvidence": "Identify the final presentation chain and preserve UI/alpha behavior under A/B testing."
+    },
+    {
+      "from": {
+        "catalog": "ff7-rebirth-shader-injector-v2-2-1",
+        "family": "ocean-a"
+      },
+      "expectedRole": "ocean rendering",
+      "reason": "No ocean pass executed in the current industrial Remake capture.",
+      "requiredEvidence": "Capture a scene containing the relevant water/ocean renderer before classification."
+    },
+    {
+      "from": {
+        "catalog": "ff7-rebirth-shader-injector-v2-2-1",
+        "family": "water-a"
+      },
+      "expectedRole": "water rendering variant A",
+      "reason": "No water pass executed in the current industrial Remake capture.",
+      "requiredEvidence": "Capture a scene containing the relevant water renderer before classification."
+    },
+    {
+      "from": {
+        "catalog": "ff7-rebirth-shader-injector-v2-2-1",
+        "family": "water-b"
+      },
+      "expectedRole": "water rendering variant B",
+      "reason": "No water pass executed in the current industrial Remake capture.",
+      "requiredEvidence": "Capture a scene containing the alternate water permutation before classification."
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "kind": "shader-family-alias-decisions",
+  "id": "ff7-remake-intergrade-regional-alias-review-v1",
+  "catalog": {
+    "id": "ue4-dxbc-semantic-descriptors-v1",
+    "sha256": "37D9D2BA253311392C2F7F409347BD9E413CB6E3045207193070ECD014075C96"
+  },
+  "provenance": {
+    "candidateArtifact": {
+      "kind": "generated-alias-candidates",
+      "label": "FF7 Remake contact-area baseline learned-alias candidates",
+      "path": "artifacts/analysis/ff7r-contact-area-baseline-20260831-alias-candidates.json",
+      "sha256": "F957C8888550326203197982BFA75DAC58BBDA9E9681DB870F570A249F140B64"
+    }
+  },
+  "entries": [
+    {
+      "id": "eda405f2d455d5c7-ps-motion-blur-candidate",
+      "stage": "ps",
+      "shaderHash": "EDA405F2D455D5C7",
+      "familyId": "ue4-motion-blur-scene-color-resolve-ps-sm5",
+      "implementationId": "ue4-motion-blur-scene-color-resolve-ps-sm5-d3d11",
+      "variantId": "semantic-v1",
+      "state": "pending",
+      "rationale": "All eleven bounded semantic checks pass, but runtime ownership and equivalence have not yet been reviewed in game.",
+      "evidence": [
+        {
+          "kind": "generated-alias-candidates",
+          "label": "Header-backed structural candidate record",
+          "path": "artifacts/analysis/ff7r-contact-area-baseline-20260831-alias-candidates.json",
+          "sha256": "F957C8888550326203197982BFA75DAC58BBDA9E9681DB870F570A249F140B64"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,69 @@
+diff --git a/tools/New-IntergradeAcceptedContactShadowFamilyIni.ps1 b/tools/New-IntergradeAcceptedContactShadowFamilyIni.ps1
+--- a/tools/New-IntergradeAcceptedContactShadowFamilyIni.ps1
++++ b/tools/New-IntergradeAcceptedContactShadowFamilyIni.ps1
+@@ -285,7 +285,8 @@ function New-FamilySection(
+     [string[]]$TemplateLines,
+     [int]$TemporaryCount,
+     [int]$MinimumInstructions,
+-    [int]$MaximumInstructions) {
++    [int]$MaximumInstructions,
++    [string]$EnableVariable) {
+@@ -310,7 +311,7 @@ forbidden_bindings = t120, g0, cb13, u7
+ min_instructions = $MinimumInstructions
+ max_instructions = $MaximumInstructions
+ x29 = `$ue4fx_contact_edge_width_v2
+ y29 = `$ue4fx_contact_edge_cutoff_v2
+-x31 = `$ue4fx_master_injected_v1
++x31 = `$ue4fx_master_injected_v1 * $EnableVariable
+ y31 = -1
+ z31 = 1
+ w31 = 100
+@@ -335,6 +336,9 @@ $header = @"
+ global `$ue4fx_master_injected_v1 = 1
+ global `$ue4fx_contact_edge_width_v2 = 0.06
+ global `$ue4fx_contact_edge_cutoff_v2 = 0
++global `$ue4fx_contact_base_t5_enabled_v1 = 1
++global `$ue4fx_contact_base_t4_enabled_v1 = 1
++global `$ue4fx_contact_frustum_t4_enabled_v1 = 1
+ 
+ [KeyUE4FXMasterPageDown]
+ key = no_modifiers VK_NEXT
+@@ -342,12 +346,30 @@ type = cycle
+ smart = true
+ `$ue4fx_master_injected_v1 = 0, 1
++
++[KeyUE4FXContactBaseT5Number1]
++key = no_modifiers 1
++type = cycle
++smart = true
++`$ue4fx_contact_base_t5_enabled_v1 = 0, 1
++
++[KeyUE4FXContactBaseT4Number2]
++key = no_modifiers 2
++type = cycle
++smart = true
++`$ue4fx_contact_base_t4_enabled_v1 = 0, 1
++
++[KeyUE4FXContactFrustumT4Number3]
++key = no_modifiers 3
++type = cycle
++smart = true
++`$ue4fx_contact_frustum_t4_enabled_v1 = 0, 1
+ "@
+ $sections = @(
+-    New-FamilySection -Name 'ShaderRegexUE4FXRemakeContactBaseT5' -Depth 't5' -LightList 't12' -SceneColor 't9' -TemplateLines $baseTemplateLines -TemporaryCount 15 -MinimumInstructions 645 -MaximumInstructions 1008
+-    New-FamilySection -Name 'ShaderRegexUE4FXRemakeContactBaseT4' -Depth 't4' -LightList 't11' -SceneColor 't8' -TemplateLines $baseTemplateLines -TemporaryCount 15 -MinimumInstructions 631 -MaximumInstructions 631
+-    New-FamilySection -Name 'ShaderRegexUE4FXRemakeContactFrustumT4' -Depth 't4' -LightList 't11' -SceneColor 't8' -TemplateLines $frustumTemplateLines -TemporaryCount 16 -MinimumInstructions 478 -MaximumInstructions 478
++    New-FamilySection -Name 'ShaderRegexUE4FXRemakeContactBaseT5' -Depth 't5' -LightList 't12' -SceneColor 't9' -TemplateLines $baseTemplateLines -TemporaryCount 15 -MinimumInstructions 645 -MaximumInstructions 1008 -EnableVariable '`$ue4fx_contact_base_t5_enabled_v1'
++    New-FamilySection -Name 'ShaderRegexUE4FXRemakeContactBaseT4' -Depth 't4' -LightList 't11' -SceneColor 't8' -TemplateLines $baseTemplateLines -TemporaryCount 15 -MinimumInstructions 631 -MaximumInstructions 631 -EnableVariable '`$ue4fx_contact_base_t4_enabled_v1'
++    New-FamilySection -Name 'ShaderRegexUE4FXRemakeContactFrustumT4' -Depth 't4' -LightList 't11' -SceneColor 't8' -TemplateLines $frustumTemplateLines -TemporaryCount 16 -MinimumInstructions 478 -MaximumInstructions 478 -EnableVariable '`$ue4fx_contact_frustum_t4_enabled_v1'
+ )
+@@ -380,6 +402,11 @@ $report = [ordered]@{
+         [ordered]@{ name='ShaderRegexUE4FXRemakeContactFrustumT4'; members=@('62b33a2d1e505241') }
+     )
++    diagnosticKeys = [ordered]@{
++        '1' = 'ShaderRegexUE4FXRemakeContactBaseT5'
++        '2' = 'ShaderRegexUE4FXRemakeContactBaseT4'
++        '3' = 'ShaderRegexUE4FXRemakeContactFrustumT4'
++    }
+     variants = @($variantEvidence)

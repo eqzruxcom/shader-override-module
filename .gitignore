@@ -1,0 +1,54 @@
+# Local reference checkouts and downloaded archives are reproducible inputs,
+# not part of this project's distributable source.
+reference/3Dmigoto/
+reference/ShaderInjector/
+reference/HelixMod-FF7R/
+reference/external/
+reference/*.7z
+reference/*.zip
+
+# Runtime captures and compiled shader artifacts are machine/build specific.
+captures/
+artifacts/
+backups/
+*.bin
+*.blob
+*.cso
+*.pdb
+*.log
+*.obj
+*.ilk
+*.exp
+*.user
+*.suo
+*.bak
+
+# Generated build and test output.
+**/bin/
+**/builds/
+**/obj/
+**/stage/
+.vs/
+
+# This workspace also contains unrelated media/audio experiments. They are not
+# part of Shader Override Module.
+audio_reverb_assessment_*/
+different_bjs_section_processed/
+nextstage_analysis/
+nextstage_combined_*/
+oral_dereverb_uniform_previews/
+oral_uniform_previews/
+passedontochatgpt*/
+very_fast_bj_reverb_AB_*/
+
+# Local scratch patch iterations. Curated patches live under patches/.
+/*.patch
+# Local incremental working copies; Git history replaces these.
+*.v[0-9]*
+*.pre-strictmode-fix
+*.pyc
+CODEX_WRITE_TEST.txt
+
+# Compiled Windows outputs are release artifacts, not source commits.
+*.exe
+*.dll

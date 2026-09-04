@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.rebirth-effects.invalid/dxvk-d3d11-runtime-bundle.schema.json",
+  "title": "Non-installing DXVK D3D11 runtime bundle",
+  "type": "object",
+  "required": ["schemaVersion", "packageId", "backend", "architecture", "createdUtc", "sourceRevision", "patchSha256", "adapter", "buildEvidence", "smokeEvidence", "config", "replacements", "files", "rollback", "policy"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "packageId": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]+$" },
+    "backend": { "const": "dxvk-d3d11" },
+    "architecture": { "const": "x64" },
+    "createdUtc": { "type": "string", "format": "date-time" },
+    "sourceRevision": { "const": "adeda6639a09ad1b6a1b7c4158a781ffaf68947d" },
+    "patchSha256": { "$ref": "#/$defs/sha256" },
+    "adapter": {
+      "type": "object",
+      "required": ["id", "game", "engineFamily", "renderer", "bindingManifest", "bindingManifestSha256", "executable"],
+      "properties": {
+        "id": { "const": "FF7RemakeIntergrade" },
+        "game": { "type": "string", "minLength": 1 },
+        "engineFamily": { "const": "UE4-custom" },
+        "renderer": { "const": "D3D11" },
+        "bindingManifest": { "const": "provenance/adapter-bindings.json" },
+        "bindingManifestSha256": { "$ref": "#/$defs/sha256" },
+        "executable": {
+          "type": "object",
+          "required": ["name", "sha256"],
+          "properties": { "name": { "const": "ff7remake_.exe" }, "sha256": { "$ref": "#/$defs/sha256" } },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "buildEvidence": { "$ref": "#/$defs/evidence" },
+    "smokeEvidence": {
+      "type": "object",
+      "required": ["manifest", "manifestSha256", "passed"],
+      "properties": { "manifest": { "type": "string", "minLength": 1 }, "manifestSha256": { "$ref": "#/$defs/sha256" }, "passed": { "const": true } },
+      "additionalProperties": false
+    },
+    "config": {
+      "type": "object",
+      "required": ["relativePath", "key", "value"],
+      "properties": { "relativePath": { "const": "dxvk.conf" }, "key": { "const": "d3d11.shaderOverridePath" }, "value": { "const": "ShaderFixes" } },
+      "additionalProperties": false
+    },
+    "replacements": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["identity", "stage", "familyId", "versionGroup", "binary", "binarySha256", "manifest", "manifestSha256", "compatibilityStatus"],
+        "properties": {
+          "identity": { "type": "string", "pattern": "^[0-9a-f]{16}-(vs|hs|ds|gs|ps|cs)$" },
+          "stage": { "enum": ["vs", "hs", "ds", "gs", "ps", "cs"] },
+          "familyId": { "type": "string", "minLength": 1 },
+          "versionGroup": { "type": "string", "minLength": 1 },
+          "binary": { "type": "string", "pattern": "^ShaderFixes/[0-9a-f]{16}-(vs|hs|ds|gs|ps|cs)_replace\\.bin$" },
+          "binarySha256": { "$ref": "#/$defs/sha256" },
+          "manifest": { "type": "string", "pattern": "^provenance/replacements/[0-9a-f]{16}-(vs|hs|ds|gs|ps|cs)\\.json$" },
+          "manifestSha256": { "$ref": "#/$defs/sha256" },
+          "compatibilityStatus": { "enum": ["passed-reflection-contract", "passed-declaration-contract-rdef-unavailable"] }
+        },
+        "additionalProperties": false
+      }
+    },
+    "files": {
+      "type": "array",
+      "minItems": 8,
+      "items": {
+        "type": "object",
+        "required": ["relativePath", "sha256", "sizeBytes", "role"],
+        "properties": {
+          "relativePath": { "type": "string", "minLength": 1 },
+          "sha256": { "$ref": "#/$defs/sha256" },
+          "sizeBytes": { "type": "integer", "minimum": 1 },
+          "role": { "enum": ["runtime", "configuration", "replacement", "provenance", "rollback"] }
+        },
+        "additionalProperties": false
+      }
+    },
+    "rollback": { "type": "object", "required": ["plan", "planSha256"], "properties": { "plan": { "const": "rollback-plan.json" }, "planSha256": { "$ref": "#/$defs/sha256" } }, "additionalProperties": false },
+    "policy": {
+      "type": "object",
+      "required": ["installed", "runtimeEligible", "automaticInstall", "gameDirectoryTouched", "backupRequired"],
+      "properties": { "installed": { "const": false }, "runtimeEligible": { "const": false }, "automaticInstall": { "const": false }, "gameDirectoryTouched": { "const": false }, "backupRequired": { "const": true } },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[0-9A-F]{64}$" },
+    "evidence": { "type": "object", "required": ["manifest", "manifestSha256"], "properties": { "manifest": { "type": "string", "minLength": 1 }, "manifestSha256": { "$ref": "#/$defs/sha256" } }, "additionalProperties": false }
+  }
+}

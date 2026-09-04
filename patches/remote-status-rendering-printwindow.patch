@@ -1,0 +1,37 @@
+diff --git a/tests/ShaderFamilyHost/Test-RemoteStatusRendering.ps1 b/tests/ShaderFamilyHost/Test-RemoteStatusRendering.ps1
+--- a/tests/ShaderFamilyHost/Test-RemoteStatusRendering.ps1
++++ b/tests/ShaderFamilyHost/Test-RemoteStatusRendering.ps1
+@@ -42,11 +42,14 @@ public static class RemoteStatusWindowBounds
+     [DllImport("user32.dll", SetLastError = true)]
+     public static extern bool SetWindowPos(
+         IntPtr hwnd,
+         IntPtr insertAfter,
+         int x,
+         int y,
+         int width,
+         int height,
+         uint flags);
++
++    [DllImport("user32.dll", SetLastError = true)]
++    public static extern bool PrintWindow(IntPtr hwnd, IntPtr deviceContext, uint flags);
+ }
+ '@
+@@ -64,12 +67,17 @@ function Save-WindowScreenshot {
+     $width = $rect.Right - $rect.Left
+     $height = $rect.Bottom - $rect.Top
+     $bitmap = [Drawing.Bitmap]::new($width, $height, [Drawing.Imaging.PixelFormat]::Format32bppArgb)
+     $graphics = [Drawing.Graphics]::FromImage($bitmap)
++    $deviceContext = $graphics.GetHdc()
+     try {
+-        $graphics.CopyFromScreen($rect.Left, $rect.Top, 0, 0, [Drawing.Size]::new($width, $height))
++        $rendered = [RemoteStatusWindowBounds]::PrintWindow($WindowHandle, $deviceContext, 2)
++        if (-not $rendered) {
++            throw "PrintWindow failed with Win32 error $([Runtime.InteropServices.Marshal]::GetLastWin32Error())."
++        }
+         $bitmap.Save($Path, [Drawing.Imaging.ImageFormat]::Png)
+     }
+     finally {
++        $graphics.ReleaseHdc($deviceContext)
+         $graphics.Dispose()
+         $bitmap.Dispose()
+     }

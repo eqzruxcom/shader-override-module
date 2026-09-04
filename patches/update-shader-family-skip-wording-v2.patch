@@ -1,0 +1,12 @@
+diff --git a/tests/ShaderFamilyHost/Test-ShaderFamilyModes.ps1 b/tests/ShaderFamilyHost/Test-ShaderFamilyModes.ps1
+--- a/tests/ShaderFamilyHost/Test-ShaderFamilyModes.ps1
++++ b/tests/ShaderFamilyHost/Test-ShaderFamilyModes.ps1
+@@ -233 +233 @@
+-'@ -Expected @("ShaderFamily: rejected ps_5_0 $fixtureHash for [ShaderRegexFamilyFixture]: missing required binding u0", 'Patch did not apply') -Forbidden @($matchLine)
++'@ -Expected @("ShaderFamily: skipped ps_5_0 $fixtureHash for [ShaderRegexFamilyFixture]: missing required binding u0", 'Patch did not apply') -Forbidden @($matchLine)
+@@ -243 +243 @@
+-'@ -Expected @("ShaderFamily: rejected ps_5_0 $fixtureHash for [ShaderRegexFamilyFixture]: contains forbidden binding t0", 'Patch did not apply') -Forbidden @($matchLine)
++'@ -Expected @("ShaderFamily: skipped ps_5_0 $fixtureHash for [ShaderRegexFamilyFixture]: contains forbidden binding t0", 'Patch did not apply') -Forbidden @($matchLine)
+@@ -252 +252 @@
+-'@ -Expected @("ShaderFamily: rejected ps_5_0 $fixtureHash for [ShaderRegexFamilyFixture]: instruction count 3 outside 4..4", 'Patch did not apply') -Forbidden @($matchLine)
++'@ -Expected @("ShaderFamily: skipped ps_5_0 $fixtureHash for [ShaderRegexFamilyFixture]: instruction count 3 outside 4..4", 'Patch did not apply') -Forbidden @($matchLine)

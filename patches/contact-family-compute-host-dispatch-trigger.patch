@@ -1,0 +1,17 @@
+diff --git a/tests/ShaderFamilyHost/ShaderFamilyComputeHost.cpp b/tests/ShaderFamilyHost/ShaderFamilyComputeHost.cpp
+--- a/tests/ShaderFamilyHost/ShaderFamilyComputeHost.cpp
++++ b/tests/ShaderFamilyHost/ShaderFamilyComputeHost.cpp
+@@ -81,7 +81,13 @@ int wmain(int argc, wchar_t** argv)
+         if (FAILED(hr)) {
+             std::fwprintf(stderr, L"FAIL: CreateComputeShader(%ls) returned 0x%08lx\n",
+                 argv[index], hr);
+             return 14;
+         }
++
++        context->CSSetShader(shader.Get(), nullptr, 0);
++        // 3Dmigoto performs deferred compute ShaderRegex analysis immediately
++        // before Dispatch. Zero groups trigger analysis without executing work.
++        context->Dispatch(0, 0, 0);
++        context->CSSetShader(nullptr, nullptr, 0);
+         std::wprintf(L"CREATED=%ls\n", argv[index]);
+     }

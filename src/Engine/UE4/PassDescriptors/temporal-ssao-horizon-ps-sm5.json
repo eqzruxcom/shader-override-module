@@ -1,0 +1,127 @@
+{
+  "schemaVersion": 1,
+  "id": "ue4-temporal-ssao-horizon-ps-sm5",
+  "family": "ambient-occlusion",
+  "displayName": "UE4 full-resolution temporal SSAO horizon integration",
+  "description": "Pixel pass that reconstructs geometry from normal and depth, samples hierarchical depth in multiple horizon directions using frame-varying noise, and packs current ambient occlusion with temporal feedback, reprojection weight, and signed depth.",
+  "stages": [
+    "ps"
+  ],
+  "shaderModels": [
+    "ps_5_0"
+  ],
+  "hashFastPaths": [
+    {
+      "adapter": "FF7RemakeIntergrade",
+      "hash": "a77b589dce5822d6",
+      "evidence": "Live A/B: zero X heavily reduced AO/main shading; zero Y changed an AO-like outline around moving Cloud. Square Enix documents full-resolution temporal SSAO with aggressive denoising and nonlinear baked-AO/capsule-shadow integration."
+    }
+  ],
+  "semanticSignature": {
+    "checks": [
+      {
+        "id": "single-default-sampler",
+        "pattern": "^dcl_sampler\\s+s\\d+,\\s*mode_default\\s*$",
+        "minCount": 1,
+        "maxCount": 1,
+        "meaning": "The verified AO pass uses one sampler for hierarchical-depth and temporal-history lookups."
+      },
+      {
+        "id": "single-volume-noise-input",
+        "pattern": "^dcl_resource_texture3d\\s+\\(float,float,float,float\\)\\s+t\\d+\\s*$",
+        "minCount": 1,
+        "maxCount": 1,
+        "meaning": "A frame-varying 3D noise sequence rotates or jitters the SSAO horizon samples."
+      },
+      {
+        "id": "five-screen-inputs",
+        "pattern": "^dcl_resource_texture2d\\s+\\(float,float,float,float\\)\\s+t\\d+\\s*$",
+        "minCount": 5,
+        "maxCount": null,
+        "meaning": "Normal, scene depth, AO history, velocity, and hierarchical depth are separate screen-space inputs."
+      },
+      {
+        "id": "direct-volume-noise-load",
+        "pattern": "^\\s*ld_indexable\\(texture3d\\)\\(float,float,float,float\\)\\s+[^\\r\\n]+$",
+        "minCount": 1,
+        "maxCount": null,
+        "meaning": "The per-pixel SSAO sample orientation is loaded directly from the 3D noise sequence."
+      },
+      {
+        "id": "direct-gbuffer-and-velocity-loads",
+        "pattern": "^\\s*ld_indexable\\(texture2d\\)\\(float,float,float,float\\)\\s+[^\\r\\n]+$",
+        "minCount": 3,
+        "maxCount": null,
+        "meaning": "Depth, normal, and velocity or reprojection inputs are fetched at pixel coordinates."
+      },
+      {
+        "id": "hierarchical-depth-horizon-sampling",
+        "pattern": "^\\s*sample_l_indexable\\(texture2d\\)\\(float,float,float,float\\)\\s+[^\\r\\n]+,\\s*s\\d+,\\s*r\\d+\\.[xyzw]+\\s*$",
+        "minCount": 8,
+        "maxCount": null,
+        "meaning": "Repeated variable-LOD depth samples evaluate occluding horizons around the shaded point."
+      },
+      {
+        "id": "repeated-horizon-geometry-tests",
+        "pattern": "^\\s*dp3\\s+[^\\r\\n]+$",
+        "minCount": 10,
+        "maxCount": null,
+        "meaning": "Repeated dot products reconstruct and test sample geometry for horizon-based ambient occlusion."
+      },
+      {
+        "id": "lod-selection-logarithms",
+        "pattern": "^\\s*log\\s+[^\\r\\n]+$",
+        "minCount": 2,
+        "maxCount": null,
+        "meaning": "Logarithms select hierarchical-depth mip levels as the AO sampling radius grows."
+      },
+      {
+        "id": "temporal-ao-history-sample",
+        "pattern": "^\\s*sample_l_indexable\\(texture2d\\)\\(float,float,float,float\\)\\s+[^\\r\\n]+,\\s*s\\d+,\\s*l\\(0\\.000000\\)\\s*$",
+        "minCount": 1,
+        "maxCount": null,
+        "meaning": "The packed AO history is sampled at reprojected coordinates for multi-frame feedback."
+      },
+      {
+        "id": "packed-pixel-output",
+        "pattern": "^\\s*mov\\s+o0\\.xyzw,\\s*[^\\r\\n]+$",
+        "minCount": 1,
+        "maxCount": 1,
+        "meaning": "The pass writes one packed float4 AO temporal intermediate."
+      }
+    ]
+  },
+  "runtimeContract": {
+    "output": "packed temporal SSAO intermediate",
+    "verifiedStage": "ps_5_0",
+    "implementation": "custom full-resolution temporal SSAO; public Square Enix material does not name a GTAO or HBAO variant",
+    "adapterMustConfirm": [
+      "noise-sequence texture role",
+      "normal and scene-depth slots",
+      "hierarchical-depth slot and mip chain",
+      "motion-vector slot",
+      "AO-history slot",
+      "full-resolution output dimensions",
+      "downstream nonlinear combination with baked AO or capsule shadow",
+      "per-channel temporal stability and artifact behavior"
+    ],
+    "outputEncodingStatus": "live-isolation-complete-packed-float4",
+    "knownPacking": {
+      "x": "current nonnegative AO/horizon scalar; live-zero causes major AO/main-shading reduction",
+      "y": "current or reprojected AO scalar; live-zero changes the moving-character AO outline",
+      "z": "temporal/reprojection weight or metric; zeroing produced no observable change in the tested scene",
+      "w": "signed linearized scene depth; zeroing produced no observable change in the tested scene"
+    },
+    "controlSafety": "Do not uniformly scale xyzw. AO strength is xy = lerp(1.0, original.xy, strength), while temporal metric Z and signed depth W remain unchanged."
+  },
+  "sourceEvidence": [
+    "artifacts/captured-shaders/a77b589dce5822d6-ps/a77b589dce5822d6-ps_dumpbin.asm",
+    "artifacts/captured-shaders/a77b589dce5822d6-ps/packed-output-dataflow.json",
+    "artifacts/probe-screenshots/a77b589dce5822d6-zero-channel-x-live-validation.json",
+    "artifacts/probe-screenshots/a77b589dce5822d6-zero-channel-y-live-validation.json",
+    "artifacts/probe-screenshots/a77b589dce5822d6-zero-channel-z-live-validation.json",
+    "artifacts/probe-screenshots/a77b589dce5822d6-zero-channel-w-live-validation.json",
+    "artifacts/replacement-shaders/a77b589dce5822d6-ao-strength-control-pack.json",
+    "https://www.unrealengine.com/developer-interviews/how-square-enix-leveraged-unreal-engine-to-modernize-final-fantasy-vii-remake?lang=en-US"
+  ]
+}

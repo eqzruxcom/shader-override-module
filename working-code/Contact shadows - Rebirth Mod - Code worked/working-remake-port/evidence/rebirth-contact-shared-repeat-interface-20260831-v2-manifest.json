@@ -1,0 +1,237 @@
+{
+  "schemaVersion": 1,
+  "createdAtUtc": "2026-08-31T13:22:47.9636735Z",
+  "result": "passed-shared-interface-only",
+  "candidateDirectory": "C:\\Users\\EQZITARA\\Documents\\ChatGPT\\FF7 Rebirth mod\\artifacts\\rebirth-contact-shared-repeat-candidate-20260831-v1",
+  "candidateManifestSha256": "3FDD26E45F76320345B0330FAD150AA4AE8426BA2D95B63FC7CC012E4C62CA7B",
+  "testBuildDirectory": "C:\\Users\\EQZITARA\\Documents\\ChatGPT\\FF7 Rebirth mod\\artifacts\\rebirth-contact-shared-repeat-runner-20260831-v3",
+  "testManifestSha256": "DAA4143678AE1D6F02F5BAE2084C5476A0807D7CF48C8A2B945B5C8F0F52B11C",
+  "runnerSha256": "28F48C01F2FB25F99D2603C81AD33E77695BA3C181B36BF20B92B15CE6562D95",
+  "scriptSha256": "943367FA908092B48F2C68204AEB348C017B6898AFCDD6AF4F8C3666F4410952",
+  "sources": [
+    {
+      "path": "src/Effects/Lighting/RebirthContactShadows.hlsl",
+      "sha256": "D7F38CC14D8D4939840D536F700B62EDCC14285D6BD4FF1F44E980EBBECF1FB9"
+    },
+    {
+      "path": "src/ThirdParty/ShaderInjector/RebirthContactRay.hlsl",
+      "sha256": "52C8FC47BD2C83EC813CCBD4EBC093CD45971852FD60C511978B71C959F5C99A"
+    },
+    {
+      "path": "src/ThirdParty/ShaderInjector/RebirthContactNoise.hlsl",
+      "sha256": "92FE24A57B9A13A27242A4BB059EE6391F8469A1C02FA8633B441B5C0D8AB04C"
+    },
+    {
+      "path": "src/ThirdParty/ShaderInjector/provenance.json",
+      "sha256": "527615E23B30055E887DB621C6B434B05E99CB2EB491E4115ECD2D32B688CD90"
+    },
+    {
+      "path": "src/Tests/RebirthContactCases_cs.hlsl",
+      "sha256": "00AB1460B03D7995A29EEDD9AC534EEAAB6BFFB30B3C46A5E39A09706E37B0F5"
+    },
+    {
+      "path": "src/Tests/RebirthContactAdapter_cs.hlsl",
+      "sha256": "066FF638F1EB2E1379C7824C26FC3764897F5898F5E88A1910DFD3C0D3F62797"
+    },
+    {
+      "path": "tools/import_rebirth_contact_source.py",
+      "sha256": "25DA83985CE193FDF054399DDDE0005EE46E68B15A740431F51A907C0D4F58EE"
+    },
+    {
+      "path": "src\\Effects\\Lighting\\ContactShadowCommon.hlsl",
+      "sha256": "4BEB4FD3AEEE935BE7E239CA9C927A25D53810E608495A820E2CC7658B66EB67"
+    },
+    {
+      "path": "src\\Effects\\Lighting\\ContactShadows.hlsl",
+      "sha256": "C811841A25CE6851CED7E501B9AC5B919C76A89A828C36406B03BE3CCD0A4A20"
+    },
+    {
+      "path": "src\\Tests\\ContactShadowsSmoke.hlsl",
+      "sha256": "11A6B0686B9BFC2D5FE9D877D8FDEFF3384A0D4A4A8C43B9B568910A259FDB2D"
+    },
+    {
+      "path": "src\\Tests\\ContactShadowsCases_cs.hlsl",
+      "sha256": "4C0D7F4C2DC6B90302E3B3E3ADEC8E70131B68C1ACE0FF00BFB13667BF5AA2D3"
+    },
+    {
+      "path": "src\\Tests\\IntergradeContactAdapter_cs.hlsl",
+      "sha256": "9412FA5FF92CF0032C9ED40F11326628A4F54C87DBA9FE5085B53086FDF8ADD0"
+    },
+    {
+      "path": "src\\Adapters\\FF7RemakeIntergrade\\ContactShadowKernel_ps.hlsl",
+      "sha256": "272CBC775E21E78750E0E0E62D926AA8819F7B2BDD575C736540EA1BBC1F7C97"
+    },
+    {
+      "path": "tools\\ContactShadowWarpTest.cpp",
+      "sha256": "F2C3D80EC444FA91DD8DFDE1CE555D86709C046ED8603A472727B29FA24F551C"
+    },
+    {
+      "path": "tools\\ContactShadowAdapterTests.h",
+      "sha256": "E59B4B599DBE595E27C1DA01C8FEF237E1DF2858BEFF4BAFC092090256369EF8"
+    },
+    {
+      "path": "tools\\Test-ContactShadows.ps1",
+      "sha256": "6BA2B627A72A172E6EA608462FC5CC22D7709C704384BBE46813787DA6755124"
+    },
+    {
+      "sha256": "F3666F9DF1CDCE62C5B55565D8CAB6D557F98569EA70D06DF5DB92417EAD468F",
+      "path": "src/Adapters/FF7RemakeIntergrade/RebirthContactInputMapping.hlsl"
+    },
+    {
+      "sha256": "F5EF0BE35F05107579E6CD60CA98D742FAB9470116C223D8F77FB29C8AEE8508",
+      "path": "src/Tests/RebirthContactInputs_cs.hlsl"
+    },
+    {
+      "sha256": "FBFB1AC6B7845425D948CAAB18C55C4BFA69CC8A13F89DBB7521D1699B228903",
+      "path": "src/ThirdParty/ShaderInjector/RebirthContactReconstruction.hlsl"
+    },
+    {
+      "sha256": "F33216CC68593AFA04814296855ADCECA3A3BCEB48F615ADE208E6915E85ECD1",
+      "path": "src/Adapters/FF7RemakeIntergrade/RebirthContactReconstructedKernel_ps.hlsl"
+    },
+    {
+      "sha256": "CF057920D1AB3CE2972DDF38B615F8D2857A4648E14D0637CCC826E5650F1235",
+      "path": "src/Tests/RebirthContactReconstruction_cs.hlsl"
+    },
+    {
+      "sha256": "8B9290E321265634C8BCA1E8AC6CEBA49B05F5CFC071E55F7E623154E3C7AA6E",
+      "path": "src/Tests/RebirthContactReconstructedAdapter_cs.hlsl"
+    },
+    {
+      "sha256": "4BEB4FD3AEEE935BE7E239CA9C927A25D53810E608495A820E2CC7658B66EB67",
+      "path": "src/Effects/Lighting/ContactShadowCommon.hlsl"
+    },
+    {
+      "sha256": "C811841A25CE6851CED7E501B9AC5B919C76A89A828C36406B03BE3CCD0A4A20",
+      "path": "src/Effects/Lighting/ContactShadows.hlsl"
+    },
+    {
+      "sha256": "D7F38CC14D8D4939840D536F700B62EDCC14285D6BD4FF1F44E980EBBECF1FB9",
+      "path": "src/Effects/Lighting/RebirthContactShadows.hlsl"
+    },
+    {
+      "sha256": "52C8FC47BD2C83EC813CCBD4EBC093CD45971852FD60C511978B71C959F5C99A",
+      "path": "src/ThirdParty/ShaderInjector/RebirthContactRay.hlsl"
+    },
+    {
+      "sha256": "92FE24A57B9A13A27242A4BB059EE6391F8469A1C02FA8633B441B5C0D8AB04C",
+      "path": "src/ThirdParty/ShaderInjector/RebirthContactNoise.hlsl"
+    },
+    {
+      "sha256": "527615E23B30055E887DB621C6B434B05E99CB2EB491E4115ECD2D32B688CD90",
+      "path": "src/ThirdParty/ShaderInjector/provenance.json"
+    },
+    {
+      "sha256": "272CBC775E21E78750E0E0E62D926AA8819F7B2BDD575C736540EA1BBC1F7C97",
+      "path": "src/Adapters/FF7RemakeIntergrade/ContactShadowKernel_ps.hlsl"
+    },
+    {
+      "sha256": "33FCF0FB367915C5657EA0298F9A9DC47351F1DD9ABEF67BC5EEF1172723D872",
+      "path": "src/Adapters/FF7RemakeIntergrade/RebirthContactShadowKernel_ps.hlsl"
+    },
+    {
+      "sha256": "F3666F9DF1CDCE62C5B55565D8CAB6D557F98569EA70D06DF5DB92417EAD468F",
+      "path": "src/Adapters/FF7RemakeIntergrade/RebirthContactInputMapping.hlsl"
+    },
+    {
+      "sha256": "FBFB1AC6B7845425D948CAAB18C55C4BFA69CC8A13F89DBB7521D1699B228903",
+      "path": "src/ThirdParty/ShaderInjector/RebirthContactReconstruction.hlsl"
+    },
+    {
+      "sha256": "F33216CC68593AFA04814296855ADCECA3A3BCEB48F615ADE208E6915E85ECD1",
+      "path": "src/Adapters/FF7RemakeIntergrade/RebirthContactReconstructedKernel_ps.hlsl"
+    },
+    {
+      "sha256": "16A1FE89D4755F47A4DFFC4F0A2F39D10D8802AB3B547800B7C6E6EC9FF85BE2",
+      "path": "src/Adapters/FF7RemakeIntergrade/RebirthContactShared.hlsl"
+    },
+    {
+      "sha256": "A8AF0542AB19103C3E805AF5CF78613461FDC7715EC772F7DF1A6D6ADC4931D2",
+      "path": "src/Adapters/FF7RemakeIntergrade/RebirthContactSharedKernel_cs.hlsl"
+    },
+    {
+      "sha256": "04CBC27FB61894CA13A98202DED398BE547BA93B688E0B86469A2D16BB03C0BE",
+      "path": "tools/audit_rebirth_shared_boundary.py"
+    },
+    {
+      "sha256": "383579F09266B403D053E795D8675FA0DE3C9D381509DABDFF1D292CABF851A5",
+      "path": "src/Tests/RebirthContactGroupOracle_cs.hlsl"
+    }
+  ],
+  "profiles": [
+    {
+      "frame": 0,
+      "material": 1
+    },
+    {
+      "frame": 61,
+      "material": 231
+    },
+    {
+      "frame": 12345,
+      "material": 248
+    }
+  ],
+  "variants": [
+    {
+      "shaderHash": "c30cdc8365df9840",
+      "lightIterations": 8,
+      "creationChecks": 3,
+      "laneCases": 491520,
+      "fixtureSha256": "95B26E80689872179229B64EBDA1DB4113A297A12DA9155E57C4C38E6C01CD6F",
+      "candidateSha256": "FB2CFE361716D3EC1E8F4281B6761A44CA1EEE5188EB189427B8AC1C79903A14",
+      "groupsPassed": 240
+    },
+    {
+      "shaderHash": "62b33a2d1e505241",
+      "lightIterations": 8,
+      "creationChecks": 3,
+      "laneCases": 491520,
+      "fixtureSha256": "E565519E7EF58421CC899018FCB1D2E6B71A3DDA0C79FC3F50EC0BB39E7A011A",
+      "candidateSha256": "4B0FA766204B785A14B99A480C3B9F673B5943B224904016C0754A19BD583F8B",
+      "groupsPassed": 240
+    },
+    {
+      "shaderHash": "5a9fbefe0ab6f815",
+      "lightIterations": 8,
+      "creationChecks": 3,
+      "laneCases": 491520,
+      "fixtureSha256": "1C8CF39D92A8C5FB1B17BCF60B0BE0755EC217CB7AAC89C143182DC196281D8E",
+      "candidateSha256": "AE5619F786C97F68D1E73B3D6743FD8591A98FBC988D7AB2DA1D0236FAE6DBA5",
+      "groupsPassed": 240
+    },
+    {
+      "shaderHash": "0e97888f9a8767da",
+      "lightIterations": 8,
+      "creationChecks": 3,
+      "laneCases": 491520,
+      "fixtureSha256": "F92C7EFEF79BF8BD8C9B07904B469092452982ECB523B3D6FDA11908DBD336FA",
+      "candidateSha256": "9F7FC62E4FC9D317D8530ED88CA7B58CE16E0F6E484EAB98BCD1CE67931C5CBE",
+      "groupsPassed": 240
+    },
+    {
+      "shaderHash": "08bb8764f1840179",
+      "lightIterations": 8,
+      "creationChecks": 3,
+      "laneCases": 491520,
+      "fixtureSha256": "F782E523DBB00D3A98AD6DB4130951424D746B9FFA0F7A6FBD15D8A1A2F3A152",
+      "candidateSha256": "60DC88F73F4DED20AC8CD28A5B1FEB910483C47ECA0BDDB9DF41E4F89B33F05B",
+      "groupsPassed": 240
+    }
+  ],
+  "creationChecks": 15,
+  "groupsPassed": 1200,
+  "laneCases": 2457600,
+  "lightIterationsPerDispatch": 8,
+  "mixedNativeContributions": true,
+  "runtimeEligible": false,
+  "qualityGatePassed": false,
+  "gameFilesModified": false,
+  "liveTested": false,
+  "limitations": [
+    "Synthetic resources and fixture loop, not captured frame or complete native tiled shading",
+    "Odd viewport origins intentionally neutral",
+    "WARP execution cannot prove absence of scheduling races on every hardware GPU",
+    "No proof of temporal phase progression, raster/helper equivalence, visual improvement or hardware performance"
+  ]
+}

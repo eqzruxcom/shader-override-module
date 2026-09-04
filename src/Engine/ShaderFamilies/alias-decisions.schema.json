@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.rebirth-effects.invalid/shader-family-alias-decisions.schema.json",
+  "title": "Shader-family alias review ledger",
+  "type": "object",
+  "required": ["schemaVersion", "kind", "id", "catalog", "provenance", "entries"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "kind": { "const": "shader-family-alias-decisions" },
+    "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]+$" },
+    "catalog": {
+      "type": "object",
+      "required": ["id", "sha256"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]+$" },
+        "sha256": { "type": "string", "pattern": "^[0-9A-F]{64}$" }
+      },
+      "additionalProperties": false
+    },
+    "provenance": {
+      "type": "object",
+      "required": ["candidateArtifact"],
+      "properties": {
+        "candidateArtifact": { "$ref": "#/$defs/evidence" }
+      },
+      "additionalProperties": false
+    },
+    "entries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "stage", "shaderHash", "familyId", "implementationId", "variantId", "state", "rationale", "evidence"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]+$" },
+          "stage": { "enum": ["vs", "ps", "cs", "hs", "ds", "gs"] },
+          "shaderHash": { "type": "string", "pattern": "^[0-9A-F]{16}$" },
+          "familyId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]+$" },
+          "implementationId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]+$" },
+          "variantId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]+$" },
+          "state": { "enum": ["pending", "accepted", "rejected"] },
+          "rationale": { "type": "string", "minLength": 1 },
+          "reviewer": { "type": "string", "minLength": 1 },
+          "reviewedAtUtc": { "type": "string", "format": "date-time" },
+          "adapter": { "type": "string", "minLength": 1 },
+          "versionGroup": { "type": "string", "minLength": 1 },
+          "evidence": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "$ref": "#/$defs/evidence" }
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "$defs": {
+    "evidence": {
+      "type": "object",
+      "required": ["kind", "label", "path", "sha256"],
+      "properties": {
+        "kind": { "type": "string", "minLength": 1 },
+        "label": { "type": "string", "minLength": 1 },
+        "path": { "type": "string", "minLength": 1 },
+        "sha256": { "type": "string", "pattern": "^[0-9A-F]{64}$" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

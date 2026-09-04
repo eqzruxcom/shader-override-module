@@ -1,0 +1,19 @@
+diff --git a/tools/Analyze-IntergradeContactFamilyCensus.ps1 b/tools/Analyze-IntergradeContactFamilyCensus.ps1
+--- a/tools/Analyze-IntergradeContactFamilyCensus.ps1
++++ b/tools/Analyze-IntergradeContactFamilyCensus.ps1
+@@ -58,7 +58,14 @@ foreach($file in $files){
+     $text=([IO.File]::ReadAllText($file.FullName)-replace"`r`n","`n");$count=Get-InstructionCount $text
+     $evaluations=[Collections.Generic.List[object]]::new();$accepted=[Collections.Generic.List[string]]::new()
+     foreach($entry in $families.GetEnumerator()){
+-        $raw=$false;try{$raw=$entry.Value.regex.IsMatch($text)}catch[Text.RegularExpressions.RegexMatchTimeoutException]{$timeouts.Add([ordered]@{file=$file.Name;family=$entry.Key});continue}
++        $raw = $false
++        try {
++            $raw = $entry.Value.regex.IsMatch($text)
++        }
++        catch [Text.RegularExpressions.RegexMatchTimeoutException] {
++            $timeouts.Add([ordered]@{file=$file.Name;family=$entry.Key})
++            continue
++        }
+         $reasons=[Collections.Generic.List[string]]::new()
+         if($count-lt$entry.Value.minimum-or$count-gt$entry.Value.maximum){$reasons.Add("instruction-count $count outside $($entry.Value.minimum)..$($entry.Value.maximum)")}
+         foreach($binding in $entry.Value.required){if(-not(Test-Binding $text $binding)){$reasons.Add("missing $binding")}}

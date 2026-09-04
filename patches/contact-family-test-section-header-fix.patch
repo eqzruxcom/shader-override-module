@@ -1,0 +1,11 @@
+diff --git a/tools/Test-IntergradeContactShadowFamilyRegex.ps1 b/tools/Test-IntergradeContactShadowFamilyRegex.ps1
+--- a/tools/Test-IntergradeContactShadowFamilyRegex.ps1
++++ b/tools/Test-IntergradeContactShadowFamilyRegex.ps1
+@@ -30,7 +30,7 @@ $patternLines = [Collections.Generic.List[string]]::new()
+ for ($i = $start + 1; $i -lt $ini.Count; ++$i) {
+     $line = $ini[$i].Trim()
+-    if ($line.StartsWith('[')) { break }
++    if ($line -match '^\[[^\]]+\]$') { break }
+     if ($line -and -not $line.StartsWith(';')) { $patternLines.Add($line) }
+ }
+ if ($patternLines.Count -lt 1) { throw 'Contact family pattern is empty' }

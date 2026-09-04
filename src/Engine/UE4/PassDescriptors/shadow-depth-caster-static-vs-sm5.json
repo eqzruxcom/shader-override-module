@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "id": "ue4-shadow-depth-caster-static-vs-sm5",
+  "family": "shadow-depth-casters",
+  "displayName": "UE4 static shadow-depth caster vertex family",
+  "description": "Vertex family that transforms non-skinned geometry and emits ShadowDepth plus SV_POSITION for shadow-map rasterization without reading a bone buffer.",
+  "stages": ["vs"],
+  "shaderModels": ["vs_5_0"],
+  "hashFastPaths": [
+    { "adapter": "FF7RemakeIntergrade", "hash": "49b1908cb47c0d29", "evidence": "Verified full-interpolant static ShadowDepth caster variant." },
+    { "adapter": "FF7RemakeIntergrade", "hash": "73012b97e989a07e", "evidence": "Verified position-only static ShadowDepth caster variant." }
+  ],
+  "semanticSignature": {
+    "checks": [
+      { "id": "shadow-depth-output-semantic", "pattern": "^//\\s*ShadowDepth\\s+0\\s+[^\\r\\n]+$", "minCount": 1, "maxCount": 1, "meaning": "The DXBC output signature explicitly contains the ShadowDepth semantic." },
+      { "id": "no-bone-transform-buffer", "pattern": "^dcl_resource_buffer\\s+", "minCount": 0, "maxCount": 0, "meaning": "Static caster variants do not read buffered bone matrices." },
+      { "id": "position-vector-input", "pattern": "^dcl_input\\s+v\\d+\\.xyz\\s*$", "minCount": 1, "maxCount": null, "meaning": "A three-component object-space position enters the static transform path." },
+      { "id": "single-position-output", "pattern": "^dcl_output_siv\\s+o\\d+\\.xyzw,\\s*position\\s*$", "minCount": 1, "maxCount": 1, "meaning": "The rasterizer position is emitted once." },
+      { "id": "matrix-transform-multiply", "pattern": "^\\s*mul\\s+r\\d+\\.[xyzw]+,\\s*[^\\r\\n]+cb\\d+\\[\\d+\\]\\.[xyzw]+\\s*$", "minCount": 1, "maxCount": null, "meaning": "The static object position enters a constant-buffer matrix transform." },
+      { "id": "matrix-transform-accumulation", "pattern": "^\\s*mad\\s+r\\d+\\.[xyzw]+,\\s*[^\\r\\n]+cb\\d+\\[\\d+\\]\\.[xyzw]+[^\\r\\n]*$", "minCount": 2, "maxCount": null, "meaning": "Subsequent matrix rows accumulate the transformed position." },
+      { "id": "no-depth-pixel-output", "pattern": "^dcl_output\\s+oDepth\\s*$", "minCount": 0, "maxCount": 0, "meaning": "This is the vertex caster stage, not the later pixel depth writer." }
+    ]
+  },
+  "runtimeContract": {
+    "output": "static shadow-map caster position and ShadowDepth interpolant",
+    "verifiedStage": "vs_5_0",
+    "adapterMustConfirm": ["object/world transform constants", "instance transform path", "ShadowDepth interpolation channel", "paired material-coverage pixel shader when present"],
+    "controlSafety": "Keep this family separate from the skinned caster family and from receiver-side shadow filtering."
+  },
+  "sourceEvidence": ["docs/shader-coverage-audit-2026-08-31.md", "docs/helix-ue3-shader-transformer-evidence.md", "src/Adapters/FF7RemakeIntergrade/verified-shader-classifications.json"]
+}

@@ -1,0 +1,9 @@
+diff --git a/tools/Analyze-IntergradeLiveLightingCoverage.ps1 b/tools/Analyze-IntergradeLiveLightingCoverage.ps1
+--- a/tools/Analyze-IntergradeLiveLightingCoverage.ps1
++++ b/tools/Analyze-IntergradeLiveLightingCoverage.ps1
+@@ -171,4 +171,4 @@
+ Write-Host "PASS: correlated $computeCount compute shaders and $($universal.shaders.scanned) full census shaders."
+ Write-Host "Accepted tiled-light family: $($local.compatibleMatchCount); SampleGI exact: $($sampleGi.exactCompatibleCount); universal unique candidates: $($universalUniqueHashes.Count)."
+-Write-Host "New shader $newShaderHash: $newShaderStructuralClassification"
++Write-Host "New shader ${newShaderHash}: $newShaderStructuralClassification"
+ Write-Host "Report: $output"

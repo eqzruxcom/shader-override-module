@@ -74,6 +74,55 @@ foreach ($relative in @($consumerRelative, 'host64/nvngx_dlss.dll', 'host64/nvng
     if (-not $recordPaths.Contains($relative)) { throw "Required neural file is not inventoried: $relative" }
     if ((Get-PeMachine (Join-Path $bundleRoot $relative.Replace('/', '\'))) -ne 0x8664) { throw "Required neural file is not x64: $relative" }
 }
+if ($manifest.PSObject.Properties.Name -contains 'neuralInputSet') {
+    $setBinding = $manifest.neuralInputSet
+    $setRelative = [string]$setBinding.manifest
+    if ($setRelative -ne 'provenance/neural-input-set.json' -or -not $recordPaths.Contains($setRelative)) { throw 'Embedded neural-input receipt is missing from the bundle inventory.' }
+    $setPath = Join-Path $bundleRoot $setRelative.Replace('/', '\')
+    $setHash = Get-Sha256Upper $setPath
+    if ($setHash -ne ([string]$setBinding.manifestSha256).ToUpperInvariant()) { throw 'Embedded neural-input receipt hash mismatch.' }
+    if ($setBinding.sourcePathsRetained -ne $false -or $setBinding.redistributionAuthorized -ne $false) { throw 'Embedded neural-input policy is unsafe.' }
+    $set = Get-Content -Raw -LiteralPath $setPath | ConvertFrom-Json
+    if ($set.schemaVersion -ne 1 -or $set.kind -ne 'fallout-new-vegas-dlss5-neural-input-set' -or
+        $set.targetAdapter -ne 'FalloutNewVegas' -or [string]$set.inputSetId -ne [string]$setBinding.inputSetId -or
+        [string]$set.profile.name -ne 'RenoDX-DLSS5-NR-310.8-native-resolution' -or
+        $set.policy.sourcePathsRetained -ne $false -or $set.policy.redistributionAuthorized -ne $false) {
+        throw 'Embedded neural-input receipt identity or policy is invalid.'
+    }
+    if (($set | ConvertTo-Json -Depth 10) -match '(?i)\"sourcePath\"') { throw 'Embedded neural-input receipt retains a source path.' }
+    $roleTargets = @{
+        renoDxDlss5 = $consumerRelative
+        nvngxDlss = 'host64/nvngx_dlss.dll'
+        nvngxDlssNr = 'host64/nvngx_dlssnr.dll'
+    }
+    $reviewedHashes = @{
+        renoDxDlss5 = 'A2973900531D58FF7BEB21172828095BCE2281BC2A81E82191F9D89C983D6A21'
+        nvngxDlss = 'BE6E434A94CA32499515EB62CA0E6C274526055D568D0426E4C652DCDFB6EE6E'
+        nvngxDlssNr = 'E16BCF15E16E13F527491CDF7845B2FE6521A738D8F7C9C721866A8496E1FC8E'
+    }
+    $setRecords = @($set.files)
+    if ($setRecords.Count -ne 3) { throw 'Embedded neural-input receipt must contain exactly three payloads.' }
+    foreach ($setRecord in $setRecords) {
+        $role = [string]$setRecord.role
+        if (-not $roleTargets.ContainsKey($role)) { throw "Embedded neural-input receipt has an unknown role: $role" }
+        if (([string]$setRecord.sha256).ToUpperInvariant() -ne $reviewedHashes[$role]) { throw "Embedded neural-input role '$role' does not match the reviewed hash profile." }
+        $targetRelative = [string]$roleTargets[$role]
+        $targetRecord = @($records | Where-Object { [string]$_.relativePath -ieq $targetRelative })
+        if ($targetRecord.Count -ne 1 -or ([string]$targetRecord[0].sha256).ToUpperInvariant() -ne ([string]$setRecord.sha256).ToUpperInvariant()) {
+            throw "Embedded neural-input role '$role' does not match the bundled payload."
+        }
+    }
+    $inputs = @($manifest.neuralInputs)
+    if ($inputs.Count -ne 3) { throw 'Full bundle must retain three neural-input provenance entries.' }
+    foreach ($input in $inputs) {
+        if ($input.PSObject.Properties.Name -contains 'sourcePath') { throw 'Full bundle neural-input provenance retains a source path.' }
+        if ([string]$input.inputSetId -ne [string]$set.inputSetId -or -not $roleTargets.ContainsKey([string]$input.role)) { throw 'Full bundle neural-input provenance is not bound to the embedded input set.' }
+        $setRecord = @($setRecords | Where-Object { [string]$_.role -eq [string]$input.role })
+        if ($setRecord.Count -ne 1 -or ([string]$setRecord[0].sha256).ToUpperInvariant() -ne ([string]$input.sha256).ToUpperInvariant()) {
+            throw "Full bundle neural-input hash does not match its receipt: $($input.role)"
+        }
+    }
+}
 if (Get-ChildItem -LiteralPath $bundleRoot -Recurse -File | Where-Object { $_.Name -match '(?i)^(nvngx_dlssg|sl\.dlss_g|sl\.interposer)\.dll$' }) { throw 'Full neural-rendering bundle unexpectedly contains frame-generation/Streamline files.' }
 
 $feedConfig = Get-Content -Raw -LiteralPath (Join-Path $bundleRoot 'dlss5-feed.cfg')

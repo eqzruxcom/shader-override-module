@@ -51,6 +51,18 @@
       },
       "additionalProperties": false
     },
+    "componentBuild": {
+      "type": ["object", "null"],
+      "required": ["buildId", "manifest", "manifestSha256", "dependencyLock", "dependencyLockSha256"],
+      "properties": {
+        "buildId": { "type": "string", "minLength": 1 },
+        "manifest": { "const": "provenance/feeder-component-build.json" },
+        "manifestSha256": { "$ref": "#/$defs/sha256" },
+        "dependencyLock": { "const": "provenance/feeder-dependency-lock.json" },
+        "dependencyLockSha256": { "$ref": "#/$defs/sha256" }
+      },
+      "additionalProperties": false
+    },
     "inputs": { "type": "array", "minItems": 12 },
     "files": {
       "type": "array",

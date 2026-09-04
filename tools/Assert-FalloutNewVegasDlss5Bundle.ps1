@@ -73,6 +73,35 @@ $actualPaths = @(
 $missingRecords = @($actualPaths | Where-Object { -not $recordPaths.Contains($_) })
 if ($missingRecords.Count) { throw ('Bundle contains unlisted file(s): ' + ($missingRecords -join ', ')) }
 
+if ($manifest.PSObject.Properties.Name -contains 'componentBuild' -and $null -ne $manifest.componentBuild) {
+    $componentManifestRelative = [string]$manifest.componentBuild.manifest
+    $componentLockRelative = [string]$manifest.componentBuild.dependencyLock
+    if ($componentManifestRelative -ne 'provenance/feeder-component-build.json' -or $componentLockRelative -ne 'provenance/feeder-dependency-lock.json') { throw 'Bundle component provenance paths are invalid.' }
+    foreach ($relative in @($componentManifestRelative, $componentLockRelative)) {
+        if (-not $recordPaths.Contains($relative)) { throw "Bundle component provenance is not inventoried: $relative" }
+    }
+    $componentManifestPath = Join-Path $bundleRoot $componentManifestRelative.Replace('/', '\')
+    $componentLockPath = Join-Path $bundleRoot $componentLockRelative.Replace('/', '\')
+    if ((Get-Sha256Upper $componentManifestPath) -ne ([string]$manifest.componentBuild.manifestSha256).ToUpperInvariant() -or (Get-Sha256Upper $componentLockPath) -ne ([string]$manifest.componentBuild.dependencyLockSha256).ToUpperInvariant()) { throw 'Bundle component provenance hash mismatch.' }
+    $componentManifest = Get-Content -Raw -LiteralPath $componentManifestPath | ConvertFrom-Json
+    $componentLock = Get-Content -Raw -LiteralPath $componentLockPath | ConvertFrom-Json
+    if ($componentManifest.kind -ne 'fallout-new-vegas-dlss5-component-build' -or $componentManifest.buildId -ne $manifest.componentBuild.buildId -or $componentManifest.reproducibility.passCount -ne 2 -or $componentManifest.reproducibility.byteIdentical -ne $true -or $componentLock.sources.dlss5Feeder.revision -ne $componentManifest.sources.dlss5Feeder.revision) { throw 'Bundle component provenance does not prove a two-pass deterministic Feeder build.' }
+    if ((Get-Sha256Upper $componentLockPath) -ne ([string]$componentManifest.dependencyLockSha256).ToUpperInvariant()) { throw 'Copied component manifest and dependency lock disagree.' }
+    $componentMappings = [ordered]@{
+        'bin/x86/dlss5-feed.addon32' = 'dlss5-feed.addon32'
+        'bin/x86/VkLayer_feed_vk32.dll' = 'layers/x86/VkLayer_feed_vk32.dll'
+        'bin/x64/dlss5-feed-host64.exe' = 'host64/dlss5-feed-host64.exe'
+        'assets/DLSS5_Feed.fx' = 'reshade-shaders/Shaders/DLSS5_Feed.fx'
+        'config/x86/VkLayer_feed_vk32.json' = 'layers/x86/VkLayer_feed_vk32.json'
+    }
+    foreach ($componentRelative in $componentMappings.Keys) {
+        $bundleRelative = $componentMappings[$componentRelative]
+        $componentRecord = @($componentManifest.files | Where-Object { [string]$_.relativePath -ieq $componentRelative })
+        $bundleRecord = @($records | Where-Object { [string]$_.relativePath -ieq $bundleRelative })
+        if ($componentRecord.Count -ne 1 -or $bundleRecord.Count -ne 1 -or ([string]$componentRecord[0].sha256).ToUpperInvariant() -ne ([string]$bundleRecord[0].sha256).ToUpperInvariant()) { throw "Bundle payload does not match component-build provenance: $bundleRelative" }
+    }
+}
+
 $required = @(
     'd3d9.dll',
     'dxvk.conf',

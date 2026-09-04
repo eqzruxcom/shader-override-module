@@ -2,6 +2,7 @@
 param(
     [Parameter(Mandatory)][string] $DxvkD3D9Path,
     [Parameter(Mandatory)][string] $FeederAddon32Path,
+    [string] $FeederComponentBuildDirectory,
     [Parameter(Mandatory)][string] $FeederHost64Path,
     [Parameter(Mandatory)][string] $FeederEffectPath,
     [Parameter(Mandatory)][string] $FeedLayer32Path,
@@ -24,6 +25,7 @@ $outputParentFull = [IO.Path]::GetFullPath($OutputParent).TrimEnd('\')
 $finalRoot = Join-Path $outputParentFull $PackageId
 $temporaryRoot = Join-Path $outputParentFull ('.staging-' + $PackageId + '-' + [Guid]::NewGuid().ToString('N'))
 $assertPath = Join-Path $PSScriptRoot 'Assert-FalloutNewVegasDlss5Bundle.ps1'
+$componentAssertPath = Join-Path $PSScriptRoot 'Assert-FalloutNewVegasDlss5ComponentBuild.ps1'
 $utf8 = [Text.UTF8Encoding]::new($false)
 $moved = $false
 
@@ -99,6 +101,32 @@ $inputs = [ordered]@{
 }
 $frameworkRoot = Resolve-InputDirectory $ReShadeFrameworkRoot 'ReShade framework root'
 $lumeniteRootFull = Resolve-InputDirectory $LumeniteRoot 'LumeniteFX root'
+$componentBuild = $null
+if (-not [string]::IsNullOrWhiteSpace($FeederComponentBuildDirectory)) {
+    $componentValidation = & $componentAssertPath -BuildDirectory $FeederComponentBuildDirectory
+    $componentRoot = [IO.Path]::GetFullPath($componentValidation.BuildRoot).TrimEnd('\')
+    $componentManifestPath = Join-Path $componentRoot 'component-build.json'
+    $componentLockPath = Join-Path $componentRoot 'dependency-lock.json'
+    $componentManifest = Get-Content -Raw -LiteralPath $componentManifestPath | ConvertFrom-Json
+    $componentInputs = [ordered]@{
+        feederAddon32 = 'bin\x86\dlss5-feed.addon32'
+        feederHost64 = 'bin\x64\dlss5-feed-host64.exe'
+        feederEffect = 'assets\DLSS5_Feed.fx'
+        feedLayer32 = 'bin\x86\VkLayer_feed_vk32.dll'
+        feedLayer32Manifest = 'config\x86\VkLayer_feed_vk32.json'
+    }
+    foreach ($key in $componentInputs.Keys) {
+        $expected = [IO.Path]::GetFullPath((Join-Path $componentRoot $componentInputs[$key]))
+        if (-not ([string]$inputs[$key]).Equals($expected, [StringComparison]::OrdinalIgnoreCase)) { throw "Input $key does not come from the validated component build: $expected" }
+    }
+    $componentBuild = [ordered]@{
+        buildId = [string]$componentManifest.buildId
+        manifest = 'provenance/feeder-component-build.json'
+        manifestSha256 = Get-Sha256Upper $componentManifestPath
+        dependencyLock = 'provenance/feeder-dependency-lock.json'
+        dependencyLockSha256 = Get-Sha256Upper $componentLockPath
+    }
+}
 
 foreach ($entry in @(
     @($inputs.dxvkD3D9, 'x86', 'DXVK D3D9 runtime'),
@@ -136,6 +164,11 @@ if (-not (Test-Path -LiteralPath $lumeniteInclude -PathType Container)) { throw 
 
 try {
     [IO.Directory]::CreateDirectory($temporaryRoot) | Out-Null
+
+if ($null -ne $componentBuild) {
+        Copy-TrackedFile $componentManifestPath 'provenance\feeder-component-build.json'
+        Copy-TrackedFile $componentLockPath 'provenance\feeder-dependency-lock.json'
+    }
 
     Copy-TrackedFile $inputs.dxvkD3D9 'd3d9.dll'
     Copy-TrackedFile $inputs.feederAddon32 'dlss5-feed.addon32'
@@ -310,6 +343,7 @@ single user-supplied neural consumer plus NVIDIA runtimes are hash-closed.
             explicitLayers = @('VK_LAYER_reshade', 'VK_LAYER_feed_vk')
             dxvkAllowFse = $false
         }
+        componentBuild = $componentBuild
         inputs = @($inputRecords)
         files = @($files)
         gates = [ordered]@{

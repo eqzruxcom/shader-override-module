@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "adapter": "FalloutNewVegas",
+  "sources": {
+    "dlss5Feeder": {
+      "repository": "https://github.com/jlrouzies-fr/DLSS5-Feeder.git",
+      "revision": "792755324574ff4703eb441a7bc14c724e125b84"
+    },
+    "vulkanHeaders": {
+      "repository": "https://github.com/KhronosGroup/Vulkan-Headers.git",
+      "revision": "ee2ec5fd83dafce291024683b50dc89219333076"
+    },
+    "nvidiaDlssSdk": {
+      "repository": "https://github.com/NVIDIA/DLSS.git",
+      "revision": "a291cc7d2cc642a51566f3dfd5376f635cd1b284"
+    },
+    "lumeniteFx": {
+      "repository": "https://github.com/umar-afzaal/LumeniteFX.git",
+      "revision": "76fa3e4d601c97e9bc63f119c01405b7b9938885"
+    },
+    "reshadeShaders": {
+      "repository": "https://github.com/crosire/reshade-shaders.git",
+      "revision": "6db142b4b1a05c764222e5b0bd9a644b7ccfe1dc"
+    },
+    "classicGamesReference": {
+      "repository": "https://github.com/perseval-BLR/dlss5-classic-games.git",
+      "revision": "d339c97bae519587ae78e8b1b7d5c3ab5f58adc8"
+    },
+    "dxvk": {
+      "repository": "https://github.com/doitsujin/dxvk.git",
+      "tag": "v3.0.2",
+      "revision": "6b20f622a77b87b2921fe5d2c1774d2f2ba3e9b7",
+      "runtimeArchive": "dxvk-3.0.2.tar.gz",
+      "runtimeArchiveSha256": "9C538924110A7CDEF871CA36DEE218C0774124374FFDEB38AF4B76BE55BDF7C2",
+      "x86D3D9Sha256": "44A2E749694128710CCE3A545C954BD9D986DD6A8EA61BB08D931C2EF0190488",
+      "provenance": "official-release-binary"
+    },
+    "reshade": {
+      "repository": "https://github.com/crosire/reshade.git",
+      "tag": "v6.8.0",
+      "revision": "18deaa52de0c425a78b329e9cb3c497281cd00ec",
+      "addonInstallerSha256": "AFE4C8F13048306307983B8B3D41D5BF00A86820440B0E57DEA10950E1176445",
+      "x86DllSha256": "DA430E0A9C6EECEFA0D1B27D05E16C426FB5D04E808B194D914EAAC4B31BC0F8",
+      "x64DllSha256": "0CEE63F9C9F13F3AC909C5B4903F4DBB4B719A7AB3B4F13B0DEAF83C814B94F7",
+      "provenance": "official-addon-installer"
+    }
+  },
+  "build": {
+    "component": "DLSS5-Feeder",
+    "toolchain": "Microsoft Visual C++ 2022",
+    "passes": 2,
+    "deterministicLinkOption": "/Brepro",
+    "deterministicSourceEdits": [
+      "Replace dlss5-feed32 __DATE__/__TIME__ attachment text with the pinned source revision",
+      "Replace dlss5-feed-host64 __DATE__/__TIME__ startup text with the pinned source revision"
+    ],
+    "expectedOutputs": [
+      { "relativePath": "bin/x86/dlss5-feed.addon32", "machine": "x86" },
+      { "relativePath": "bin/x86/VkLayer_feed_vk32.dll", "machine": "x86" },
+      { "relativePath": "bin/x64/dlss5-feed-host64.exe", "machine": "x64" },
+      { "relativePath": "bin/x64/VkLayer_feed_vk.dll", "machine": "x64" }
+    ]
+  }
+}

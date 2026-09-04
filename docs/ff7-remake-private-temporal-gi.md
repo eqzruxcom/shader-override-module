@@ -36,6 +36,7 @@ ResourceHistory = copy_desc clear_on_create ps-t2
 - Eight SM5 shaders compile strictly.
 - CPU behavior tests cover initialization, F2 reset, depth rejection, viewport rejection, bounded source retention, and feedback absence.
 - The live-candidate stager is transaction tested against a disposable game tree, including drift rejection and byte-exact rollback.
+- Real-game staging refuses to proceed unless its exact-file backup root is under `F:\Shader3Dmigoto\Backups`.
 
 Run the gates from the repository root:
 

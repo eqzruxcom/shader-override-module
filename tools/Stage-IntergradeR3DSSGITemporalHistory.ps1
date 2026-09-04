@@ -19,6 +19,9 @@ $candidate = [IO.Path]::GetFullPath($CandidateRoot).TrimEnd('\')
 $predecessor = [IO.Path]::GetFullPath($PredecessorPackRoot).TrimEnd('\')
 $backup = [IO.Path]::GetFullPath($BackupRoot).TrimEnd('\')
 $external = -not $target.StartsWith($root + '\',[StringComparison]::OrdinalIgnoreCase)
+$approvedExternalBackupRoot = [IO.Path]::GetFullPath('F:\Shader3Dmigoto\Backups').TrimEnd('\')
+$backupInWorkspace = $backup.StartsWith($root + '\',[StringComparison]::OrdinalIgnoreCase)
+$backupOnApprovedDrive = $backup.StartsWith($approvedExternalBackupRoot + '\',[StringComparison]::OrdinalIgnoreCase)
 $utf8 = [Text.UTF8Encoding]::new($false)
 
 function Get-Hash([string]$Path) { (Get-FileHash -Algorithm SHA256 -LiteralPath $Path).Hash }
@@ -43,7 +46,8 @@ if ($external) {
 }
 if (-not $candidate.StartsWith($root + '\',[StringComparison]::OrdinalIgnoreCase)) { throw 'CandidateRoot must remain inside the workspace.' }
 if (-not $predecessor.StartsWith($root + '\',[StringComparison]::OrdinalIgnoreCase)) { throw 'PredecessorPackRoot must remain inside the workspace.' }
-if (-not $backup.StartsWith($root + '\',[StringComparison]::OrdinalIgnoreCase)) { throw 'BackupRoot must remain inside the workspace.' }
+if (-not $backupInWorkspace -and -not $backupOnApprovedDrive) { throw 'BackupRoot must remain inside the workspace or under F:\Shader3Dmigoto\Backups.' }
+if ($external -and -not $backupOnApprovedDrive) { throw 'A real-game stage or restore requires BackupRoot under F:\Shader3Dmigoto\Backups.' }
 foreach ($directory in @($target,(Join-Path $target 'Mods'),(Join-Path $target 'ShaderFixes'))) {
     if (-not (Test-Path -LiteralPath $directory -PathType Container)) { throw "Required target directory is missing: $directory" }
 }

@@ -15,6 +15,14 @@ accepted.
 - `clear_on_create` custom-resource option for deterministic initialization of
   descriptor-copied resources after creation, resize, or device change.
 - FF7 Remake Intergrade proving adapter and fail-closed validation tooling.
+- Fallout: New Vegas DX9/DXVK transport-only bundle staging with x86/x64 PE
+  validation, local explicit Vulkan layers, complete file hashing, and tamper tests.
+- New Vegas transport install/restore tooling with explicit acknowledgement,
+  per-target backup provenance, hash verification, atomic drift refusal, and
+  exact removal of package-created files.
+- New Vegas full-neural candidate promotion with one x64 RenoDX consumer,
+  user-supplied x64 DLSS/Neural Rendering runtimes, mode-2 configuration,
+  frame-generation exclusion, and separately acknowledged reversible install.
 
 ### Verified in FF7 Remake Intergrade
 

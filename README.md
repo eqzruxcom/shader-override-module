@@ -14,8 +14,10 @@ adapter owns its shader hashes, resource bindings, coordinate conventions, and
 pass integration.
 
 For the concise live state, see [Project status](STATUS.md). For changes to the
-framework itself, see [Changelog](CHANGELOG.md). The future Vulkan translation
-track is documented separately in the [DXVK backend roadmap](docs/dxvk-vulkan-backend.md).
+framework itself, see [Changelog](CHANGELOG.md). The paused D3D11 shader-identity
+track is documented in the [DXVK backend roadmap](docs/dxvk-vulkan-backend.md).
+The isolated DX9 branch now has source-built transport plus guarded full-neural
+[Fallout: New Vegas DLSS5 path](docs/fallout-new-vegas-dlss5-transport.md).
 
 ## Current status
 

@@ -15,15 +15,20 @@ called working merely because it compiled or produced a visible change.
 | Background screenshot IPC | Working foundation | Window capture and foreground fallback demonstrated |
 | Dynamic resource `clear_on_create` | Built, offline verification pending | x64 Release DLL builds; live deployment not yet performed |
 | Cross-game semantic catalog | Experimental | Fail-closed candidate and review tooling exists; broader game proof remains |
-| DXVK / Vulkan backend | Paused research track | Separately documented; not part of the current DX11 lighting milestone |
+| DXVK D3D11 shader identity | Paused research track | Separately documented; not part of the current DX11 lighting milestone |
+| DX9 / New Vegas DLSS5 transport | Built offline, live pending | 25-file hash-closed bundle plus acknowledgement-gated, backup-verified install and drift-safe rollback pass disposable-tree tests |
+| DX9 / New Vegas DLSS5 neural candidate | Built offline, live pending | Validated transport can be promoted with one x64 RenoDX consumer and x64 DLSS/NR runtimes; mode-specific install and exact rollback pass disposable-tree tests; frame generation is excluded |
 
 ## DXVK / Vulkan backend
 
-This is a separate backend track, not an alternate name for the current DX11
-work. Its purpose is to preserve SOM shader identities and family behavior when
-a D3D9/D3D11 game is translated to Vulkan. It is paused while the native DX11
-engine and FF7 Remake lighting pipeline are being proven. See
-[DXVK / Vulkan backend roadmap](docs/dxvk-vulkan-backend.md).
+The D3D11 shader-identity backend remains a separate paused research track. The
+DX9 branch instead isolates a Fallout: New Vegas transport proof that leaves the
+FF7 adapter untouched. Its source-built x86 Feeder, x64 helper, local explicit
+Vulkan layers, validators, transport/full package promotion, and reversible
+install tests pass offline; the game is not installed on this machine, so live
+transport, neural-rendering, and frame-generation claims remain pending. See
+[the New Vegas transport checkpoint](docs/fallout-new-vegas-dlss5-transport.md)
+and the [DXVK backend roadmap](docs/dxvk-vulkan-backend.md).
 
 ## FF7 Remake Intergrade proving adapter
 

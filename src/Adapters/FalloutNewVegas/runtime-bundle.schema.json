@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.shader-override-module.invalid/fallout-new-vegas-dlss5-runtime-bundle.schema.json",
+  "title": "Fallout New Vegas DLSS5 transport bundle",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "packageId",
+    "createdUtc",
+    "adapter",
+    "mode",
+    "stack",
+    "configuration",
+    "inputs",
+    "files",
+    "gates",
+    "policy"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "packageId": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]+$" },
+    "createdUtc": { "type": "string", "format": "date-time" },
+    "adapter": {
+      "type": "object",
+      "required": ["id", "executable", "executableArchitecture", "sourceApi", "translatedApi"],
+      "properties": {
+        "id": { "const": "FalloutNewVegas" },
+        "executable": { "const": "FalloutNV.exe" },
+        "executableArchitecture": { "const": "x86" },
+        "sourceApi": { "const": "D3D9" },
+        "translatedApi": { "const": "Vulkan" }
+      },
+      "additionalProperties": false
+    },
+    "mode": { "const": "transport-only" },
+    "stack": { "type": "array", "minItems": 6, "items": { "type": "string", "minLength": 1 } },
+    "configuration": {
+      "type": "object",
+      "required": ["feederMode", "motionProvider", "motionProviderId", "explicitLayers", "dxvkAllowFse"],
+      "properties": {
+        "feederMode": { "const": 1 },
+        "motionProvider": { "const": "LumeniteFX Kernel" },
+        "motionProviderId": { "const": 3 },
+        "explicitLayers": {
+          "type": "array",
+          "prefixItems": [{ "const": "VK_LAYER_reshade" }, { "const": "VK_LAYER_feed_vk" }],
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "dxvkAllowFse": { "const": false }
+      },
+      "additionalProperties": false
+    },
+    "inputs": { "type": "array", "minItems": 12 },
+    "files": {
+      "type": "array",
+      "minItems": 15,
+      "items": {
+        "type": "object",
+        "required": ["relativePath", "sha256", "sizeBytes"],
+        "properties": {
+          "relativePath": { "type": "string", "minLength": 1 },
+          "sha256": { "$ref": "#/$defs/sha256" },
+          "sizeBytes": { "type": "integer", "minimum": 1 }
+        },
+        "additionalProperties": false
+      }
+    },
+    "gates": { "type": "object" },
+    "policy": { "type": "object" }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[0-9A-F]{64}$" }
+  }
+}

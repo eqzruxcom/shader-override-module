@@ -16,11 +16,16 @@ if (Test-Path -LiteralPath $outputRoot) {
     throw 'Family output already exists; preserve prior evidence.'
 }
 
-$baseRoot = Join-Path $repositoryRoot 'artifacts\checkpoints\rebirth-contact-first-working-20260831-v1\payload\ShaderFixes'
+$baseRoot = Join-Path $repositoryRoot 'working-code\Contact shadows - Rebirth Mod - Code worked\working-remake-port\payload\ShaderFixes'
 $frustumRoot = Join-Path $repositoryRoot 'working-code\Frustum Fix\20260831-v1\accepted-runtime\ShaderFixes'
 $originalRoot = Join-Path $repositoryRoot 'working-code\Contact shadows - Rebirth Mod - Code worked\original-remake'
 $timelinePath = Join-Path $repositoryRoot 'docs\contact-softness-current-plan.md'
 $utf8 = [Text.UTF8Encoding]::new($false)
+
+function Get-CanonicalTextSha256([string]$Path) {
+    $text = [IO.File]::ReadAllText($Path).Replace("`r`n", "`n").Replace("`r", "`n")
+    return [Convert]::ToHexString([Security.Cryptography.SHA256]::HashData($utf8.GetBytes($text)))
+}
 
 $variants = @(
     [ordered]@{ Hash='08bb8764f1840179'; Temps=31; Index='r14'; IndexComponent='w'; Diffuse='r24'; Specular='r23'; SpecularMask='xyz'; Depth='t5'; LightList='t12'; SceneColor='t9'; Instructions=657; Target='Base' },
@@ -146,7 +151,7 @@ foreach ($variant in $variants) {
             throw "Required shader evidence is missing: $requiredPath"
         }
     }
-    $baseSha = (Get-FileHash -Algorithm SHA256 -LiteralPath $basePath).Hash
+    $baseSha = Get-CanonicalTextSha256 -Path $basePath
     if ($baseSha -ne $expectedBaseSha[$variant.Hash]) {
         throw "First-working checkpoint hash mismatch: $($variant.Hash)"
     }
@@ -163,6 +168,8 @@ foreach ($variant in $variants) {
         nativeInstructionCount = $variant.Instructions
         originalAssemblySha256 = (Get-FileHash -Algorithm SHA256 -LiteralPath $originalPath).Hash
         firstWorkingSha256 = $baseSha
+        firstWorkingCanonicalLfSha256 = $baseSha
+        firstWorkingWorkingTreeSha256 = (Get-FileHash -Algorithm SHA256 -LiteralPath $basePath).Hash
         targetSha256 = if ($variant.Target -eq 'Frustum') { $expectedFrustum62bSha } else { $baseSha }
         depth = $variant.Depth
         lightList = $variant.LightList
@@ -180,7 +187,7 @@ $baseTemplateLines = @($baseReference -split "`n")
 
 $frustumVariant = $variants | Where-Object Hash -eq '62b33a2d1e505241'
 $frustumPath = Join-Path $frustumRoot '62b33a2d1e505241-cs.txt'
-if ((Get-FileHash -Algorithm SHA256 -LiteralPath $frustumPath).Hash -ne $expectedFrustum62bSha) {
+if ((Get-CanonicalTextSha256 -Path $frustumPath) -ne $expectedFrustum62bSha) {
     throw 'Accepted 62b-only Frustum Fix hash mismatch.'
 }
 $frustumTemplate = Get-NormalisedTemplate `
@@ -341,6 +348,8 @@ $report = [ordered]@{
     timelineSha256 = (Get-FileHash -Algorithm SHA256 -LiteralPath $timelinePath).Hash
     baseCheckpoint = $baseRoot
     frustumCheckpoint = $frustumPath
+    frustumCheckpointCanonicalLfSha256 = Get-CanonicalTextSha256 -Path $frustumPath
+    frustumCheckpointWorkingTreeSha256 = (Get-FileHash -Algorithm SHA256 -LiteralPath $frustumPath).Hash
     baseNormalisedTemplateSha256 = $baseTemplateSha
     frustumNormalisedTemplateSha256 = $frustumTemplateSha
     baseIndexInsertionLines = 1

@@ -1,6 +1,6 @@
 [CmdletBinding()]
 param(
-    [string]$FamilyDirectory = (Join-Path (Split-Path -Parent $PSScriptRoot) 'artifacts\accepted-contact-family-rebuild-20260904-v1'),
+    [string]$FamilyDirectory = (Join-Path (Split-Path -Parent $PSScriptRoot) 'artifacts\accepted-contact-family-rebuild-20260904-v2-portable'),
     [string]$OutputPath = (Join-Path (Split-Path -Parent $PSScriptRoot) 'artifacts\analysis\intergrade-accepted-contact-family-guard-rejection-20260904.json')
 )
 

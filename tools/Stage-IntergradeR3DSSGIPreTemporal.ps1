@@ -138,7 +138,7 @@ if($Action -eq 'Stage'){
     if($f2.Count -ne 1 -or -not $f2[0].path.EndsWith('\Agent2R3DSSGITest.ini',[StringComparison]::OrdinalIgnoreCase)){throw 'Live F2 ownership is not the exact accepted Agent2 claim.'}
     if(@(Get-HashClaims $mods 'c473ab75b7519f7e').Count -ne 0 -or @(Get-HashClaims $mods 'af6cd28a0108a18a').Count -ne 1){throw 'Live c473/af6 ownership is not the predecessor state.'}
     if($externalTarget){
-        $contactAuthority=Join-Path $root 'artifacts\accepted-contact-family-rebuild-20260904-v1\ContactShadowFamily.ini'
+        $contactAuthority=Join-Path $root 'artifacts\accepted-contact-family-rebuild-20260904-v2-portable\ContactShadowFamily.ini'
         $liveContact=Join-Path $mods 'ContactShadows.ini'
         $contactSha='F86A81DEE319C6A6E98933D4AC99C0477B6E5D8B43E6F7D29272FDDA476B5478'
         if(-not(Test-Path -LiteralPath $contactAuthority -PathType Leaf) -or (Get-Hash $contactAuthority) -ne $contactSha){throw 'Automatic contact-family authority drifted.'}

@@ -1,6 +1,6 @@
 # FF7 Remake private temporal indirect-lighting candidate
 
-Status: offline verified and installed for controlled live validation; native moving/static reprojection now matched from retained c473 assembly.
+Status: offline verified and live-tested, but not graduated; native moving/static reprojection matches retained c473 assembly, while the visible-source angle cutoff remains materially unchanged.
 
 ## Why this revision exists
 
@@ -45,6 +45,12 @@ Run the gates from the repository root:
 .\tools\Test-IntergradeR3DSSGITemporalLiveStage.ps1
 ```
 
+## Live result — static reprojection v2
+
+The user tested the v2 candidate beside the known small light and reported the result as "mostly the same": illumination still appeared and disappeared with view angle. This means the corrected c473 static-surface fallback is technically required but was not the dominant cause of the visible cutoff. The v2 candidate is therefore not graduated.
+
+This result narrows the next test to source sampling. The trace still uses four pixel-jittered angular slices; a small visible emitter can fall between those directions as the camera changes the sampling phase. The next controlled candidate must compare the unchanged four-slice trace against denser angular coverage while keeping temporal reprojection, denoise, composite strength, and scene placement fixed.
+
 ## Still pending
 
-The retained c473 assembly proves both paths: nonzero t4.zx uses the decoded motion vector, while the zero sentinel uses depth plus CB1[114..117] to reproject static surfaces. Controlled live validation must now confirm the corrected wall persistence, disocclusion behavior, resolution changes, F2 off/on resets, and regressions for Cloud, emissive lights, contact shadows, UI, and native F10 reload behavior. The candidate remains isolated on F2 until those checks pass.
+Use F2 only as the indirect-light master and Page Up only for the sparse/dense foreground test cycle. F10 remains native reload and Page Down remains the graduated master. Validate fixed-camera parity, slow orbit, fast pan, camera cuts, character/material stability, UI, resolution/FOV changes, contact/frustum regressions, and timing before promotion. If dense angular coverage still cuts out while the source remains on screen, instrument history validity next; if only off-screen sources fail, move to a bounded GI-only cache or native light/probe source.

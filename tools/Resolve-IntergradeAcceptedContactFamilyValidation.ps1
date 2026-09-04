@@ -2,7 +2,7 @@
 param(
     [string]$ContractReportPath = (Join-Path (Split-Path -Parent $PSScriptRoot) 'artifacts\analysis\accepted-contact-family-contract-regression-20260904.json'),
     [string]$StructuralReportPath = (Join-Path (Split-Path -Parent $PSScriptRoot) 'artifacts\analysis\accepted-contact-family-regex-regression-20260904.json'),
-    [string]$GenerationReportPath = (Join-Path (Split-Path -Parent $PSScriptRoot) 'artifacts\accepted-contact-family-transform-20260904-004502349\family-generation.json'),
+    [string]$GenerationReportPath = (Join-Path (Split-Path -Parent $PSScriptRoot) 'artifacts\accepted-contact-family-rebuild-20260904-v2-portable\family-generation.json'),
     [string]$OutputPath = (Join-Path (Split-Path -Parent $PSScriptRoot) 'artifacts\analysis\intergrade-accepted-contact-family-validation-20260904.json')
 )
 

@@ -18,7 +18,7 @@ The accepted family is reproducible and fail-closed:
 Primary evidence:
 
 - `artifacts/analysis/intergrade-accepted-contact-family-validation-20260904.json`
-- `artifacts/accepted-contact-family-rebuild-20260904-v1`
+- `artifacts/accepted-contact-family-rebuild-20260904-v2-portable`
 - `artifacts/analysis/intergrade-accepted-contact-family-guard-rejection-20260904.json`
 
 The old WARP/software evidence is valid only for its archived source snapshot. The current experimental geometric tracer has a different source hash and cannot inherit that old pass result. This does not invalidate the accepted five-shader assembly family, which is generated from hash-pinned first-working shader checkpoints.

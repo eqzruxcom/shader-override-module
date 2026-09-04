@@ -1,0 +1,86 @@
+SHADER OVERRIDE MODULE — DX9/DXVK AGENT HANDOFF
+
+Repository:
+https://github.com/eqzruxcom/shader-override-module
+
+Base branch:
+main
+
+Base commit at handoff:
+6a97082252097a9b6ceaa7afea9f48181ca207f7
+
+Working branch:
+codex/dx9-dxvk-backend
+
+IMPORTANT WORKSPACE RULE
+
+Work from a separate clone or Git worktree. Do not switch branches in the
+existing shared checkout used for active FF7 Remake DX11 lighting work.
+
+SCOPE
+
+- Build only the DX9-to-DXVK/Vulkan backend foundation.
+- Put backend implementation under src/Backends/DXVK/.
+- Follow docs/dxvk-vulkan-backend.md.
+- Track the work against GitHub issue #3:
+  https://github.com/eqzruxcom/shader-override-module/issues/3
+- Preserve deterministic shader identities compatible with SOM's shader-family
+  matching system.
+- Document how DX9 shader bytecode, render passes, resources, and draw events
+  map to stable SOM identities after DXVK translation.
+- Prefer an offline proof and tests before any game installation.
+
+DO NOT CHANGE
+
+- Do not modify the current FF7 Remake DX11 contact-shadow or indirect-lighting
+  implementation.
+- Do not alter shared live-game INI files.
+- Do not change the established key contract:
+  F10 is shader reload; F2 is reserved for the current indirect-light test;
+  Page Up is the active test-cycle key; Page Down is for graduated master
+  controls only.
+- Do not merge the branch into main without review.
+
+SOURCE AND LICENSE REQUIREMENTS
+
+- Record the exact upstream DXVK repository URL and commit used.
+- Preserve DXVK's Zlib license and its upstream copyright notices.
+- Keep Shader Override Module's GPLv3 license and third-party notices intact.
+- Clearly distinguish original SOM code, modified upstream code, and unmodified
+  upstream code.
+- Do not copy code from closed-source projects such as geo-11.
+
+DO NOT COMMIT
+
+- Game files or copyrighted game assets
+- Shader/texture dumps or captures
+- User-specific paths or configuration
+- DLLs, EXEs, PDBs, compiled shaders, build directories, or caches
+- Secrets, credentials, tokens, or private logs
+
+EXPECTED FIRST MILESTONE
+
+1. Pin and document an upstream DXVK revision.
+2. Establish a reproducible local build without committing binaries.
+3. Identify the DX9 shader-creation and pipeline-binding interception points.
+4. Define a deterministic SOM identity from original DX9 shader bytecode,
+   independent of Vulkan pipeline-cache identifiers.
+5. Add an offline identity test with positive and negative fixtures.
+6. Document the intended bridge from that identity to SOM family matching.
+
+DELIVERY
+
+- Commit only scoped source, tests, and documentation.
+- Push codex/dx9-dxvk-backend to origin.
+- Open a pull request against main.
+- In the pull request, list the upstream DXVK commit, build command, tests run,
+  known limitations, and every shared file touched.
+- Do not merge the pull request; leave it for review against the active DX11
+  work.
+
+SEPARATE-CLONE START COMMANDS
+
+git clone https://github.com/eqzruxcom/shader-override-module.git SOM-DX9
+cd SOM-DX9
+git switch -c codex/dx9-dxvk-backend
+

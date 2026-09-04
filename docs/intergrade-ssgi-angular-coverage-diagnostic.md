@@ -39,3 +39,11 @@ Generate and verify:
 ```
 
 The generated pack is `artifacts/agent2-r3d-ssgi-angular-coverage-pack-v1`. Ten SM5 shaders compile strictly. The 8- and 16-slice trace sources are proven byte-identical to the four-slice source except for the one slice-count constant. The verifier also proves the native OFF path, private-history routing, absence of finished-scene feedback, and reserved-key contract.
+
+## Controlled live transition
+
+`New-IntergradeR3DSSGIAngularCoverageLiveCandidate.ps1` packages the eleven verified Mods files with the same rebuilt x64 wrapper used by the temporal-v2 predecessor. It refuses a different wrapper or a drifted predecessor manifest.
+
+`Stage-IntergradeR3DSSGIAngularCoverage.ps1` provides Stage, Status, and Restore operations. A stage requires the exact ten-file temporal-v2 predecessor, refuses either dense trace if it already exists, requires an explicit offline-candidate acknowledgement, and backs up every one of the twelve touched files. A real-game transition additionally requires the known executable fingerprint, accepted contact-shadow-family hash, a backup below `F:\Shader3Dmigoto\Backups`, and a closed game process.
+
+`Test-IntergradeR3DSSGIAngularCoverageLiveStage.ps1` exercises the transition only in a disposable fake game tree. It proves early rejection, exact staging, installed-file drift detection, unsafe-restore rejection, removal of the two candidate-created traces, and byte-for-byte restoration of the temporal-v2 predecessor. Passing this test does not install the candidate or claim a live visual result.
